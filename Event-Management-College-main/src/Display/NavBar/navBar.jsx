@@ -1,0 +1,135 @@
+import Logo2 from "../../assets/logo2.png";
+import { useState } from "react";
+import { CiUser } from "react-icons/ci";
+import { HiOutlineMenu, HiX } from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion"; // 👈 Added Framer Motion
+import { Link, useNavigate } from "react-router-dom";
+// import Logo2 from "../assets/logo2.png"
+export function NavBar() {
+  const [mobileView, setMobileView] = useState(false);
+
+  const navigate = useNavigate();
+
+  return (
+    <nav className="w-full flex-wrap">
+      <div className=" max-w-7xl w-full mx-auto px-4 md:px-6 lg:px-10 flex-wrap">
+        <div className="flex items-center justify-between w-full flex-wrap pt-4">
+          {/* Logo Section */}
+          <div className="flex items-center w-[205px] h-[70px]">
+            <div className="flex items-center h-[66px]">
+              <img src={Logo2} alt="Logo" className="w-[50px]" />
+            </div>
+            <div className="flex items-center justify-center">
+              <h2 className="font-sans font-bold text-white text-[27px]">
+                DOCKET
+              </h2>
+            </div>
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center justify-between w-[900px] flex-row flex-wrap">
+            <div className="flex items-center justify-center gap-8 px-8 py-4 flex-row w-[680px] h-auto flex-wrap bg-slate-600 backdrop-blur-sm border border-gray-600 rounded-2xl shadow-2xl shadow-purple-500/20">
+              <div className="group cursor-pointer relative">
+                <Link
+                  to="/"
+                  className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300"
+                >
+                  Home
+                </Link>
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              </div>
+              <div className="group cursor-pointer relative">
+                <h3 className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300">
+                  About Us
+                </h3>
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              </div>
+              <div className="group cursor-pointer relative">
+                <h3 className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300">
+                  Events
+                </h3>
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              </div>
+              <div className="group cursor-pointer relative">
+                <h3 className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300">
+                  Gallery
+                </h3>
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              </div>
+            </div>
+            <div
+              onClick={() => navigate("/login")}
+              className="relative flex items-center justify-center gap-2 px-6 py-2.5 w-auto h-[40px] bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold overflow-hidden group shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <h3 className="relative font-sans font-semibold text-[16px]">
+                Login
+              </h3>
+              <CiUser className="relative text-xl group-hover:scale-110 transition-transform" />
+            </div>
+          </div>
+
+          {/* Mobile Menu Icon */}
+          <div className="flex md:hidden items-center justify-center text-white">
+            {mobileView ? (
+              <HiX
+                className="text-3xl cursor-pointer"
+                onClick={() => setMobileView(false)}
+              />
+            ) : (
+              <HiOutlineMenu
+                className="text-3xl cursor-pointer"
+                onClick={() => setMobileView(true)}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Dropdown Menu (Animated) */}
+        <AnimatePresence>
+          {mobileView && (
+            <motion.div
+              key="mobileMenu"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", stiffness: 80, damping: 20 }}
+              className="fixed top-0 right-0 w-2/3 h-full bg-black shadow-lg z-50 md:hidden flex flex-col"
+            >
+              <div className="flex justify-end p-4">
+                <HiX
+                  className="text-white text-3xl cursor-pointer"
+                  onClick={() => setMobileView(false)}
+                />
+              </div>
+
+              <div className="flex flex-col space-y-2 text-white font-semibold text-lg px-6">
+                <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
+                  Home
+                </h1>
+                <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
+                  About Us
+                </h1>
+                <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
+                  Events
+                </h1>
+                <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
+                  Gallery
+                </h1>
+              </div>
+
+              <div className="mt-auto p-6">
+                <Link
+                  to="/login"
+                  className="w-full py-2 px-4 text-black bg-white font-semibold rounded hover:bg-gray-100 transition flex items-center justify-center"
+                >
+                  Login
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </nav>
+  );
+}
