@@ -16,6 +16,8 @@ import AdminAddEvent from "./pages/admin/AddEvent";
 import AdminFeedback from "./pages/admin/Feedback";
 import AdminRegistrations from "./pages/admin/Registrations";
 import AdminAttendence from "./pages/admin/Attendence";
+import AddProgram from "./pages/admin/AddProgram";
+import TeacherAddProgram from "./pages/teacher/TeacherAddProgram";
 
 function App() {
   const {pathname} = useLocation()
@@ -33,6 +35,7 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path='/teacher' element={true ? <Layout/> : <Login/>}>
             <Route index element={<TeacherDashboard/>}/>
+            <Route path='teacher-add-program' element={<TeacherAddProgram/>}/>
             <Route path='addevent' element={<AddEvent/>}/>
             <Route path='feedback' element={<Feedback/>}/>
             <Route path='registrations' element={<Registrations/>}/>
@@ -40,6 +43,7 @@ function App() {
         </Route>
           <Route path='/admin' element={true ? <AdminLayout/> : <Login/>}>
             <Route index element={<AdminDashboard/>}/>
+            <Route path='admin-add-program' element={<AddProgram/>}/>
             <Route path='addevent' element={<AdminAddEvent/>}/>
             <Route path='feedback' element={<AdminFeedback/>}/>
             <Route path='registrations' element={<AdminRegistrations/>}/>

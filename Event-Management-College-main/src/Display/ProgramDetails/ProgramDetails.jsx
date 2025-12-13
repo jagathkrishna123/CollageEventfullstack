@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Items, PROGRAMDATAS } from "../../Constants/ProgramData";
+import { EVENTDATAS, Items, } from "../../Constants/ProgramData";
 
 const ProgramDetails = () => {
   const { id } = useParams();
@@ -95,14 +95,14 @@ const ProgramDetails = () => {
       </div>
      {/* events related */}
      {/* Filter related events */}
-{PROGRAMDATAS.filter(e => e.programName === showDetail.Name).length > 0 && (
+{EVENTDATAS.filter(e => e.programName === showDetail.Name).length > 0 && (
   <div className="w-full mt-16">
     <h2 className="text-[35px] font-bold mb-6">
       Events under {showDetail.Name}
     </h2>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {PROGRAMDATAS.filter(e => e.programName === showDetail.Name).map(event => (
+      {EVENTDATAS.filter(e => e.programName === showDetail.Name).map(event => (
         <div
           key={event.id}
           className="bg-white/5 p-5 border border-[#00A9E8] rounded-2xl backdrop-blur-lg hover:shadow-lg transition"
@@ -113,10 +113,12 @@ const ProgramDetails = () => {
             className="w-full h-40 object-cover rounded-xl mb-4"
           />
 
-          <h3 className="text-xl font-semibold">{event.name}</h3>
-          <p className="text-gray-300">{event.description}</p>
+          <h3 className="text-xl font-semibold">{event.eventName}</h3>
+          <p className="text-gray-300 text-[14px]">{event.department}</p>
+          <p className="text-gray-300 text-[12px]">{event.description}</p>
+          
 
-          <p className="text-gray-400 mt-2">
+          {/* <p className="text-gray-400 mt-2">
             <strong>Venue:</strong> {event.venue}
           </p>
           <p className="text-gray-400">
@@ -124,7 +126,7 @@ const ProgramDetails = () => {
           </p>
           <p className="text-gray-400">
             <strong>Registered:</strong> {event.registered}
-          </p>
+          </p> */}
         </div>
       ))}
     </div>

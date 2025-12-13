@@ -72,7 +72,7 @@ import { FaCheckCircle, FaStar, FaBolt, FaLightbulb } from "react-icons/fa";
 // ];
 // Import images
 
-
+//PROGRAMS
 export const Items = [
   { 
     id: 1,
@@ -126,7 +126,7 @@ export const Items = [
   },
 ];
 
-
+//EVENTS
 export const PROGRAMDATAS = [
   {
     id: 1,
@@ -257,3 +257,177 @@ export const adminDashboard_data = {
   "attendance": 180,
   "feedbackReceived": 95
 };
+
+export const PROGRAMS = [
+  { id: 1, name: "Hackathon 2025" },
+  { id: 2, name: "AI Workshop" },
+  { id: 3, name: "Web Development Bootcamp" },
+  { id: 4, name: "Cyber Security Seminar" },
+  { id: 5, name: "Cloud Computing Training" },
+];
+
+///////////////////////////////////////////////////////////////////////////
+
+export const EVENTDATAS = [
+  {
+    id: 1,
+    programName: "Hackathon",
+    eventName: "24 Hour Coding Challenge",
+    description: "A high-intensity hackathon where teams build real-world solutions.",
+    date: "2025-03-18",
+    startTime: "09:00",
+    endTime: "09:00",
+    venue: "Block A Exhibition Hall",
+    latitude: 11.2588,
+    longitude: 75.7804,
+    incharge: "Dr. Arun Kumar",
+    department: "Computer Science",
+    limit: 120,
+    image: img15, // reused image
+  },
+  {
+    id: 2,
+    programName: "Tech Meetup",
+    eventName: "Future of Web Technologies",
+    description: "Expert talk on modern frontend and backend development.",
+    date: "2025-04-05",
+    startTime: "10:00",
+    endTime: "13:00",
+    venue: "Seminar Hall 1",
+    latitude: 11.2595,
+    longitude: 75.7812,
+    incharge: "Ms. Sneha Raj",
+    department: "Information Technology",
+    limit: 80,
+    image: img12,
+  },
+  {
+    id: 3,
+    programName: "Design Sprint",
+    eventName: "UI/UX Design Workshop",
+    description: "Hands-on workshop covering user experience and interface design.",
+    date: "2025-04-20",
+    startTime: "11:00",
+    endTime: "16:00",
+    venue: "Innovation Lab",
+    latitude: 11.2579,
+    longitude: 75.7798,
+    incharge: "Mr. Rahul Menon",
+    department: "Design & Media",
+    limit: 60,
+    image: img13,
+  },
+  {
+    id: 4,
+    programName: "Hackathon",
+    eventName: "AI Model Building Contest",
+    description: "Participants compete by building intelligent AI models.",
+    date: "2025-05-02",
+    startTime: "09:30",
+    endTime: "17:30",
+    venue: "Computer Lab 2",
+    latitude: 11.2601,
+    longitude: 75.7825,
+    incharge: "Mr. Faisal Khan",
+    department: "Artificial Intelligence",
+    limit: 50,
+    image: img14,
+  },
+  {
+    id: 5,
+    programName: "Design Sprint",
+    eventName: "Community Innovation Drive",
+    description: "Students collaborate on solving local community problems.",
+    date: "2025-05-15",
+    startTime: "10:00",
+    endTime: "14:00",
+    venue: "City Park",
+    latitude: 11.2590,
+    longitude: 75.7819,
+    incharge: "Ms. Anjali Varma",
+    department: "Social Sciences",
+    limit: 100,
+    image: img11,
+  },
+  {
+  id: 6,
+  programName: "Hackathon",
+  eventName: "AI Innovation Challenge",
+  description: "24-hour hackathon focused on AI-based problem solving.",
+  date: "2025-06-05",
+  startTime: "09:00",
+  endTime: "09:00",
+  venue: "Innovation Lab",
+  latitude: 11.2585,
+  longitude: 75.7802,
+  incharge: "Mr. Rahul Menon",
+  department: "Computer Science",
+  limit: 80,
+  image: img15,
+},
+{
+  id: 7,
+  programName: "Tech Meetup",
+  eventName: "Web Development Bootcamp",
+  description: "Hands-on workshop on modern web technologies.",
+  date: "2025-06-12",
+  startTime: "10:00",
+  endTime: "16:00",
+  venue: "Seminar Hall 2",
+  latitude: 11.2601,
+  longitude: 75.7825,
+  incharge: "Ms. Neha Thomas",
+  department: "Information Technology",
+  limit: 60,
+  image: img12,
+},
+{
+  id: 8,
+  programName: "Design Sprint",
+  eventName: "UI/UX Design Workshop",
+  description: "Learn user-centered design principles and prototyping.",
+  date: "2025-06-20",
+  startTime: "11:00",
+  endTime: "15:00",
+  venue: "Design Studio",
+  latitude: 11.2579,
+  longitude: 75.7796,
+  incharge: "Mr. Arjun Nair",
+  department: "Design",
+  limit: 50,
+  image: img13,
+},
+{
+  id: 9,
+  programName: "Hackathon",
+  eventName: "Smart Campus Hack",
+  description: "Build smart solutions to improve campus life.",
+  date: "2025-07-01",
+  startTime: "09:00",
+  endTime: "18:00",
+  venue: "Main Auditorium",
+  latitude: 11.2612,
+  longitude: 75.7831,
+  incharge: "Dr. Suresh Kumar",
+  department: "Engineering",
+  limit: 100,
+  image: img14,
+},
+{
+  id: 10,
+  programName: "Tech Meetup",
+  eventName: "Cyber Security Awareness Program",
+  description: "Session on cyber threats, safety, and best practices.",
+  date: "2025-07-10",
+  startTime: "14:00",
+  endTime: "17:00",
+  venue: "Conference Hall",
+  latitude: 11.2594,
+  longitude: 75.7810,
+  incharge: "Ms. Priya Nandakumar",
+  department: "Computer Applications",
+  limit: 120,
+  image: img16,
+}
+
+];

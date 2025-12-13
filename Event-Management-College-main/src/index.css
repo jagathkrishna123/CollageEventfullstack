@@ -1,24 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Outfit:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@300;400;500;600;700&family=Lexend+Deca:wght@100..900&display=swap");
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Outfit:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@300;400;500;600;700&family=Lexend+Deca:wght@100..900&display=swap');
-
 .font-out {
-    font-family: "Outfit", sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
 .font-momo {
-    font-family: "Momo Trust Display", sans-serif;
+  font-family: "Momo Trust Display", sans-serif;
 }
 
 .font-hind {
-  font-family: 'Hind', sans-serif;
+  font-family: "Hind", sans-serif;
 }
 
 .font-lexend {
-  font-family: 'Lexend Deca', sans-serif;
+  font-family: "Lexend Deca", sans-serif;
 }
 .font-ark {
-  font-family: 'Archivo Black', sans-serif;
+  font-family: "Archivo Black", sans-serif;
 }
 
 html {

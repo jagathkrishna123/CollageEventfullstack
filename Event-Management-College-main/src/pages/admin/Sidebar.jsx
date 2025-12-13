@@ -14,8 +14,8 @@ const Sidebar = () => {
             <p className='hidden md:inline-block'>Dashboard</p>
         </NavLink>
         
-        <NavLink  to='/admin/addProgram' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-           <MdOutlineAddBox />
+        <NavLink  to='/admin/admin-add-program' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
+           <MdOutlineAddBox className='text-[18px]' />
             <p className='hidden md:inline-block'>Add Program</p>
         </NavLink>
 
