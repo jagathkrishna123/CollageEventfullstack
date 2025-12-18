@@ -53,7 +53,7 @@ const AddProgram = () => {
   };
 
   return (
-    <div className="text-white p-6">
+    <div className="text-gray-200 p-6 font-out">
       <h1 className="text-3xl font-bold mb-8">Add New Program</h1>
 
       <form
@@ -117,7 +117,7 @@ const AddProgram = () => {
           <label className="block text-gray-300 mb-2">Program Image</label>
           <input
             type="file"
-            className="text-gray-300"
+            className="text-gray-700 bg-slate-300 p-2 rounded-md cursor-pointer"
             onChange={(e) => setImage(e.target.files[0])}
           />
         </div>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { Items } from "../../Constants/ProgramData";
 import { useNavigate } from "react-router-dom";
+import Bgimage from "../../assets/bground.svg"
 
 export function LandingPage() {
 
@@ -36,11 +37,28 @@ export function LandingPage() {
     }, [currentIndex, Items.length]);
 
     return (
-        <div className="flex items-center justify-center w-full min-h-screen relative overflow-hidden">
+            <div className="flex items-center justify-center w-full min-h-screen relative overflow-hidden pt-[70px]">
+
             {/* Dark Blue Gradient Background - Matching reference image and navbar */}
             <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-slate-900 to-slate-950"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 via-transparent to-blue-900/20"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+             <img
+  src={Bgimage}
+  alt="background blob"
+  className="
+    absolute
+    top-[45%] left-1/2
+    -translate-x-1/2 -translate-y-1/2
+    w-[700px] sm:w-[900px] md:w-[1100px] lg:w-[1550px]
+    opacity-35
+    blur-[2px]
+    pointer-events-none
+    select-none
+    z-[1]
+  "
+/>
+
             
             <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-2 gap-6 relative z-10">
 

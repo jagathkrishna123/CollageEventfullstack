@@ -37,7 +37,7 @@ const OurPrograms = () => {
               transition={{ duration: 0.5 }}
               className="text-[24px] md:text-[36px] font-bold font-lexend text-gray-600"
             >
-              <span className="text-cyan-600">College Events</span>
+              <span className="text-cyan-600">College Programs</span>
             </motion.h2>
           </div>
 

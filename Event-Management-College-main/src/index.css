@@ -20,11 +20,11 @@
   font-family: "Archivo Black", sans-serif;
 }
 
-html {
+/* html {
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
-}
+} */
 
 /* Hide scrollbar but keep scrolling functionality */
 ::-webkit-scrollbar {

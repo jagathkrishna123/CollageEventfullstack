@@ -260,7 +260,7 @@ const AddEvent = () => {
             type="file"
             accept="image/*"
             name="poster"
-            className="text-gray-300"
+            className="text-gray-700 bg-slate-300 p-2 rounded-md cursor-pointer"
             onChange={handleSingleImageChange}
           />
         </div>
@@ -273,7 +273,7 @@ const AddEvent = () => {
             accept="image/*"
             multiple
             name="priceImages"
-            className="text-gray-300"
+            className="text-gray-700 bg-slate-300 p-2 rounded-md cursor-pointer"
             onChange={handleMultipleImagesChange}
           />
           {eventData.priceImages.length > 0 && (
@@ -306,7 +306,7 @@ const AddEvent = () => {
             accept="image/*"
             multiple
             name="sponsorImages"
-            className="text-gray-300"
+            className="text-gray-700 bg-slate-300 p-2 rounded-md cursor-pointer"
             onChange={handleMultipleImagesChange}
           />
           {eventData.sponsorImages.length > 0 && (

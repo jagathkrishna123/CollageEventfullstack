@@ -44,7 +44,7 @@ export function UpcomingEvents() {
                             <h5 className=" text-[14px] lg:text-[18px] font-semibold text-white font-momo">
                                 UPCOMING EVENTS
                             </h5>
-                            <img src={time} alt="Time icon" className="w-4 h-4" />
+                            {/* <img src={time} alt="Time icon" className="w-4 h-4" /> */}
                         </div>
                     </div>
 

@@ -2,6 +2,10 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { MdOutlineAddBox } from "react-icons/md";
+import { IoMdAddCircleOutline } from 'react-icons/io';
+import { TbMessage } from 'react-icons/tb';
+import { PiUserCheckBold } from 'react-icons/pi';
+import { CgNotes } from 'react-icons/cg';
 
 
 // import { assets } from '../../assets/assets'
@@ -20,22 +24,22 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink  to='/admin/addevent' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <MdOutlineAddBox />
+            <IoMdAddCircleOutline />
             <p className='hidden md:inline-block'>Add Event</p>
         </NavLink>
 
         <NavLink  to='/admin/feedback' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-           <MdOutlineAddBox />
+           <TbMessage />
             <p className='hidden md:inline-block'>Feedback</p>
         </NavLink>
 
         <NavLink  to='/admin/attendence' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-           <MdOutlineAddBox />
+           <PiUserCheckBold />
             <p className='hidden md:inline-block'>Attendance</p>
         </NavLink>
 
         <NavLink  to='/admin/registrations' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-           <MdOutlineAddBox />
+           <CgNotes />
             <p className='hidden md:inline-block'>Registrations</p>
         </NavLink>
     </div>

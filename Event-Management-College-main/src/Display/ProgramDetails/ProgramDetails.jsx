@@ -13,7 +13,7 @@ const ProgramDetails = () => {
   }, [id]);
 
   return showDetail ? (
-    <div className="min-h-screen  bg-[#03050F] text-white p-8">
+    <div className="min-h-screen  bg-[#03050F] text-white p-8 font-out">
       <div className="max-w-7xl mx-auto w-full items-center justify-center flex flex-col gap-5">
         <div className="max-w-xs w-full border border-[#2F53E0] rounded-4xl p-2 text-center">
           <p className="font-semibold text-[16px]">
@@ -77,7 +77,7 @@ const ProgramDetails = () => {
             <p className="bg-gradient-to-r from-[#2F53E0] to-[#FCFCFC] bg-clip-text text-transparent text-[40px] font-bold">
               About the {showDetail.Name}
             </p>
-            <p className="text-white text-md leading-relaxed">
+            <p className="text-white text-md leading-loose">
               {showDetail.Description}
             </p>
           </div>
@@ -102,33 +102,25 @@ const ProgramDetails = () => {
     </h2>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {EVENTDATAS.filter(e => e.programName === showDetail.Name).map(event => (
-        <div
-          key={event.id}
-          className="bg-white/5 p-5 border border-[#00A9E8] rounded-2xl backdrop-blur-lg hover:shadow-lg transition"
-        >
-          <img
-            src={event.image}
-            alt={event.name}
-            className="w-full h-40 object-cover rounded-xl mb-4"
-          />
+     {EVENTDATAS
+  .filter(e => e.programName === showDetail.Name)
+  .map(event => (
+    <div
+      key={event.id}
+      onClick={() => navigate(`/eventdetails/${event.id}`)}
+      className="bg-white/5 p-5 border border-[#00A9E8] rounded-2xl backdrop-blur-lg hover:shadow-lg transition cursor-pointer"
+    >
+      <img
+        src={event.image}
+        alt={event.eventName}
+        className="w-full h-40 object-cover rounded-xl mb-4"
+      />
 
-          <h3 className="text-xl font-semibold">{event.eventName}</h3>
-          <p className="text-gray-300 text-[14px]">{event.department}</p>
-          <p className="text-gray-300 text-[12px]">{event.description}</p>
-          
-
-          {/* <p className="text-gray-400 mt-2">
-            <strong>Venue:</strong> {event.venue}
-          </p>
-          <p className="text-gray-400">
-            <strong>Prize:</strong> {event.prize}
-          </p>
-          <p className="text-gray-400">
-            <strong>Registered:</strong> {event.registered}
-          </p> */}
-        </div>
-      ))}
+      <h3 className="text-xl font-semibold">{event.eventName}</h3>
+      <p className="text-gray-300 text-[14px]">{event.department}</p>
+      <p className="text-gray-300 text-[12px]">{event.description}</p>
+    </div>
+))}
     </div>
   </div>
 )}

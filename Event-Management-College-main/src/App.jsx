@@ -18,10 +18,11 @@ import AdminRegistrations from "./pages/admin/Registrations";
 import AdminAttendence from "./pages/admin/Attendence";
 import AddProgram from "./pages/admin/AddProgram";
 import TeacherAddProgram from "./pages/teacher/TeacherAddProgram";
+import EventDeatils from "./Display/EventDetails/EventDeatils";
 
 function App() {
   const {pathname} = useLocation()
-  const hideLayout = pathname.includes("admin") || pathname.includes("teacher");
+  const hideLayout = pathname.includes("admin") || pathname.includes("teacher")|| pathname.includes("login");
   return (
     <div className="bg-gradient-to-br from-neutral-900 via-gray-900 to-black
 ">
@@ -32,6 +33,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Display />} />
           <Route path="/programdetails/:id" element={<ProgramDetails />} />
+          <Route path="/eventdetails/:id" element={<EventDeatils/>} />
           <Route path="/login" element={<Login/>} />
           <Route path='/teacher' element={true ? <Layout/> : <Login/>}>
             <Route index element={<TeacherDashboard/>}/>

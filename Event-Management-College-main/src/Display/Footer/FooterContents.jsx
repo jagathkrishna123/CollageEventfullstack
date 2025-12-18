@@ -4,6 +4,7 @@ import {  FaLinkedin } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { SlSocialInstagram } from "react-icons/sl";
+import Logo2 from "../../assets/logo2.png";
 
 
 
@@ -13,7 +14,18 @@ export default function FooterContents() {
       <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo & Description */}
         <div>
-          <h2 className="text-2xl font-semibold mb-3 font-momo">YourWebsite</h2>
+          <div className="flex items-center w-[150px] h-[48px]">
+  <div className="flex items-center h-[44px]">
+    <img src={Logo2} alt="Logo" className="w-[32px]" />
+  </div>
+
+  <div className="flex items-center justify-center ml-2">
+    <h2 className="font-sans font-bold text-white text-[18px]">
+      DOCKET
+    </h2>
+  </div>
+</div>
+
           <p className="text-gray-300 text-sm leading-relaxed">
             Empowering students with technology, innovation, and learning.
           </p>

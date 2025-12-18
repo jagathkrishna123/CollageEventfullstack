@@ -12,10 +12,10 @@ const Login = () => {
     event.preventDefault()
   }
   return (
-    <form className='min-h-[80vh] flex item-cneter'>
-<div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 
+    <form className='min-h-[100vh] flex item-cneter'>
+<div className='flex flex-col gap-3 m-auto items-start p-8 pt-10 min-w-[340px] sm:min-w-96 
 bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl text-gray-200 text-sm shadow-xl'>
-          <p className='text-2xl font-semibold'>{state === 'Sign Up' ? "Cereate Account" : "Login"}</p>
+          <p className='text-2xl font-semibold'>{state === 'Sign Up' ? "Create Account" : "Login"}</p>
           <p>Please {state === 'Sign Up' ? "sign up" : "log in"} to book appointment</p>
           {
             state === "Sign Up" && 
@@ -33,11 +33,11 @@ bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl text-gray-200 
             <p>Password</p>
             <input className='border border-gray-500 rounded w-full p-2 mt-1' type="password" onChange={(e) => setPassword(e.target.password)} value={password} />
           </div>
-          <button className='bg-primary text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? "Cereate Account" : "Login"}</button>
+          <button className='bg-blue-950 text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? "Create Account" : "Login"}</button>
         {
           state === "Sign Up"
-          ? <p>Already have an account? <span onClick={()=>setState('Login')} className='text-primary underline cursor-pointer'>Login here</span></p>
-          : <p>Create a new account? <span onClick={()=>setState('Sign Up')} className='text-primary underline cursor-pointer'>Click here</span></p>
+          ? <p>Already have an account? <span onClick={()=>setState('Login')} className='text-blue-800 underline cursor-pointer'>Login here</span></p>
+          : <p>Create a new account? <span onClick={()=>setState('Sign Up')} className='text-blue-800 underline cursor-pointer'>Click here</span></p>
         }
         </div>
     </form>
