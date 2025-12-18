@@ -14,7 +14,7 @@ const ProgramDetails = () => {
 
   return showDetail ? (
     <div className="min-h-screen  bg-[#03050F] text-white p-8 font-out">
-      <div className="max-w-7xl mx-auto w-full items-center justify-center flex flex-col gap-5">
+      <div className="max-w-7xl mx-auto w-full items-center justify-center flex flex-col gap-5 pt-30">
         <div className="max-w-xs w-full border border-[#2F53E0] rounded-4xl p-2 text-center">
           <p className="font-semibold text-[16px]">
             {showDetail.programDate} : {showDetail.programTime}
@@ -41,30 +41,43 @@ const ProgramDetails = () => {
           <div className="flex flex-row flex-wrap justify-center gap-6">
             {showDetail.features.map((feature, index) => (
               <div
-                key={index}
-                className="group flex flex-col items-center text-center 
-                   p-4 rounded-2xl bg-white/5 backdrop-blur-md 
-                   border border-white/10 shadow-md 
-                   hover:shadow-[0_0_15px_rgba(63,131,248,0.4)] 
-                   transition-all duration-300 cursor-pointer"
-              >
-                {/* Icon Box */}
-                <div
-                  className="flex items-center justify-center
-                     w-14 h-14 rounded-xl 
-                     bg-gradient-to-br from-[#1a2cff33] to-[#1a2cff11]
-                     border border-[#2F53E0]/40
-                     group-hover:scale-110 group-hover:border-[#2F53E0]
-                     transition-all duration-300"
-                >
-                  <feature.icon className="text-white text-2xl drop-shadow" />
-                </div>
+  key={index}
+  className="
+    group
+    flex flex-col items-center text-center
+    p-3 sm:p-4
+    rounded-xl sm:rounded-2xl
+    bg-white/5 backdrop-blur-md
+    border border-white/10
+    shadow-sm
+    hover:shadow-[0_0_12px_rgba(63,131,248,0.4)]
+    transition-all duration-300
+    cursor-pointer
+    w-[110px] sm:w-[140px]
+  "
+>
+  {/* Icon Box */}
+  <div
+    className="
+      flex items-center justify-center
+      w-10 h-10 sm:w-14 sm:h-14
+      rounded-lg sm:rounded-xl
+      bg-gradient-to-br from-[#1a2cff33] to-[#1a2cff11]
+      border border-[#2F53E0]/40
+      group-hover:scale-105
+      group-hover:border-[#2F53E0]
+      transition-all duration-300
+    "
+  >
+    <feature.icon className="text-white text-lg sm:text-2xl drop-shadow" />
+  </div>
 
-                {/* Feature Name */}
-                <p className="text-white text-sm font-medium mt-3 leading-tight">
-                  {feature.name}
-                </p>
-              </div>
+  {/* Feature Name */}
+  <p className="text-white text-xs sm:text-sm font-medium mt-2 sm:mt-3 leading-tight">
+    {feature.name}
+  </p>
+</div>
+
             ))}
           </div>
         </div>
@@ -117,8 +130,8 @@ const ProgramDetails = () => {
       />
 
       <h3 className="text-xl font-semibold">{event.eventName}</h3>
-      <p className="text-gray-300 text-[14px]">{event.department}</p>
-      <p className="text-gray-300 text-[12px]">{event.description}</p>
+      <p className="text-gray-300 text-[14px] ">{event.department}</p>
+      <p className="text-gray-300 text-[12px] line-clamp-2">{event.description}</p>
     </div>
 ))}
     </div>

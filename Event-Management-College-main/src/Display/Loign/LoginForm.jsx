@@ -2,7 +2,7 @@
 import React from 'react'
 import { useAppContext } from '../../context/AppContext';
 
-const Login = () => {
+const LoginForm = () => {
     const {setShowUserLogin, setUser} = useAppContext() //passing state from appcontext
 
     const [state, setState] = React.useState("login");
@@ -56,4 +56,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default LoginForm

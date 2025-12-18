@@ -19,14 +19,19 @@ import AdminAttendence from "./pages/admin/Attendence";
 import AddProgram from "./pages/admin/AddProgram";
 import TeacherAddProgram from "./pages/teacher/TeacherAddProgram";
 import EventDeatils from "./Display/EventDetails/EventDeatils";
+import LoginForm from "./Display/Loign/LoginForm";
+import { useAppContext } from "./context/AppContext";
+import ScrollToTop from "./Display/ScrollToTop";
 
 function App() {
   const {pathname} = useLocation()
   const hideLayout = pathname.includes("admin") || pathname.includes("teacher")|| pathname.includes("login");
+  const {showUserLogin, user} = useAppContext()
   return (
     <div className="bg-gradient-to-br from-neutral-900 via-gray-900 to-black
 ">
-      
+    <ScrollToTop/>
+      {showUserLogin && <LoginForm/>}
       <div className="w-full">
         {!hideLayout && <NavBar />}
       </div>
