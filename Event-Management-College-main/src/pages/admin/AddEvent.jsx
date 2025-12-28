@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { PROGRAMS } from "../../Constants/ProgramData";
-import { useParams } from "react-router-dom";
+import { PROGRAMS, EVENTDATAS } from "../../Constants/ProgramData";
+import { useParams, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 const AddEvent = () => {
   const { id } = useParams();
-const isEditMode = Boolean(id);
+  const location = useLocation();
+  const isEditMode = Boolean(id);
   const [eventData, setEventData] = useState({
     programName: "",
     eventName: "",
@@ -33,29 +34,89 @@ const isEditMode = Boolean(id);
     membersPerTeamFromDepartment: "",
     teamsPerDepartment: "",
   });
+  
   useEffect(() => {
-  if (!id) return;
+    if (!id) return;
 
-  const fetchEvent = async () => {
-    try {
-      const res = await axios.get(`http://localhost:3000/event/${id}`);
-      const event = res.data;
-
+    // First, check if event data was passed via navigation state
+    if (location.state?.eventData) {
+      const event = location.state.eventData;
       setEventData({
-        ...event,
+        programName: event.programName || "",
+        eventName: event.eventName || "",
+        description: event.description || "",
+        date: event.date || "",
+        startTime: event.startTime || "",
+        endTime: event.endTime || "",
+        venue: event.venue || "",
+        latitude: event.latitude || "",
+        longitude: event.longitude || "",
+        incharge: event.incharge || "",
+        department: event.department || "",
+        limit: event.limit || "",
         poster: null,
         priceImage: null,
         sponsorImages: [],
+        participationType: event.participationType || "",
+        overallIndividualLimit: event.overallIndividualLimit || "",
+        departmentIndividualLimit: event.departmentIndividualLimit || "",
+        membersPerTeamFromDepartment: event.membersPerTeamFromDepartment || "",
+        teamsPerDepartment: event.teamsPerDepartment || "",
       });
-
-      setSearchTerm(event.programName);
-    } catch (error) {
-      console.error(error);
+      setSearchTerm(event.programName || "");
+      return;
     }
-  };
 
-  fetchEvent();
-}, [id]);
+    // Second, check local EVENTDATAS
+    const localEvent = EVENTDATAS.find(e => e.id === parseInt(id));
+    if (localEvent) {
+      setEventData({
+        programName: localEvent.programName || "",
+        eventName: localEvent.eventName || "",
+        description: localEvent.description || "",
+        date: localEvent.date || "",
+        startTime: localEvent.startTime || "",
+        endTime: localEvent.endTime || "",
+        venue: localEvent.venue || "",
+        latitude: localEvent.latitude || "",
+        longitude: localEvent.longitude || "",
+        incharge: localEvent.incharge || "",
+        department: localEvent.department || "",
+        limit: localEvent.limit || "",
+        poster: null,
+        priceImage: null,
+        sponsorImages: [],
+        participationType: localEvent.participationType || "",
+        overallIndividualLimit: localEvent.overallIndividualLimit || "",
+        departmentIndividualLimit: localEvent.departmentIndividualLimit || "",
+        membersPerTeamFromDepartment: localEvent.membersPerTeamFromDepartment || "",
+        teamsPerDepartment: localEvent.teamsPerDepartment || "",
+      });
+      setSearchTerm(localEvent.programName || "");
+      return;
+    }
+
+    // Third, try to fetch from API
+    const fetchEvent = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/event/${id}`);
+        const event = res.data;
+
+        setEventData({
+          ...event,
+          poster: null,
+          priceImage: null,
+          sponsorImages: [],
+        });
+
+        setSearchTerm(event.programName || "");
+      } catch (error) {
+        console.error("Error fetching event:", error);
+      }
+    };
+
+    fetchEvent();
+  }, [id, location.state]);
 
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -138,7 +199,7 @@ const isEditMode = Boolean(id);
 
   return (
     <div className="text-white p-6 w-full overflow-y-auto">
-      <h1 className="text-3xl font-bold mb-8">Add New Event</h1>
+      <h1 className="text-3xl font-bold mb-8">{isEditMode ? "Edit Event" : "Add New Event"}</h1>
 
       <form
         onSubmit={handleSubmit}
@@ -176,77 +237,96 @@ const isEditMode = Boolean(id);
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Event Name</label>
           <input
-  type="text"
-  name="eventName"
-  value={eventData.eventName}
-  onChange={handleChange}
-/>
+            type="text"
+            name="eventName"
+            value={eventData.eventName}
+            onChange={handleChange}
+            className="w-full p-3 bg-gray-800 rounded"
+          />
         </div>
 
         {/* DESCRIPTION */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Description</label>
           <textarea
-  name="description"
-  value={eventData.description}
-  onChange={handleChange}
-/>
+            name="description"
+            value={eventData.description}
+            onChange={handleChange}
+            className="w-full p-3 bg-gray-800 rounded"
+            rows="4"
+          />
         </div>
 
         {/* DATE & TIME */}
         <div className="grid md:grid-cols-3 gap-6 mb-6">
           <div>
             <label className="block mb-2 text-gray-300">Event Date</label>
-<input
-  type="date"
-  name="date"
-  value={eventData.date}
-  onChange={handleChange}
-/>          </div>
+            <input
+              type="date"
+              name="date"
+              value={eventData.date}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-800 rounded"
+            />
+          </div>
 
           <div>
             <label className="block mb-2 text-gray-300">Start Time</label>
-<input
-  type="time"
-  name="startTime"
-  value={eventData.startTime}
-  onChange={handleChange}
-/>
+            <input
+              type="time"
+              name="startTime"
+              value={eventData.startTime}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-800 rounded"
+            />
           </div>
 
           <div>
             <label className="block mb-2 text-gray-300">End Time</label>
-<input
-  type="time"
-  name="endTime"
-  value={eventData.endTime}
-  onChange={handleChange}
-/>
+            <input
+              type="time"
+              name="endTime"
+              value={eventData.endTime}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-800 rounded"
+            />
           </div>
         </div>
 
         {/* VENUE */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Venue</label>
-<input
-  type="text"
-  name="venue"
-  value={eventData.venue}
-  onChange={handleChange}
-/>
+          <input
+            type="text"
+            name="venue"
+            value={eventData.venue}
+            onChange={handleChange}
+            className="w-full p-3 bg-gray-800 rounded"
+          />
         </div>
 
         {/* LAT & LNG */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Venue Location</label>
           <div className="grid md:grid-cols-2 gap-6">
-<input
-  type="number"
-  name="latitude"
-  value={eventData.latitude}
-  onChange={handleChange}
-/>
-            <input type="number" step="any" name="longitude" value={eventData.longitude} placeholder="Longitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
+            <input
+              type="number"
+              step="any"
+              name="latitude"
+              value={eventData.latitude}
+              onChange={handleChange}
+              placeholder="Latitude"
+              className="p-3 bg-gray-800 rounded w-full"
+            />
+            <input
+              type="number"
+              step="any"
+              name="longitude"
+              value={eventData.longitude}
+              placeholder="Longitude"
+              className="p-3 bg-gray-800 rounded w-full"
+              onChange={handleChange}
+            />
           </div>
         </div>
 
@@ -254,17 +334,24 @@ const isEditMode = Boolean(id);
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
             <label className="block mb-2 text-gray-300">Department</label>
-<input
-  type="text"
-  name="department"
-  value={eventData.department}
-  onChange={handleChange}
-/>
+            <input
+              type="text"
+              name="department"
+              value={eventData.department}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-800 rounded"
+            />
           </div>
 
           <div>
             <label className="block mb-2 text-gray-300">Incharge</label>
-            <input type="text" name="incharge" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            <input
+              type="text"
+              name="incharge"
+              value={eventData.incharge}
+              onChange={handleChange}
+              className="p-3 bg-gray-800 rounded w-full"
+            />
           </div>
         </div>
 
@@ -304,11 +391,23 @@ const isEditMode = Boolean(id);
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block mb-2 text-gray-300">Overall Participant Limit</label>
-              <input type="number" name="overallIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+              <input
+                type="number"
+                name="overallIndividualLimit"
+                value={eventData.overallIndividualLimit}
+                onChange={handleChange}
+                className="p-3 bg-gray-800 rounded w-full"
+              />
             </div>
             <div>
               <label className="block mb-2 text-gray-300">Participants Per Department</label>
-              <input type="number" name="departmentIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+              <input
+                type="number"
+                name="departmentIndividualLimit"
+                value={eventData.departmentIndividualLimit}
+                onChange={handleChange}
+                className="p-3 bg-gray-800 rounded w-full"
+              />
             </div>
           </div>
         )}
@@ -318,11 +417,23 @@ const isEditMode = Boolean(id);
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block mb-2 text-gray-300">Teams Per Department</label>
-              <input type="number" name="teamsPerDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+              <input
+                type="number"
+                name="teamsPerDepartment"
+                value={eventData.teamsPerDepartment}
+                onChange={handleChange}
+                className="p-3 bg-gray-800 rounded w-full"
+              />
             </div>
             <div>
               <label className="block mb-2 text-gray-300">Members Per Team</label>
-              <input type="number" name="membersPerTeamFromDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+              <input
+                type="number"
+                name="membersPerTeamFromDepartment"
+                value={eventData.membersPerTeamFromDepartment}
+                onChange={handleChange}
+                className="p-3 bg-gray-800 rounded w-full"
+              />
             </div>
           </div>
         )}

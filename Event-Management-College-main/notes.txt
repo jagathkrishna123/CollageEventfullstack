@@ -333,3 +333,580 @@ bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl text-gray-200 
 }
 
 export default Login
+
+///////////////////////////////////////////////////////
+import React, { useState } from "react";
+import axios from "axios";
+import { PROGRAMS } from "../../Constants/ProgramData";
+
+const AddEvent = () => {
+  const [eventData, setEventData] = useState({
+    programName: "",
+    eventName: "",
+    description: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    venue: "",
+    latitude: "",
+    longitude: "",
+    incharge: "",
+    department: "",
+    limit: "",
+
+    // Images
+    poster: null,
+    priceImage: null,
+    sponsorImages: [],
+
+    // Participation
+    participationType: "",
+    overallIndividualLimit: "",
+    departmentIndividualLimit: "",
+    membersPerTeamFromDepartment: "",
+    teamsPerDepartment: "",
+  });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const filteredPrograms = PROGRAMS.filter((program) =>
+    program.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEventData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleProgramSelect = (program) => {
+    setEventData((prev) => ({ ...prev, programName: program.name }));
+    setSearchTerm(program.name);
+    setShowSuggestions(false);
+  };
+
+  const handlePosterImage = (e) => {
+    setEventData((prev) => ({ ...prev, poster: e.target.files[0] }));
+  };
+
+  const handlePriceImage = (e) => {
+    setEventData((prev) => ({ ...prev, priceImage: e.target.files[0] }));
+  };
+
+  const handleSponsorImages = (e) => {
+    const files = Array.from(e.target.files);
+    setEventData((prev) => ({
+      ...prev,
+      sponsorImages: [...prev.sponsorImages, ...files].slice(0, 3),
+    }));
+  };
+
+  const removeSponsorImage = (index) => {
+    setEventData((prev) => ({
+      ...prev,
+      sponsorImages: prev.sponsorImages.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+
+      Object.entries(eventData).forEach(([key, value]) => {
+        if (key === "sponsorImages") {
+          value.forEach((img) => formData.append("sponsorImages", img));
+        } else {
+          formData.append(key, value);
+        }
+      });
+
+      await axios.post("http://localhost:3000/event/addEvent", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Event added successfully");
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  return (
+    <div className="text-white p-6 w-full overflow-y-auto">
+      <h1 className="text-3xl font-bold mb-8">Add New Event</h1>
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-5xl mx-auto"
+      >
+        {/* PROGRAM SEARCH */}
+        <div className="mb-6 relative">
+          <label className="block mb-2 text-gray-300">Program Name</label>
+          <input
+            type="text"
+            value={searchTerm}
+            placeholder="Search program..."
+            className="w-full p-3 bg-gray-800 rounded"
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowSuggestions(true);
+            }}
+          />
+          {showSuggestions && (
+            <ul className="absolute w-full bg-gray-800 mt-1 rounded">
+              {filteredPrograms.map((program) => (
+                <li
+                  key={program.id}
+                  onClick={() => handleProgramSelect(program)}
+                  className="p-2 hover:bg-gray-700 cursor-pointer"
+                >
+                  {program.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* EVENT NAME */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Event Name</label>
+          <input
+            type="text"
+            name="eventName"
+            className="w-full p-3 bg-gray-800 rounded"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* DESCRIPTION */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Description</label>
+          <textarea
+            name="description"
+            className="w-full p-3 bg-gray-800 rounded h-28"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* DATE & TIME */}
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <div>
+            <label className="block mb-2 text-gray-300">Event Date</label>
+            <input type="date" name="date" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-gray-300">Start Time</label>
+            <input type="time" name="startTime" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-gray-300">End Time</label>
+            <input type="time" name="endTime" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* VENUE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Venue</label>
+          <input type="text" name="venue" className="w-full p-3 bg-gray-800 rounded" onChange={handleChange} />
+        </div>
+
+        {/* LAT & LNG */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Venue Location</label>
+          <div className="grid md:grid-cols-2 gap-6">
+            <input type="number" step="any" name="latitude" placeholder="Latitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
+            <input type="number" step="any" name="longitude" placeholder="Longitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* DEPARTMENT & INCHARGE */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label className="block mb-2 text-gray-300">Department</label>
+            <input type="text" name="department" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-gray-300">Incharge</label>
+            <input type="text" name="incharge" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* PARTICIPATION TYPE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Participation Type</label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2">
+              <input type="radio" name="participationType" value="individual" onChange={handleChange} />
+              Individual
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="radio" name="participationType" value="team" onChange={handleChange} />
+              Team
+            </label>
+          </div>
+        </div>
+
+        {/* INDIVIDUAL */}
+        {eventData.participationType === "individual" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block mb-2 text-gray-300">Overall Participant Limit</label>
+              <input type="number" name="overallIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block mb-2 text-gray-300">Participants Per Department</label>
+              <input type="number" name="departmentIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+          </div>
+        )}
+
+        {/* TEAM */}
+        {eventData.participationType === "team" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block mb-2 text-gray-300">Teams Per Department</label>
+              <input type="number" name="teamsPerDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block mb-2 text-gray-300">Members Per Team</label>
+              <input type="number" name="membersPerTeamFromDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+          </div>
+        )}
+
+        {/* EVENT POSTER */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Event Poster</label>
+          <input type="file" accept="image/*" onChange={handlePosterImage} />
+          {eventData.poster && <img src={URL.createObjectURL(eventData.poster)} className="w-24 mt-2 rounded" />}
+        </div>
+
+        {/* PRICE IMAGE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Price Image</label>
+          <input type="file" accept="image/*" onChange={handlePriceImage} />
+          {eventData.priceImage && <img src={URL.createObjectURL(eventData.priceImage)} className="w-24 mt-2 rounded" />}
+        </div>
+
+        {/* SPONSORS */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Sponsor Images (Max 3)</label>
+          <input type="file" accept="image/*" multiple onChange={handleSponsorImages} />
+
+          <div className="flex gap-3 mt-3">
+            {eventData.sponsorImages.map((img, i) => (
+              <div key={i} className="relative">
+                <img src={URL.createObjectURL(img)} className="w-20 h-20 object-cover rounded" />
+                <button
+                  type="button"
+                  onClick={() => removeSponsorImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-600 text-xs px-1 rounded"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold">
+          Add Event
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default AddEvent;
+//////////////////////////////////////////////////
+import React, { useState } from "react";
+import axios from "axios";
+import { PROGRAMS } from "../../Constants/ProgramData";
+
+const AddEvent = () => {
+  const [eventData, setEventData] = useState({
+    programName: "",
+    eventName: "",
+    description: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    venue: "",
+    latitude: "",
+    longitude: "",
+    incharge: "",
+    department: "",
+    limit: "",
+
+    // Images
+    poster: null,
+    priceImage: null,
+    sponsorImages: [],
+
+    // Participation
+    participationType: "",
+    overallIndividualLimit: "",
+    departmentIndividualLimit: "",
+    membersPerTeamFromDepartment: "",
+    teamsPerDepartment: "",
+  });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const filteredPrograms = PROGRAMS.filter((program) =>
+    program.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEventData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleProgramSelect = (program) => {
+    setEventData((prev) => ({ ...prev, programName: program.name }));
+    setSearchTerm(program.name);
+    setShowSuggestions(false);
+  };
+
+  const handlePosterImage = (e) => {
+    setEventData((prev) => ({ ...prev, poster: e.target.files[0] }));
+  };
+
+  const handlePriceImage = (e) => {
+    setEventData((prev) => ({ ...prev, priceImage: e.target.files[0] }));
+  };
+
+  const handleSponsorImages = (e) => {
+    const files = Array.from(e.target.files);
+    setEventData((prev) => ({
+      ...prev,
+      sponsorImages: [...prev.sponsorImages, ...files].slice(0, 3),
+    }));
+  };
+
+  const removeSponsorImage = (index) => {
+    setEventData((prev) => ({
+      ...prev,
+      sponsorImages: prev.sponsorImages.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+
+      Object.entries(eventData).forEach(([key, value]) => {
+        if (key === "sponsorImages") {
+          value.forEach((img) => formData.append("sponsorImages", img));
+        } else {
+          formData.append(key, value);
+        }
+      });
+
+      await axios.post("http://localhost:3000/event/addEvent", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Event added successfully");
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  return (
+    <div className="text-white p-6 w-full overflow-y-auto">
+      <h1 className="text-3xl font-bold mb-8">Add New Event</h1>
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-5xl mx-auto"
+      >
+        {/* PROGRAM SEARCH */}
+        <div className="mb-6 relative">
+          <label className="block mb-2 text-gray-300">Program Name</label>
+          <input
+            type="text"
+            value={searchTerm}
+            placeholder="Search program..."
+            className="w-full p-3 bg-gray-800 rounded"
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowSuggestions(true);
+            }}
+          />
+          {showSuggestions && (
+            <ul className="absolute w-full bg-gray-800 mt-1 rounded">
+              {filteredPrograms.map((program) => (
+                <li
+                  key={program.id}
+                  onClick={() => handleProgramSelect(program)}
+                  className="p-2 hover:bg-gray-700 cursor-pointer"
+                >
+                  {program.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* EVENT NAME */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Event Name</label>
+          <input
+            type="text"
+            name="eventName"
+            className="w-full p-3 bg-gray-800 rounded"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* DESCRIPTION */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Description</label>
+          <textarea
+            name="description"
+            className="w-full p-3 bg-gray-800 rounded h-28"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* DATE & TIME */}
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <div>
+            <label className="block mb-2 text-gray-300">Event Date</label>
+            <input type="date" name="date" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-gray-300">Start Time</label>
+            <input type="time" name="startTime" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-gray-300">End Time</label>
+            <input type="time" name="endTime" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* VENUE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Venue</label>
+          <input type="text" name="venue" className="w-full p-3 bg-gray-800 rounded" onChange={handleChange} />
+        </div>
+
+        {/* LAT & LNG */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Venue Location</label>
+          <div className="grid md:grid-cols-2 gap-6">
+            <input type="number" step="any" name="latitude" placeholder="Latitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
+            <input type="number" step="any" name="longitude" placeholder="Longitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* DEPARTMENT & INCHARGE */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label className="block mb-2 text-gray-300">Department</label>
+            <input type="text" name="department" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-gray-300">Incharge</label>
+            <input type="text" name="incharge" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* PARTICIPATION TYPE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Participation Type</label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2">
+              <input type="radio" name="participationType" value="individual" onChange={handleChange} />
+              Individual
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="radio" name="participationType" value="team" onChange={handleChange} />
+              Team
+            </label>
+          </div>
+        </div>
+
+        {/* INDIVIDUAL */}
+        {eventData.participationType === "individual" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block mb-2 text-gray-300">Overall Participant Limit</label>
+              <input type="number" name="overallIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block mb-2 text-gray-300">Participants Per Department</label>
+              <input type="number" name="departmentIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+          </div>
+        )}
+
+        {/* TEAM */}
+        {eventData.participationType === "team" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block mb-2 text-gray-300">Teams Per Department</label>
+              <input type="number" name="teamsPerDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block mb-2 text-gray-300">Members Per Team</label>
+              <input type="number" name="membersPerTeamFromDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+          </div>
+        )}
+
+        {/* EVENT POSTER */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Event Poster</label>
+          <input type="file" accept="image/*" onChange={handlePosterImage} />
+          {eventData.poster && <img src={URL.createObjectURL(eventData.poster)} className="w-24 mt-2 rounded" />}
+        </div>
+
+        {/* PRICE IMAGE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Price Image</label>
+          <input type="file" accept="image/*" onChange={handlePriceImage} />
+          {eventData.priceImage && <img src={URL.createObjectURL(eventData.priceImage)} className="w-24 mt-2 rounded" />}
+        </div>
+
+        {/* SPONSORS */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Sponsor Images (Max 3)</label>
+          <input type="file" accept="image/*" multiple onChange={handleSponsorImages} />
+
+          <div className="flex gap-3 mt-3">
+            {eventData.sponsorImages.map((img, i) => (
+              <div key={i} className="relative">
+                <img src={URL.createObjectURL(img)} className="w-20 h-20 object-cover rounded" />
+                <button
+                  type="button"
+                  onClick={() => removeSponsorImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-600 text-xs px-1 rounded"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold">
+          Add Event
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default AddEvent;

@@ -85,7 +85,7 @@ const ManageProgram = () => {
                   {/* ACTIONS */}
                   <td className="p-3 flex gap-2 justify-center">
                    <button
-  onClick={() => navigate(`/admin/addevent/${event.id}`)}
+  onClick={() => navigate(`/admin/addevent/${event.id}`, { state: { eventData: event } })}
   className="px-3 py-1 bg-blue-600 rounded"
 >
   Edit
