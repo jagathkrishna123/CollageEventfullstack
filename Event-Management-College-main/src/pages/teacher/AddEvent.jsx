@@ -16,53 +16,74 @@ const AddEvent = () => {
     incharge: "",
     department: "",
     limit: "",
+
+    // Images
     poster: null,
+    priceImage: null,
+    sponsorImages: [],
+
+    // Participation
+    participationType: "",
+    overallIndividualLimit: "",
+    departmentIndividualLimit: "",
+    membersPerTeamFromDepartment: "",
+    teamsPerDepartment: "",
   });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Filter programs
   const filteredPrograms = PROGRAMS.filter((program) =>
     program.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEventData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEventData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle program select
   const handleProgramSelect = (program) => {
-    setEventData((prev) => ({
-      ...prev,
-      programName: program.name,
-    }));
+    setEventData((prev) => ({ ...prev, programName: program.name }));
     setSearchTerm(program.name);
     setShowSuggestions(false);
   };
 
-  // Handle image
-  const handleImage = (e) => {
+  const handlePosterImage = (e) => {
+    setEventData((prev) => ({ ...prev, poster: e.target.files[0] }));
+  };
+
+  const handlePriceImage = (e) => {
+    setEventData((prev) => ({ ...prev, priceImage: e.target.files[0] }));
+  };
+
+  const handleSponsorImages = (e) => {
+    const files = Array.from(e.target.files);
     setEventData((prev) => ({
       ...prev,
-      poster: e.target.files[0],
+      sponsorImages: [...prev.sponsorImages, ...files].slice(0, 3),
     }));
   };
 
-  // Submit
+  const removeSponsorImage = (index) => {
+    setEventData((prev) => ({
+      ...prev,
+      sponsorImages: prev.sponsorImages.filter((_, i) => i !== index),
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const formData = new FormData();
-      Object.entries(eventData).forEach(([key, value]) =>
-        formData.append(key, value)
-      );
+
+      Object.entries(eventData).forEach(([key, value]) => {
+        if (key === "sponsorImages") {
+          value.forEach((img) => formData.append("sponsorImages", img));
+        } else {
+          formData.append(key, value);
+        }
+      });
 
       await axios.post("http://localhost:3000/event/addEvent", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -89,21 +110,19 @@ const AddEvent = () => {
             type="text"
             value={searchTerm}
             placeholder="Search program..."
-            className="w-full p-3 bg-gray-800 rounded outline-none"
+            className="w-full p-3 bg-gray-800 rounded"
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setShowSuggestions(true);
             }}
-            onFocus={() => setShowSuggestions(true)}
           />
-
-          {showSuggestions && filteredPrograms.length > 0 && (
-            <ul className="absolute z-10 w-full bg-gray-800 border border-gray-700 rounded mt-1 max-h-48 overflow-y-auto">
+          {showSuggestions && (
+            <ul className="absolute w-full bg-gray-800 mt-1 rounded">
               {filteredPrograms.map((program) => (
                 <li
                   key={program.id}
                   onClick={() => handleProgramSelect(program)}
-                  className="p-3 hover:bg-gray-700 cursor-pointer"
+                  className="p-2 hover:bg-gray-700 cursor-pointer"
                 >
                   {program.name}
                 </li>
@@ -118,7 +137,7 @@ const AddEvent = () => {
           <input
             type="text"
             name="eventName"
-            className="w-full p-3 bg-gray-800 rounded outline-none"
+            className="w-full p-3 bg-gray-800 rounded"
             onChange={handleChange}
           />
         </div>
@@ -128,132 +147,136 @@ const AddEvent = () => {
           <label className="block mb-2 text-gray-300">Description</label>
           <textarea
             name="description"
-            className="w-full p-3 bg-gray-800 rounded outline-none h-28"
+            className="w-full p-3 bg-gray-800 rounded h-28"
             onChange={handleChange}
           />
         </div>
 
         {/* DATE & TIME */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
           <div>
             <label className="block mb-2 text-gray-300">Event Date</label>
-            <input
-              type="date"
-              name="date"
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
+            <input type="date" name="date" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
           </div>
 
           <div>
             <label className="block mb-2 text-gray-300">Start Time</label>
-            <input
-              type="time"
-              name="startTime"
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
+            <input type="time" name="startTime" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
           </div>
 
           <div>
             <label className="block mb-2 text-gray-300">End Time</label>
-            <input
-              type="time"
-              name="endTime"
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
+            <input type="time" name="endTime" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
           </div>
         </div>
 
         {/* VENUE */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Venue</label>
-          <input
-            type="text"
-            name="venue"
-            className="w-full p-3 bg-gray-800 rounded outline-none"
-            onChange={handleChange}
-          />
+          <input type="text" name="venue" className="w-full p-3 bg-gray-800 rounded" onChange={handleChange} />
         </div>
 
-        {/* LATITUDE & LONGITUDE */}
+        {/* LAT & LNG */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Venue Location</label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input
-              type="number"
-              step="any"
-              name="latitude"
-              placeholder="Latitude"
-              value={eventData.latitude}
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
-
-            <input
-              type="number"
-              step="any"
-              name="longitude"
-              placeholder="Longitude"
-              value={eventData.longitude}
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
+          <div className="grid md:grid-cols-2 gap-6">
+            <input type="number" step="any" name="latitude" placeholder="Latitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
+            <input type="number" step="any" name="longitude" placeholder="Longitude" className="p-3 bg-gray-800 rounded" onChange={handleChange} />
           </div>
         </div>
 
-        {/* DEPARTMENT, INCHARGE, LIMIT */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {/* DEPARTMENT & INCHARGE */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
             <label className="block mb-2 text-gray-300">Department</label>
-            <input
-              type="text"
-              name="department"
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
+            <input type="text" name="department" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
           </div>
 
           <div>
             <label className="block mb-2 text-gray-300">Incharge</label>
-            <input
-              type="text"
-              name="incharge"
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 text-gray-300">
-              Participation Limit
-            </label>
-            <input
-              type="number"
-              name="limit"
-              className="w-full p-3 bg-gray-800 rounded outline-none"
-              onChange={handleChange}
-            />
+            <input type="text" name="incharge" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
           </div>
         </div>
 
-        {/* POSTER */}
+        {/* PARTICIPATION TYPE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Participation Type</label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2">
+              <input type="radio" name="participationType" value="individual" onChange={handleChange} />
+              Individual
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="radio" name="participationType" value="team" onChange={handleChange} />
+              Team
+            </label>
+          </div>
+        </div>
+
+        {/* INDIVIDUAL */}
+        {eventData.participationType === "individual" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block mb-2 text-gray-300">Overall Participant Limit</label>
+              <input type="number" name="overallIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block mb-2 text-gray-300">Participants Per Department</label>
+              <input type="number" name="departmentIndividualLimit" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+          </div>
+        )}
+
+        {/* TEAM */}
+        {eventData.participationType === "team" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block mb-2 text-gray-300">Teams Per Department</label>
+              <input type="number" name="teamsPerDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block mb-2 text-gray-300">Members Per Team</label>
+              <input type="number" name="membersPerTeamFromDepartment" className="p-3 bg-gray-800 rounded w-full" onChange={handleChange} />
+            </div>
+          </div>
+        )}
+
+        {/* EVENT POSTER */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-300">Event Poster</label>
-          <input
-            type="file"
-            accept="image/*"
-            className="text-gray-300"
-            onChange={handleImage}
-          />
+          <input type="file" accept="image/*" onChange={handlePosterImage} />
+          {eventData.poster && <img src={URL.createObjectURL(eventData.poster)} className="w-24 mt-2 rounded" />}
         </div>
 
-        {/* SUBMIT */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold"
-        >
+        {/* PRICE IMAGE */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Price Image</label>
+          <input type="file" accept="image/*" onChange={handlePriceImage} />
+          {eventData.priceImage && <img src={URL.createObjectURL(eventData.priceImage)} className="w-24 mt-2 rounded" />}
+        </div>
+
+        {/* SPONSORS */}
+        <div className="mb-6">
+          <label className="block mb-2 text-gray-300">Sponsor Images (Max 3)</label>
+          <input type="file" accept="image/*" multiple onChange={handleSponsorImages} />
+
+          <div className="flex gap-3 mt-3">
+            {eventData.sponsorImages.map((img, i) => (
+              <div key={i} className="relative">
+                <img src={URL.createObjectURL(img)} className="w-20 h-20 object-cover rounded" />
+                <button
+                  type="button"
+                  onClick={() => removeSponsorImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-600 text-xs px-1 rounded"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold">
           Add Event
         </button>
       </form>

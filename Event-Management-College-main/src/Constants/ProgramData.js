@@ -278,7 +278,7 @@ export const EVENTDATAS = [
     programName: "Hackathon",
     eventName: "24 Hour Coding Challenge",
     description:
-      "A high-intensity 24-hour hackathon where teams collaborate to design, develop, and deploy innovative real-world solutions. Participants will brainstorm ideas, build functional prototypes, and present their projects to a panel of experts. This challenge tests problem-solving skills, coding efficiency, teamwork, and creativity under time pressure.",
+      "A high-intensity 24-hour hackathon where teams collaborate to design, develop, and deploy innovative real-world solutions.",
     date: "2025-03-18",
     startTime: "09:00",
     endTime: "09:00",
@@ -288,7 +288,23 @@ export const EVENTDATAS = [
     incharge: "Dr. Arun Kumar",
     department: "Computer Science",
     limit: 120,
-    image: img13,
+
+    // 🔹 Images (links)
+    poster: "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    priceImage: "https://images.unsplash.com/photo-1607082349566-187342175e2f",
+    sponsorImages: [
+      "https://images.unsplash.com/photo-1529612700005-e35377bf1415",
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+    ],
+
+    // 🔹 Participation
+    participationType: "team",
+    membersPerTeamFromDepartment: 4,
+    teamsPerDepartment: 5,
+
+    overallIndividualLimit: "",
+    departmentIndividualLimit: "",
   },
 
   {
@@ -296,7 +312,7 @@ export const EVENTDATAS = [
     programName: "Tech Meetup",
     eventName: "Future of Web Technologies",
     description:
-      "An expert-led technical meetup focusing on the future of web development. The session covers modern frontend frameworks, backend scalability, cloud deployment, and emerging trends such as AI-powered web applications. Participants will gain industry insights, real-world use cases, and opportunities to interact with experienced professionals.",
+      "An expert-led meetup focusing on modern frontend frameworks, backend scalability, and AI-powered web apps.",
     date: "2025-04-05",
     startTime: "10:00",
     endTime: "13:00",
@@ -306,7 +322,19 @@ export const EVENTDATAS = [
     incharge: "Ms. Sneha Raj",
     department: "Information Technology",
     limit: 80,
-    image: img20,
+
+    poster: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    priceImage: "https://images.unsplash.com/photo-1542744095-291d1f67b221",
+    sponsorImages: [
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    ],
+
+    participationType: "individual",
+    overallIndividualLimit: 80,
+    departmentIndividualLimit: 10,
+
+    membersPerTeamFromDepartment: "",
+    teamsPerDepartment: "",
   },
 
   {
@@ -314,7 +342,7 @@ export const EVENTDATAS = [
     programName: "Design Sprint",
     eventName: "UI/UX Design Workshop",
     description:
-      "A hands-on UI/UX design workshop aimed at teaching user-centered design principles. Participants will learn wireframing, prototyping, usability testing, and visual design fundamentals. The workshop includes practical exercises, team activities, and expert feedback to help students create intuitive and engaging digital experiences.",
+      "Hands-on workshop covering wireframing, prototyping, usability testing, and visual design fundamentals.",
     date: "2025-04-20",
     startTime: "11:00",
     endTime: "16:00",
@@ -324,7 +352,17 @@ export const EVENTDATAS = [
     incharge: "Mr. Rahul Menon",
     department: "Design & Media",
     limit: 60,
-    image: img21,
+
+    poster: "https://images.unsplash.com/photo-1559028012-d3cdbb3b1a41",
+    priceImage: "https://images.unsplash.com/photo-1492724441997-5dc865305da7",
+    sponsorImages: [],
+
+    participationType: "individual",
+    overallIndividualLimit: 60,
+    departmentIndividualLimit: 8,
+
+    membersPerTeamFromDepartment: "",
+    teamsPerDepartment: "",
   },
 
   {
@@ -332,7 +370,7 @@ export const EVENTDATAS = [
     programName: "Hackathon",
     eventName: "AI Model Building Contest",
     description:
-      "A competitive event where participants design and train intelligent AI models to solve predefined problem statements. The contest focuses on data preprocessing, model selection, training optimization, and performance evaluation. Teams will present their solutions, demonstrating innovation, accuracy, and real-world applicability.",
+      "Participants design and train AI models to solve real-world problems using data preprocessing and ML techniques.",
     date: "2025-05-02",
     startTime: "09:30",
     endTime: "17:30",
@@ -342,7 +380,20 @@ export const EVENTDATAS = [
     incharge: "Mr. Faisal Khan",
     department: "Artificial Intelligence",
     limit: 50,
-    image: img22,
+
+    poster: "https://images.unsplash.com/photo-1504639725590-34d0984388bd",
+    priceImage: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+    sponsorImages: [
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+    ],
+
+    participationType: "team",
+    membersPerTeamFromDepartment: 3,
+    teamsPerDepartment: 4,
+
+    overallIndividualLimit: "",
+    departmentIndividualLimit: "",
   },
 
   {
@@ -350,106 +401,177 @@ export const EVENTDATAS = [
     programName: "Design Sprint",
     eventName: "Community Innovation Drive",
     description:
-      "A collaborative innovation drive where students work together to identify and solve real-world community challenges. Participants will engage in research, ideation, and solution development focused on social impact. The event encourages creative thinking, teamwork, and socially responsible innovation.",
+      "Students collaborate to solve real-world community challenges with a focus on social impact.",
     date: "2025-05-15",
     startTime: "10:00",
     endTime: "14:00",
     venue: "City Park",
-    latitude: 11.2590,
+    latitude: 11.259,
     longitude: 75.7819,
     incharge: "Ms. Anjali Varma",
     department: "Social Sciences",
     limit: 100,
-    image: img11,
-  },
 
-  {
-    id: 6,
-    programName: "Hackathon",
-    eventName: "AI Innovation Challenge",
-    description:
-      "A 24-hour hackathon focused on building AI-powered solutions for real-world problems. Participants will work on problem analysis, data modeling, algorithm design, and prototype implementation. The challenge emphasizes innovation, practical AI usage, and teamwork under time constraints.",
-    date: "2025-06-05",
-    startTime: "09:00",
-    endTime: "09:00",
-    venue: "Innovation Lab",
-    latitude: 11.2585,
-    longitude: 75.7802,
-    incharge: "Mr. Rahul Menon",
-    department: "Computer Science",
-    limit: 80,
-    image: img23,
-  },
+    poster: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b",
+    priceImage: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0",
+    sponsorImages: [],
 
-  {
-    id: 7,
-    programName: "Tech Meetup",
-    eventName: "Web Development Bootcamp",
-    description:
-      "An intensive hands-on bootcamp covering modern web development technologies. Participants will learn frontend and backend concepts, build responsive applications, and explore best practices used in the industry. The bootcamp is designed for skill enhancement through practical implementation.",
-    date: "2025-06-12",
-    startTime: "10:00",
-    endTime: "16:00",
-    venue: "Seminar Hall 2",
-    latitude: 11.2601,
-    longitude: 75.7825,
-    incharge: "Ms. Neha Thomas",
-    department: "Information Technology",
-    limit: 60,
-    image: img13,
-  },
+    participationType: "individual",
+    overallIndividualLimit: 100,
+    departmentIndividualLimit: 15,
 
-  {
-    id: 8,
-    programName: "Design Sprint",
-    eventName: "UI/UX Design Workshop",
-    description:
-      "A practical design workshop focused on user-centered design methodologies. Participants will learn design thinking, wireframing, prototyping, and usability testing. The session encourages creativity and provides real-world design challenges to enhance design skills.",
-    date: "2025-06-20",
-    startTime: "11:00",
-    endTime: "15:00",
-    venue: "Design Studio",
-    latitude: 11.2579,
-    longitude: 75.7796,
-    incharge: "Mr. Arjun Nair",
-    department: "Design",
-    limit: 50,
-    image: img13,
+    membersPerTeamFromDepartment: "",
+    teamsPerDepartment: "",
   },
-
   {
-    id: 9,
-    programName: "Hackathon",
-    eventName: "Smart Campus Hack",
-    description:
-      "A hackathon dedicated to building smart solutions that enhance campus life. Participants will work on ideas related to sustainability, automation, security, and student experience. Teams will prototype innovative solutions that can be practically implemented within a campus environment.",
-    date: "2025-07-01",
-    startTime: "09:00",
-    endTime: "18:00",
-    venue: "Main Auditorium",
-    latitude: 11.2612,
-    longitude: 75.7831,
-    incharge: "Dr. Suresh Kumar",
-    department: "Engineering",
-    limit: 100,
-    image: img14,
-  },
+  id: 6,
+  programName: "Tech Meetup",
+  eventName: "Cloud Computing Essentials",
+  description:
+    "An introductory session on cloud computing concepts including IaaS, PaaS, SaaS, deployment models, and real-world cloud use cases.",
+  date: "2025-06-08",
+  startTime: "10:00",
+  endTime: "13:00",
+  venue: "Seminar Hall 3",
+  latitude: 11.2583,
+  longitude: 75.7809,
+  incharge: "Mr. Vinod Krishnan",
+  department: "Computer Applications",
+  limit: 90,
 
-  {
-    id: 10,
-    programName: "Tech Meetup",
-    eventName: "Cyber Security Awareness Program",
-    description:
-      "An informative session aimed at spreading awareness about cyber security threats and digital safety practices. Topics include common cyber attacks, data protection, secure online behavior, and best practices for personal and organizational security. The program is suitable for beginners and professionals alike.",
-    date: "2025-07-10",
-    startTime: "14:00",
-    endTime: "17:00",
-    venue: "Conference Hall",
-    latitude: 11.2594,
-    longitude: 75.7810,
-    incharge: "Ms. Priya Nandakumar",
-    department: "Computer Applications",
-    limit: 120,
-    image: img16,
-  }
+  poster: "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+  priceImage: "https://images.unsplash.com/photo-1605902711622-cfb43c4437d1",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 90,
+  departmentIndividualLimit: 12,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 7,
+  programName: "Hackathon",
+  eventName: "Green Tech Hack",
+  description:
+    "A sustainability-focused hackathon where teams build innovative tech solutions addressing environmental challenges and climate change.",
+  date: "2025-06-20",
+  startTime: "09:00",
+  endTime: "21:00",
+  venue: "Main Auditorium",
+  latitude: 11.2611,
+  longitude: 75.7833,
+  incharge: "Dr. Ramesh Iyer",
+  department: "Engineering",
+  limit: 100,
+
+  poster: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  priceImage: "https://images.unsplash.com/photo-1515169067865-5387ec356754",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+  ],
+
+  participationType: "team",
+  membersPerTeamFromDepartment: 4,
+  teamsPerDepartment: 5,
+
+  overallIndividualLimit: "",
+  departmentIndividualLimit: "",
+},
+
+{
+  id: 8,
+  programName: "Design Sprint",
+  eventName: "Product Design Thinking Sprint",
+  description:
+    "An intensive design sprint focused on product ideation, user empathy, rapid prototyping, and validation with real users.",
+  date: "2025-07-03",
+  startTime: "10:30",
+  endTime: "16:30",
+  venue: "Design Studio",
+  latitude: 11.2576,
+  longitude: 75.7794,
+  incharge: "Ms. Kavya Nair",
+  department: "Design",
+  limit: 50,
+
+  poster: "https://images.unsplash.com/photo-1559028012-d3cdbb3b1a41",
+  priceImage: "https://images.unsplash.com/photo-1515168833906-d2a3b82b302a",
+  sponsorImages: [],
+
+  participationType: "individual",
+  overallIndividualLimit: 50,
+  departmentIndividualLimit: 7,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 9,
+  programName: "Tech Meetup",
+  eventName: "AI in Everyday Applications",
+  description:
+    "A talk on how artificial intelligence is transforming everyday applications such as recommendation systems, chatbots, and automation tools.",
+  date: "2025-07-15",
+  startTime: "14:00",
+  endTime: "17:00",
+  venue: "Conference Hall",
+  latitude: 11.2599,
+  longitude: 75.7815,
+  incharge: "Ms. Priya Nandakumar",
+  department: "Artificial Intelligence",
+  limit: 120,
+
+  poster: "https://images.unsplash.com/photo-1581090700227-1e37b190418e",
+  priceImage: "https://images.unsplash.com/photo-1556157382-97eda2d62296",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 120,
+  departmentIndividualLimit: 15,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 10,
+  programName: "Hackathon",
+  eventName: "Smart City Innovation Hack",
+  description:
+    "Teams build smart city solutions focusing on mobility, safety, energy optimization, and digital governance using modern technologies.",
+  date: "2025-07-28",
+  startTime: "09:00",
+  endTime: "18:00",
+  venue: "Innovation Lab",
+  latitude: 11.2607,
+  longitude: 75.7829,
+  incharge: "Dr. Suresh Kumar",
+  department: "Computer Science",
+  limit: 120,
+
+  poster: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+  priceImage: "https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+  ],
+
+  participationType: "team",
+  membersPerTeamFromDepartment: 5,
+  teamsPerDepartment: 4,
+
+  overallIndividualLimit: "",
+  departmentIndividualLimit: "",
+}
+
 ];

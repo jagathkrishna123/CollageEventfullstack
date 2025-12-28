@@ -22,6 +22,10 @@ import EventDeatils from "./Display/EventDetails/EventDeatils";
 import LoginForm from "./Display/Loign/LoginForm";
 import { useAppContext } from "./context/AppContext";
 import ScrollToTop from "./Display/ScrollToTop";
+import EventRegistration from "./Display/EventRegistration/EventRegistration";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ManageProgram from "./pages/admin/ManageProgram";
 
 function App() {
   const {pathname} = useLocation()
@@ -35,10 +39,12 @@ function App() {
       <div className="w-full">
         {!hideLayout && <NavBar />}
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
         <Routes>
           <Route path="/" element={<Display />} />
           <Route path="/programdetails/:id" element={<ProgramDetails />} />
           <Route path="/eventdetails/:id" element={<EventDeatils/>} />
+          <Route path="/event/:id/register" element={<EventRegistration />}/>
           <Route path="/login" element={<Login/>} />
           <Route path='/teacher' element={true ? <Layout/> : <Login/>}>
             <Route index element={<TeacherDashboard/>}/>
@@ -52,6 +58,8 @@ function App() {
             <Route index element={<AdminDashboard/>}/>
             <Route path='admin-add-program' element={<AddProgram/>}/>
             <Route path='addevent' element={<AdminAddEvent/>}/>
+            <Route path='addevent/:id' element={<AdminAddEvent/>}/>
+            <Route path='manageprogram' element={<ManageProgram/>}/>
             <Route path='feedback' element={<AdminFeedback/>}/>
             <Route path='registrations' element={<AdminRegistrations/>}/>
             <Route path='attendence' element={<AdminAttendence/>}/>

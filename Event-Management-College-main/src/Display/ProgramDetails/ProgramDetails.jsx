@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { EVENTDATAS, Items, } from "../../Constants/ProgramData";
+import { Download } from "lucide-react";
 
 const ProgramDetails = () => {
   const { id } = useParams();
@@ -28,10 +29,8 @@ const ProgramDetails = () => {
         </p>
 
         <div className="flex flex-row gap-4">
-          <button className="bg-[#365EFF] text-[#FCFCFC] text-[11px] md:text-[14px] items-center px-3 py-2 rounded-xl font-semibold">
-            Register Yor Team
-          </button>
-          <button className="border border-[#FCFCFC] text-[#365EFF] text-[11px] md:text-[14px] px-3 py-2 rounded-xl font-semibold">
+          <button className="border border-[#FCFCFC] text-[#365EFF] text-[11px] md:text-[14px] px-3 py-2 rounded-xl font-semibold flex gap-2 items-center">
+            <Download className="w-5"/>
             Download Brochure
           </button>
         </div>
@@ -124,7 +123,7 @@ const ProgramDetails = () => {
       className="bg-white/5 p-5 border border-[#00A9E8] rounded-2xl backdrop-blur-lg hover:shadow-lg transition cursor-pointer"
     >
       <img
-        src={event.image}
+        src={event.poster}
         alt={event.eventName}
         className="w-full h-40 object-cover rounded-xl mb-4"
       />

@@ -27,6 +27,10 @@ const Sidebar = () => {
             <IoMdAddCircleOutline />
             <p className='hidden md:inline-block'>Add Event</p>
         </NavLink>
+        <NavLink  to='/admin/manageprogram' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
+            <IoMdAddCircleOutline />
+            <p className='hidden md:inline-block'>Manage Program</p>
+        </NavLink>
 
         <NavLink  to='/admin/feedback' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
            <TbMessage />

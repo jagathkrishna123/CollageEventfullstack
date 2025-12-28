@@ -42,7 +42,7 @@ export function UpcomingEvents() {
                     <div className="flex items-center w-full lg:w-[278px] lg:h-[48px] flex-row">
                         <div className="flex items-center gap-2 w-full lg:w-[250px] lg:h-[28px]">
                             <h5 className=" text-[14px] lg:text-[18px] font-semibold text-white font-momo">
-                                UPCOMING EVENTS
+                                UPCOMING PROGRAMS
                             </h5>
                             {/* <img src={time} alt="Time icon" className="w-4 h-4" /> */}
                         </div>
