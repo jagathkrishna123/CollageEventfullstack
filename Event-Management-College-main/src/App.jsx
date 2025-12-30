@@ -19,7 +19,6 @@ import AdminAttendence from "./pages/admin/Attendence";
 import AddProgram from "./pages/admin/AddProgram";
 import TeacherAddProgram from "./pages/teacher/TeacherAddProgram";
 import EventDeatils from "./Display/EventDetails/EventDeatils";
-import LoginForm from "./Display/Loign/LoginForm";
 import { useAppContext } from "./context/AppContext";
 import ScrollToTop from "./Display/ScrollToTop";
 import EventRegistration from "./Display/EventRegistration/EventRegistration";

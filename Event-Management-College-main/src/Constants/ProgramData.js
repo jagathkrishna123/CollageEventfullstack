@@ -575,3 +575,110 @@ export const EVENTDATAS = [
 }
 
 ];
+
+
+export const TEACHERS = [
+  {
+    id: "a1b2c3",
+    teacherId: "AED001",
+    email: "teacher1@gmail.com",
+    createdAt: "2025-01-10T10:30:00Z",
+  },
+  {
+    id: "b2c3d4",
+    teacherId: "AED002",
+    email: "teacher2@college.edu",
+    createdAt: "2025-01-10T10:45:00Z",
+  },
+  {
+    id: "c3d4e5",
+    teacherId: "AED003",
+    email: "teacher3@school.ac.in",
+    createdAt: "2025-01-10T11:00:00Z",
+  },
+  {
+    id: "d4e5f6",
+    teacherId: "AED004",
+    email: "teacher4@outlook.com",
+    createdAt: "2025-01-10T11:15:00Z",
+  },
+  {
+    id: "e5f6g7",
+    teacherId: "AED005",
+    email: "teacher5@gmail.com",
+    createdAt: "2025-01-10T11:30:00Z",
+  },
+  {
+    id: "f6g7h8",
+    teacherId: "AED006",
+    email: "teacher6@yahoo.com",
+    createdAt: "2025-01-10T11:45:00Z",
+  },
+  {
+    id: "g7h8i9",
+    teacherId: "AED007",
+    email: "teacher7@college.edu",
+    createdAt: "2025-01-10T12:00:00Z",
+  },
+  {
+    id: "h8i9j0",
+    teacherId: "AED008",
+    email: "teacher8@gmail.com",
+    createdAt: "2025-01-10T12:15:00Z",
+  },
+  {
+    id: "i9j0k1",
+    teacherId: "AED009",
+    email: "teacher9@school.ac.in",
+    createdAt: "2025-01-10T12:30:00Z",
+  },
+  {
+    id: "j0k1l2",
+    teacherId: "AED010",
+    email: "teacher10@outlook.com",
+    createdAt: "2025-01-10T12:45:00Z",
+  },
+];
+
+export const STUDENTS = [
+  {
+    regNo: "SFA001",
+    email: "student1@gmail.com",
+  },
+  {
+    regNo: "SFA002",
+    email: "student2@college.edu",
+  },
+  {
+    regNo: "SFA003",
+    email: "student3@yahoo.com",
+  },
+  {
+    regNo: "SFA004",
+    email: "student4@outlook.com",
+  },
+  {
+    regNo: "SFA005",
+    email: "student5@school.ac.in",
+  },
+  {
+    regNo: "SFA006",
+    email: "student6@gmail.com",
+  },
+  {
+    regNo: "SFA007",
+    email: "student7@college.edu",
+  },
+  {
+    regNo: "SFA008",
+    email: "student8@yahoo.com",
+  },
+  {
+    regNo: "SFA009",
+    email: "student9@school.ac.in",
+  },
+  {
+    regNo: "SFA010",
+    email: "student10@outlook.com",
+  },
+];
