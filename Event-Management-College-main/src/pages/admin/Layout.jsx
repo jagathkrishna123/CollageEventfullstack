@@ -22,7 +22,7 @@ const Layout = () => {
                               <img src={Logo2} alt="Logo" className="w-[50px]" />
                             </div>
                             <div className="flex items-center justify-center">
-                              <h2 className="font-sans font-bold text-white text-[27px]">
+                              <h2 onClick={() => navigate("/")} className="font-sans font-bold text-white text-[27px] cursor-pointer">
                                 DOCKET
                               </h2>
                             </div>

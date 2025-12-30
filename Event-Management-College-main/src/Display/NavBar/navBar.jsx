@@ -16,7 +16,7 @@ const navigate = useNavigate()
       <div className=" max-w-7xl w-full mx-auto px-4 md:px-6 lg:px-10 flex-wrap">
         <div className="flex items-center justify-between w-full flex-wrap pt-4">
           {/* Logo Section */}
-          <div className="flex items-center w-[205px] h-[70px]">
+          <div onClick={() => navigate("/")} className="flex items-center w-[205px] h-[70px] cursor-pointer">
             <div className="flex items-center h-[66px]">
               <img src={Logo2} alt="Logo" className="w-[50px]" />
             </div>

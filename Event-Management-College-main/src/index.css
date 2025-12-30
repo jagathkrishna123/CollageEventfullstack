@@ -39,3 +39,26 @@
 ::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
+/* toast custom style............... */
+
+.Toastify__toast {
+  background: #020617 !important;
+  color: #f8fafc !important;
+  border-radius: 14px !important;
+  font-family: "Raleway", sans-serif;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.Toastify__toast--success {
+  border-left: 5px solid #22c55e;
+}
+
+.Toastify__toast-body {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.Toastify__progress-bar {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}

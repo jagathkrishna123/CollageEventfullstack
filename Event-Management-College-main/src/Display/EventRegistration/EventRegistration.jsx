@@ -52,7 +52,7 @@ const EventRegistration = () => {
       <>
         <ConfirmationPopup
           onConfirm={() => {
-            toast.success("Successfully Registered 🎉");
+            toast.success("Successfully Registered");
             navigate(-1);
           }}
           onCancel={() => navigate(-1)}
@@ -81,7 +81,7 @@ const EventRegistration = () => {
     // 🔹 backend call can go here
     console.log("Team Registration Data:", teamData);
 
-    toast.success("Successfully Registered 🎉");
+    toast.success("Successfully Registered");
     navigate(-1);
   };
 

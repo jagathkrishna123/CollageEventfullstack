@@ -26,6 +26,8 @@ import EventRegistration from "./Display/EventRegistration/EventRegistration";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ManageProgram from "./pages/admin/ManageProgram";
+import AddStudent from "./pages/teacher/AddStudent";
+import AddTeacher from "./pages/admin/AddTeacher";
 
 function App() {
   const {pathname} = useLocation()
@@ -53,6 +55,7 @@ function App() {
             <Route path='feedback' element={<Feedback/>}/>
             <Route path='registrations' element={<Registrations/>}/>
             <Route path='attendence' element={<Attendence/>}/>
+            <Route path='addstudent' element={<AddStudent/>}/>
         </Route>
           <Route path='/admin' element={true ? <AdminLayout/> : <Login/>}>
             <Route index element={<AdminDashboard/>}/>
@@ -63,6 +66,7 @@ function App() {
             <Route path='feedback' element={<AdminFeedback/>}/>
             <Route path='registrations' element={<AdminRegistrations/>}/>
             <Route path='attendence' element={<AdminAttendence/>}/>
+            <Route path='addteacher' element={<AddTeacher/>}/>
          </Route>
         </Routes>
         {!hideLayout && <FooterContents />}

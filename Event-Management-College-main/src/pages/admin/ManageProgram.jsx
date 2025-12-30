@@ -40,13 +40,13 @@ const ManageProgram = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white p-6">
+    <div className="min-h-screen  text-slate-400 p-6 font-out">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-2xl font-semibold mb-6">Manage Events</h1>
 
         {/* EVENTS TABLE */}
         <div className="overflow-x-auto">
-          <table className="w-full border border-white/10 rounded-lg">
+          <table className="w-full border border-white/10 rounded-xl">
             <thead className="bg-white/5">
               <tr>
                 <th className="p-3 text-left">Event</th>
@@ -86,7 +86,7 @@ const ManageProgram = () => {
                   <td className="p-3 flex gap-2 justify-center">
                    <button
   onClick={() => navigate(`/admin/addevent/${event.id}`, { state: { eventData: event } })}
-  className="px-3 py-1 bg-blue-600 rounded"
+  className="px-3 py-1 bg-blue-600 rounded text-white"
 >
   Edit
 </button>
@@ -94,7 +94,7 @@ const ManageProgram = () => {
                     <button
                       onClick={() => handleApprove(event.id)}
                       disabled={event.status === "approved"}
-                      className="px-3 py-1 bg-green-600 rounded text-sm disabled:opacity-50"
+                      className="px-3 py-1 text-green-600 border border-green-600 font-medium rounded text-sm disabled:opacity-50"
                     >
                       Approve
                     </button>
@@ -102,7 +102,7 @@ const ManageProgram = () => {
                     <button
                       onClick={() => handleReject(event.id)}
                       disabled={event.status === "rejected"}
-                      className="px-3 py-1 bg-red-600 rounded text-sm disabled:opacity-50"
+                      className="px-3 py-1 text-red-600 border border-red-600 font-medium rounded text-sm disabled:opacity-50"
                     >
                       Reject
                     </button>
