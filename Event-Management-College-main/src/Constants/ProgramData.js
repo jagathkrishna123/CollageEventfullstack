@@ -353,7 +353,7 @@ export const EVENTDATAS = [
     department: "Design & Media",
     limit: 60,
 
-    poster: "https://images.unsplash.com/photo-1559028012-d3cdbb3b1a41",
+    poster: "https://images.unsplash.com/photo-1609921212029-bb5a28e60960?q=80&w=1152&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     priceImage: "https://images.unsplash.com/photo-1492724441997-5dc865305da7",
     sponsorImages: [],
 
@@ -500,7 +500,7 @@ export const EVENTDATAS = [
   department: "Design",
   limit: 50,
 
-  poster: "https://images.unsplash.com/photo-1559028012-d3cdbb3b1a41",
+  poster: "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   priceImage: "https://images.unsplash.com/photo-1515168833906-d2a3b82b302a",
   sponsorImages: [],
 
