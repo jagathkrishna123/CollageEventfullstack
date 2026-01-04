@@ -73,7 +73,7 @@ const Rating = () => {
   }
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 overflow-y-auto">
+    <div className="min-h-full w-full bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 overflow-y-auto">
       <div className="max-w-7xl mx-auto overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

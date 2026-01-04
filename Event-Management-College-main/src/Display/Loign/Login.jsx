@@ -376,7 +376,18 @@ const Login = () => {
           <form onSubmit={handleOtpVerify} className="bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl p-8 shadow-xl">
             <h2 className="text-2xl font-semibold text-white mb-2">Verify OTP</h2>
             <p className="text-gray-400 mb-2">OTP sent to: {userEmail}</p>
-            
+
+            {/* Display OTP for testing */}
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
+              <p className="text-yellow-400 text-sm font-medium mb-2">For Testing: Your OTP is</p>
+              <div className="flex items-center justify-center">
+                <span className="text-3xl font-bold text-yellow-400 tracking-widest bg-gray-800/50 px-6 py-2 rounded-lg border border-yellow-500/30">
+                  {generatedOtp}
+                </span>
+              </div>
+              <p className="text-yellow-400/80 text-xs mt-2 text-center">This OTP is also logged to browser console</p>
+            </div>
+
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Enter OTP</label>
               <input

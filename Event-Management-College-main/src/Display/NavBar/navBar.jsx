@@ -115,7 +115,8 @@ export function NavBar() {
                 <div className="flex items-center gap-3 ml-2">
                   <div className="hidden lg:flex items-center gap-2">
                     <span className="text-white font-light text-sm whitespace-nowrap">
-                      Welcome, {user.name.split(' ')[0]}
+                      {/* Welcome, {user.name.split(' ')[0]} */}
+                      Welcome, {user.name.split(" ").slice(0, 2).join(" ")}
                     </span>
                   </div>
                   <button

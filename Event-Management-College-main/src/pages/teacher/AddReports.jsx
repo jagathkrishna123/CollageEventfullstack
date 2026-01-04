@@ -121,7 +121,7 @@ const AddReports = () => {
   };
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 overflow-y-auto">
+    <div className="min-h-full w-full bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 overflow-y-auto">
       <div className="max-w-5xl w-full mx-auto">
         <h1 className="text-3xl font-bold text-white mb-6">Add Report</h1>
 
@@ -211,7 +211,7 @@ const AddReports = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
+            className="w-fit px-3  bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
           >
             Submit Report
           </button>
