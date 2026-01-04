@@ -25,10 +25,15 @@ const Login = () => {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     mobile: "",
     department: "",
     semester: "",
+    admissionNumber: "", // For students
     registerNumber: "",
+    gender: "", // For teachers
+    designation: "", // For teachers
+    qualification: "", // For teachers
   });
   
   // Login form state
@@ -40,6 +45,27 @@ const Login = () => {
   // Generate OTP (6-digit random number)
   const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  // Department code mapping
+  const departmentMap = {
+    BCM: "B.Com (Bachelor of Commerce)",
+    SPY: "Psychology",
+    BCA: "Bachelor of Computer Application",
+    BSW: "Bachelor of Social Work",
+    BBA: "Bachelor of Business Administration",
+  };
+
+  // Extract department from ID
+  const extractDepartment = (id) => {
+    // Format: AEDXBCM002, SFAXBCA001, or SFAYBBA003
+    // Extract the department code (3 letters after the separator letter like X or Y)
+    const match = id.match(/[A-Z]{3}[A-Z]([A-Z]{3})/);
+    if (match && match[1]) {
+      const deptCode = match[1];
+      return departmentMap[deptCode] || deptCode;
+    }
+    return "";
   };
 
   // Handle ID submission
@@ -65,10 +91,16 @@ const Login = () => {
       }
       foundUserType = "student";
       foundEmail = student.email;
+      const detectedDept = extractDepartment(id);
       setUserType("student");
       setUserEmail(student.email);
       setUserId(id);
-      setSignupData((prev) => ({ ...prev, registerNumber: id, email: student.email }));
+      setSignupData((prev) => ({ 
+        ...prev, 
+        registerNumber: id, 
+        email: student.email,
+        department: detectedDept
+      }));
     } else if (id.startsWith("AED")) {
       // Find teacher in TEACHERS array
       const teacher = TEACHERS.find((t) => t.teacherId === id);
@@ -78,10 +110,16 @@ const Login = () => {
       }
       foundUserType = "teacher";
       foundEmail = teacher.email;
+      const detectedDept = extractDepartment(id);
       setUserType("teacher");
       setUserEmail(teacher.email);
       setUserId(id);
-      setSignupData((prev) => ({ ...prev, registerNumber: id, email: teacher.email }));
+      setSignupData((prev) => ({ 
+        ...prev, 
+        registerNumber: id, 
+        email: teacher.email,
+        department: detectedDept
+      }));
     } else {
       toast.error("Invalid ID format. ID must start with 'SFA' (Student) or 'AED' (Teacher)");
       return;
@@ -131,8 +169,33 @@ const Login = () => {
       return;
     }
 
+    if (userType === "student" && !signupData.admissionNumber) {
+      toast.error("Admission number is required for students");
+      return;
+    }
+
+    if (userType === "teacher" && !signupData.gender) {
+      toast.error("Gender is required for teachers");
+      return;
+    }
+
+    if (userType === "teacher" && !signupData.designation) {
+      toast.error("Designation is required for teachers");
+      return;
+    }
+
+    if (userType === "teacher" && !signupData.qualification) {
+      toast.error("Qualification is required for teachers");
+      return;
+    }
+
     if (signupData.password.length < 6) {
       toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    if (signupData.password !== signupData.confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -154,7 +217,11 @@ const Login = () => {
           mobile: signupData.mobile,
           department: signupData.department,
           semester: signupData.semester || "",
+          admissionNumber: signupData.admissionNumber || "",
           RegisterNumber: signupData.registerNumber,
+          gender: signupData.gender || "",
+          designation: signupData.designation || "",
+          qualification: signupData.qualification || "",
         }),
       });
 
@@ -164,6 +231,21 @@ const Login = () => {
         toast.success(`${userType === "student" ? "Student" : "Teacher"} registered successfully!`);
         setStep("login");
         setLoginData((prev) => ({ ...prev, registerNumber: signupData.registerNumber }));
+        // Reset signup form
+        setSignupData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          mobile: "",
+          department: "",
+          semester: "",
+          admissionNumber: "",
+          registerNumber: "",
+          gender: "",
+          designation: "",
+          qualification: "",
+        });
       } else {
         toast.error(data.message || "Registration failed");
       }
@@ -239,16 +321,16 @@ const Login = () => {
         {/* ID Input Step */}
         {step === "id-input" && (
           <form onSubmit={handleIdSubmit} className="bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl p-8 shadow-xl">
-            <h2 className="text-2xl font-semibold text-white mb-2">Login</h2>
+            <h2 className="text-2xl font-semibold text-white mb-2">Verify</h2>
             <p className="text-gray-400 mb-6">Enter your ID to continue</p>
             
             <div className="mb-4">
-              <label className="block text-gray-300 mb-2">ID (SFA for Student, AED for Teacher)</label>
+              <label className="block text-gray-300 mb-2">Register Number/ID</label>
               <input
                 type="text"
                 value={idInput}
                 onChange={(e) => setIdInput(e.target.value.toUpperCase())}
-                placeholder="SFA001 or AED001"
+                placeholder="xxxxxxxxxx"
                 className="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                 required
               />
@@ -268,7 +350,6 @@ const Login = () => {
           <form onSubmit={handleOtpVerify} className="bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl p-8 shadow-xl">
             <h2 className="text-2xl font-semibold text-white mb-2">Verify OTP</h2>
             <p className="text-gray-400 mb-2">OTP sent to: {userEmail}</p>
-            <p className="text-yellow-400 text-sm mb-6">For testing: Check browser console for OTP</p>
             
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Enter OTP</label>
@@ -308,6 +389,20 @@ const Login = () => {
                 setUserType(null);
                 setUserEmail("");
                 setUserId("");
+                setSignupData({
+                  name: "",
+                  email: "",
+                  password: "",
+                  confirmPassword: "",
+                  mobile: "",
+                  department: "",
+                  semester: "",
+                  admissionNumber: "",
+                  registerNumber: "",
+                  gender: "",
+                  designation: "",
+                  qualification: "",
+                });
               }}
               className="mt-4 text-gray-400 hover:text-white text-sm"
             >
@@ -342,7 +437,7 @@ const Login = () => {
               />
               
               <Input
-                label="Register Number"
+                label="Register Number/ID"
                 value={signupData.registerNumber}
                 onChange={(e) => setSignupData({ ...signupData, registerNumber: e.target.value.toUpperCase() })}
                 disabled
@@ -362,16 +457,59 @@ const Login = () => {
                 label="Department"
                 value={signupData.department}
                 onChange={(e) => setSignupData({ ...signupData, department: e.target.value })}
-                required
+                disabled
+                className="bg-gray-800/30"
               />
               
               {userType === "student" && (
+                <>
                 <Input
-                  label="Semester"
-                  value={signupData.semester}
-                  onChange={(e) => setSignupData({ ...signupData, semester: e.target.value })}
-                  required
-                />
+                    label="Semester"
+                    value={signupData.semester}
+                    onChange={(e) => setSignupData({ ...signupData, semester: e.target.value })}
+                    required
+                  />
+                  <Input
+                    label="Admission Number"
+                    value={signupData.admissionNumber}
+                    onChange={(e) => setSignupData({ ...signupData, admissionNumber: e.target.value.toUpperCase() })}
+                    required
+                  />
+                  
+                </>
+              )}
+
+              {userType === "teacher" && (
+                <>
+                  <div>
+                    <label className="block text-gray-300 mb-2">Gender <span className="text-red-500">*</span></label>
+                    <select
+                      value={signupData.gender}
+                      onChange={(e) => setSignupData({ ...signupData, gender: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                      required
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <Input
+                    label="Designation"
+                    value={signupData.designation}
+                    onChange={(e) => setSignupData({ ...signupData, designation: e.target.value })}
+                    placeholder="e.g., Assistant Professor, Associate Professor"
+                    required
+                  />
+                  <Input
+                    label="Qualification"
+                    value={signupData.qualification}
+                    onChange={(e) => setSignupData({ ...signupData, qualification: e.target.value })}
+                    placeholder="e.g., M.Sc, Ph.D, M.Com"
+                    required
+                  />
+                </>
               )}
               
               <Input
@@ -379,6 +517,15 @@ const Login = () => {
                 type="password"
                 value={signupData.password}
                 onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                required
+                minLength={6}
+              />
+
+              <Input
+                label="Confirm Password"
+                type="password"
+                value={signupData.confirmPassword}
+                onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                 required
                 minLength={6}
               />
@@ -441,6 +588,20 @@ const Login = () => {
                   setUserType(null);
                   setUserEmail("");
                   setUserId("");
+                  setSignupData({
+                    name: "",
+                    email: "",
+                    password: "",
+                    confirmPassword: "",
+                    mobile: "",
+                    department: "",
+                    semester: "",
+                    admissionNumber: "",
+                    registerNumber: "",
+                    gender: "",
+                    designation: "",
+                    qualification: "",
+                  });
                 }}
                 className="text-blue-400 hover:text-blue-300 underline"
               >

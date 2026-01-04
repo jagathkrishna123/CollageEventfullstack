@@ -1,16 +1,19 @@
 import Logo2 from "../../assets/logo2.png";
 import { useState } from "react";
 import { CiUser } from "react-icons/ci";
-import { HiOutlineMenu, HiX } from "react-icons/hi";
+import { HiOutlineMenu, HiX, HiOutlineBell, HiOutlineUser } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion"; // 👈 Added Framer Motion
 import { Link, useNavigate } from "react-router-dom";
+import { FaRegUserCircle, FaUserCircle } from "react-icons/fa";
 // import { useAppContext } from "../../context/AppContext";
 // import Logo2 from "../assets/logo2.png"
+
 export function NavBar() {
   const [mobileView, setMobileView] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(3); // Example notification count
     // const {user, setUser, setShowUserLogin, navigate} = useAppContext();
 
-const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <nav className="absolute top-0 left-0 w-full z-50">
       <div className=" max-w-7xl w-full mx-auto px-4 md:px-6 lg:px-10 flex-wrap">
@@ -39,43 +42,80 @@ const navigate = useNavigate()
                 </Link>
                 <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
+
+              <div className="group cursor-pointer relative">
+                <Link
+                  to="/dashboard"
+                  className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300"
+                >
+                  Dashboard
+                </Link>
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              </div>
+
+              <div className="group cursor-pointer relative">
+                <Link
+                  to="/reports"
+                  className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300"
+                >
+                  Reports
+                </Link>
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              </div>
+
               <div className="group cursor-pointer relative">
                 <h3 className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300">
-                  About Us
+                  About
                 </h3>
                 <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
-              <div className="group cursor-pointer relative">
-                <h3 className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300">
-                  Events
-                </h3>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+              
+              
+            </div>
+            
+            {/* Icons Section */}
+            <div className="flex items-center gap-4">
+              {/* Bell Icon with Notification Badge */}
+              <div className="relative cursor-pointer group">
+                <HiOutlineBell 
+                  className="text-white text-2xl hover:text-purple-300 transition-colors duration-200" 
+                />
+                {notificationCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[14px] h-[14px] px-1.5 bg-red-500 text-white text-xs font-bold rounded-full border border-gray-900">
+                    {notificationCount > 99 ? '99+' : notificationCount}
+                  </span>
+                )}
               </div>
-              <div className="group cursor-pointer relative">
-                <h3 className="font-sans font-medium text-white text-[16px] transition-colors group-hover:text-purple-300">
-                  Gallery
+
+              {/* Profile Icon */}
+              <div 
+                onClick={() => navigate("/login")}
+                className="cursor-pointer group"
+              >
+                <FaRegUserCircle 
+                  className="text-white text-2xl hover:text-purple-300 transition-colors duration-200" 
+                />
+              </div>
+
+              {/* Logout Button */}
+              <div
+                onClick={() => navigate("/login")}
+                className="
+                  relative flex items-center justify-center gap-2
+                  px-6 py-2.5 h-[40px]
+                  bg-blue-600 hover:bg-blue-700
+                  text-white rounded-lg
+                  font-medium
+                  transition-all duration-200
+                  cursor-pointer
+                  shadow-md hover:shadow-lg
+                "
+              >
+                <h3 className="font-sans text-[16px]">
+                  Logout
                 </h3>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
             </div>
-           <div
-  onClick={() => navigate("/login")}
-  className="
-    relative flex items-center justify-center gap-2
-    px-6 py-2.5 h-[40px]
-    bg-blue-600 hover:bg-blue-700
-    text-white rounded-lg
-    font-medium
-    transition-all duration-200
-    cursor-pointer
-    shadow-md hover:shadow-lg
-  "
->
-  <h3 className="font-sans text-[16px]">
-    Login
-  </h3>
-  <CiUser className="text-xl transition-transform group-hover:scale-105" />
-</div>
  
           </div>
 
@@ -114,18 +154,60 @@ const navigate = useNavigate()
               </div>
 
               <div className="flex flex-col space-y-2 text-white font-semibold text-lg px-6">
-                <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
+                <Link
+                  to="/"
+                  onClick={() => setMobileView(false)}
+                  className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition"
+                >
                   Home
-                </h1>
+                </Link>
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileView(false)}
+                  className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition"
+                >
+                  Dashboard
+                </Link>
                 <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
                   About Us
                 </h1>
+                <Link
+                  to="/reports"
+                  onClick={() => setMobileView(false)}
+                  className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition"
+                >
+                  Reports
+                </Link>
                 <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
                   Events
                 </h1>
                 <h1 className="py-2 border-b border-gray-700 hover:bg-gray-800 rounded px-2 cursor-pointer transition">
                   Gallery
                 </h1>
+              </div>
+
+              {/* Mobile Icons */}
+              <div className="flex items-center justify-center gap-6 px-6 py-4">
+                {/* Bell Icon with Notification Badge */}
+                <div className="relative cursor-pointer">
+                  <HiOutlineBell className="text-white text-2xl" />
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full border-2 border-gray-900">
+                      {notificationCount > 99 ? '99+' : notificationCount}
+                    </span>
+                  )}
+                </div>
+
+                {/* Profile Icon */}
+                <div 
+                  onClick={() => {
+                    navigate("/login");
+                    setMobileView(false);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <HiOutlineUser className="text-white text-2xl" />
+                </div>
               </div>
 
               <div className="mt-auto p-6">

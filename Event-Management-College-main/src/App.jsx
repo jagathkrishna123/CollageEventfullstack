@@ -8,12 +8,10 @@ import Layout from "./pages/teacher/Layout";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddEvent from "./pages/teacher/AddEvent";
-import Feedback from "./pages/teacher/Feedback";
 import Registrations from "./pages/teacher/Registrations";
 import Attendence from "./pages/teacher/Attendence";
 import AdminLayout from "./pages/admin/Layout";
 import AdminAddEvent from "./pages/admin/AddEvent";
-import AdminFeedback from "./pages/admin/Feedback";
 import AdminRegistrations from "./pages/admin/Registrations";
 import AdminAttendence from "./pages/admin/Attendence";
 import AddProgram from "./pages/admin/AddProgram";
@@ -27,6 +25,11 @@ import "react-toastify/dist/ReactToastify.css";
 import ManageProgram from "./pages/admin/ManageProgram";
 import AddStudent from "./pages/teacher/AddStudent";
 import AddTeacher from "./pages/admin/AddTeacher";
+import AddReports from "./pages/teacher/AddReports";
+import Reports from "./pages/teacher/Reports";
+import UserDashboard from "./pages/UserDashboard";
+import Rating from "./pages/teacher/Rating";
+import AdminFeedback from "./pages/admin/AdminFeedback";
 
 function App() {
   const {pathname} = useLocation()
@@ -47,14 +50,17 @@ function App() {
           <Route path="/eventdetails/:id" element={<EventDeatils/>} />
           <Route path="/event/:id/register" element={<EventRegistration />}/>
           <Route path="/login" element={<Login/>} />
+          <Route path="/reports" element={<Reports/>} />
+          <Route path="/dashboard" element={<UserDashboard/>} />
           <Route path='/teacher' element={true ? <Layout/> : <Login/>}>
             <Route index element={<TeacherDashboard/>}/>
             <Route path='teacher-add-program' element={<TeacherAddProgram/>}/>
             <Route path='addevent' element={<AddEvent/>}/>
-            <Route path='feedback' element={<Feedback/>}/>
+            <Route path='rating' element={<Rating/>}/>
             <Route path='registrations' element={<Registrations/>}/>
             <Route path='attendence' element={<Attendence/>}/>
             <Route path='addstudent' element={<AddStudent/>}/>
+            <Route path='addreports' element={<AddReports/>}/>
         </Route>
           <Route path='/admin' element={true ? <AdminLayout/> : <Login/>}>
             <Route index element={<AdminDashboard/>}/>

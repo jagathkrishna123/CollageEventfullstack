@@ -150,7 +150,7 @@ const AddTeacher = () => {
      ===================== */
 
   return (
-    <div className="max-w-4xl mx-auto p-6 text-gray-400">
+    <div className="max-w-4xl mx-auto p-6 text-gray-400 font-out">
       <h2 className="text-2xl font-bold mb-6">
         Add Teachers
       </h2>
@@ -214,17 +214,17 @@ const AddTeacher = () => {
       {/* 🔹 TABLE */}
       {filteredTeachers.length > 0 ? (
         <div className="overflow-x-auto">
-          <table className="w-full border border-gray-300">
-            <thead className="bg-gray-100 text-gray-700">
+          <table className="w-full border border-gray-500">
+            <thead className="bg-gray-500 text-gray-200">
               <tr>
-                <th className="border px-4 py-2">#</th>
-                <th className="border px-4 py-2">
+                <th className="border border-gray-400 px-4 py-2">#</th>
+                <th className="border border-gray-400 px-4 py-2">
                   Teacher ID
                 </th>
-                <th className="border px-4 py-2">
+                <th className="border border-gray-400 px-4 py-2">
                   Email
                 </th>
-                <th className="border px-4 py-2">
+                <th className="border border-gray-400 px-4 py-2">
                   Actions
                 </th>
               </tr>
@@ -233,16 +233,16 @@ const AddTeacher = () => {
             <tbody>
               {filteredTeachers.map((teacher, index) => (
                 <tr key={index} className="text-center">
-                  <td className="border px-4 py-2">
+                  <td className="border border-gray-600 px-4 py-2">
                     {index + 1}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border border-gray-600 px-4 py-2">
                     {teacher.teacherId}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border border-gray-600 px-4 py-2">
                     {teacher.email}
                   </td>
-                  <td className="border px-4 py-2 space-x-3">
+                  <td className="border border-gray-600 px-4 py-2 space-x-3">
                     <button
                       onClick={() => handleEdit(
                         teachers.findIndex(
@@ -250,7 +250,7 @@ const AddTeacher = () => {
                             t.teacherId === teacher.teacherId
                         )
                       )}
-                      className="text-blue-600"
+                      className="text-blue-600 text-sm"
                     >
                       Edit
                     </button>
@@ -261,7 +261,7 @@ const AddTeacher = () => {
                             t.teacherId === teacher.teacherId
                         )
                       )}
-                      className="text-red-600"
+                      className="text-red-600 text-sm"
                     >
                       Remove
                     </button>

@@ -4,6 +4,7 @@ import { FaStarHalfStroke } from 'react-icons/fa6'
 import { IoMdAddCircleOutline } from 'react-icons/io'
 import { MdOutlineAddBox, MdOutlineGroupAdd, MdOutlineSpaceDashboard } from 'react-icons/md'
 import { PiUserCheckBold } from 'react-icons/pi'
+import { TbReportMedical } from 'react-icons/tb'
 import { NavLink } from 'react-router-dom'
 // import { assets } from '../../assets/assets'
 
@@ -25,9 +26,9 @@ const Sidebar = () => {
             <p className='hidden md:inline-block'>Add Event</p>
         </NavLink>
 
-        <NavLink  to='/teacher/feedback' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
+        <NavLink  to='/teacher/rating' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
             <FaStarHalfStroke className='text-[18px]' />
-            <p className='hidden md:inline-block'>Feedback</p>
+            <p className='hidden md:inline-block'>Rating</p>
         </NavLink>
 
         <NavLink  to='/teacher/attendence' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
@@ -42,6 +43,10 @@ const Sidebar = () => {
         <NavLink  to='/teacher/addstudent' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
             <MdOutlineGroupAdd className='text-[18px]'/>
             <p className='hidden md:inline-block'>Add Students</p>
+        </NavLink>
+        <NavLink  to='/teacher/addreports' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
+            <TbReportMedical  className='text-[18px]'/>
+            <p className='hidden md:inline-block'>Add Reports</p>
         </NavLink>
     </div>
   )
