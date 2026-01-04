@@ -295,7 +295,7 @@ const AdminFeedback = () => {
         </div>
 
         {/* Export Options */}
-        {ratings.length > 0 && (
+        {/* {ratings.length > 0 && (
           <div className="mt-8 bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-xl p-6">
             <h3 className="text-xl font-bold text-white mb-4">Export Options</h3>
             <div className="flex gap-4">
@@ -310,7 +310,7 @@ const AdminFeedback = () => {
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

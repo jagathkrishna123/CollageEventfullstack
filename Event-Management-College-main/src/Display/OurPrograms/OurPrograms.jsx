@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { PROGRAMDATAS } from "../../Constants/ProgramData";
+import { Items } from "../../Constants/ProgramData";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -7,26 +7,23 @@ const OurPrograms = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("All");
 
-  // FILTER EVENTS BY CATEGORY
+  // FILTER PROGRAMS BY CATEGORY
   const handleFilterChange = useCallback((filter) => {
     setActiveFilter(filter);
   }, []);
 
   const filteredPrograms = useMemo(() => {
     if (activeFilter === "All") {
-      return PROGRAMDATAS;
+      return Items;
     }
-    if (activeFilter === "Recommended") {
-      return PROGRAMDATAS.filter((item) => item.isRecommended === true);
-    }
-    return PROGRAMDATAS.filter(
-      (item) => item.status.toLowerCase() === activeFilter.toLowerCase()
-    );
+    // For now, show all programs since Items doesn't have status field
+    // You can add filtering logic based on program names or other criteria
+    return Items;
   }, [activeFilter]);
 
   return (
-    <div className="max-w-7xl mx-auto p-2 overflow-x-hidden">
-      <div className="flex flex-col w-full p-2">
+    <div className="max-w-7xl mx-auto p-2 overflow-x-hidden  min-h-screen">
+      <div className="flex flex-col w-full p-2 pt-20">
 
         {/* SECTION TITLE */}
         <div className="w-full flex flex-col md:flex-row mt-8 px-1">
@@ -35,95 +32,92 @@ const OurPrograms = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-[24px] md:text-[36px] font-bold font-lexend text-gray-600"
+              className="text-[24px] md:text-[36px] font-bold font-lexend text-white"
             >
-              <span className="text-cyan-600">College Programs</span>
+              <span className="text-cyan-400">Our Programs</span>
             </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-gray-400 mt-2 text-lg"
+            >
+              Discover our comprehensive range of programs and workshops
+            </motion.p>
           </div>
 
           {/* FILTER BUTTONS */}
-          <div className="w-auto px-2 py-2 rounded-md flex flex-row items-center justify-center md:justify-center gap-3 
-              font-hind text-[14px] md:text-[15px] text-gray-500 cursor-pointer mt-5 bg-gray-900">
-
-            {["All", "Recommended", "Social", "Sports", "Academics"].map(
-              (filter) => (
-                <motion.p
-                  key={filter}
-                  onClick={() => handleFilterChange(filter)}
-                  className="relative px-2 py-1 cursor-pointer transition-colors duration-200"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {filter}
-
-                  {activeFilter === filter && (
-                    <motion.div
-                      layoutId="tab-underline"
-                      className="absolute left-0 right-0 bottom-0 h-[2px] bg-gray-700"
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                </motion.p>
-              )
-            )}
-          </div>
+         
         </div>
 
-        {/* EVENT GRID */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-4">
+        {/* PROGRAMS GRID */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-8">
           {filteredPrograms.map((item) => (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => navigate(`/event/${item.id}`)}
+              transition={{ duration: 0.5 }}
               key={item.id}
-              className="flex flex-col items-center rounded-xl bg-gradient-to-br from-neutral-800 via-gray-800 to-gray-900 border border-gray-700 shadow hover:shadow-xl transition cursor-pointer "
+              className="flex flex-col rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 border border-slate-600 shadow-xl hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300 cursor-pointer group overflow-hidden"
             >
               {/* IMAGE */}
-              <div className="w-full overflow-hidden rounded-t-xl relative">
+              <div className="w-full overflow-hidden rounded-t-2xl relative">
                 <img
                   src={item.image}
-                  alt={item.name}
-                  className="w-full h-60 object-cover"
+                  alt={item.Name}
+                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
 
-                <p className="absolute top-2 left-2 bg-cyan-700 text-white text-sm px-3 py-1 rounded">
-                  {item.status}
-                </p>
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1 rounded-full font-semibold shadow-lg">
+                  {item.Name}
+                </div>
               </div>
 
-              {/* EVENT DETAILS */}
-              <div className="flex flex-col w-full p-6 gap-2">
+              {/* PROGRAM DETAILS */}
+              <div className="flex flex-col w-full p-6 gap-4">
 
-                {/* NAME */}
-                <p className="font-lexend text-[20px] text-gray-300">
-                  {item.name}
-                </p>
+                {/* TITLE */}
+                <div>
+                  <h3 className="font-bold text-xl text-white mb-1">
+                    {item.Title}
+                  </h3>
+                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                    <span className="flex items-center gap-1">
+                      📅 {item.programDate}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      ⏰ {item.programTime}
+                    </span>
+                  </div>
+                </div>
 
                 {/* DESCRIPTION */}
-                <p className="flex flex-row gap-2 items-center text-gray-400 font-hind text-[15px]">
-                  🏛️ {item.description}
+                <p className="text-gray-300 text-sm leading-relaxed line-clamp-3">
+                  {item.Description.substring(0, 150)}...
                 </p>
 
-                {/* VENUE */}
-                <p className="flex flex-row gap-2 items-center text-gray-400 font-hind text-[15px]">
-                  📍 {item.venue}
-                </p>
+                {/* FEATURES */}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {item.features.slice(0, 3).map((feature, index) => (
+                    <div key={index} className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg text-xs text-cyan-300">
+                      <span className="text-cyan-400">{feature.icon}</span>
+                      <span>{feature.name}</span>
+                    </div>
+                  ))}
+                </div>
 
-                {/* PRIZE */}
-                <p className="flex flex-row gap-2 items-center text-yellow-500 font-hind text-[15px]">
-                  🏆 {item.prize}
-                </p>
-
-                {/* REGISTERED */}
-                <p className="flex flex-row items-center gap-2 font-hind text-[13px] text-gray-400">
-                  👥 {item.registered}
-                </p>
+                {/* VIEW DETAILS BUTTON */}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // You can add navigation logic here if needed
+                  }}
+                  className="mt-4 w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
+                >
+                  Learn More
+                </motion.button>
 
               </div>
             </motion.div>

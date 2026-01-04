@@ -151,7 +151,7 @@ const EventDetails = () => {
             </div>
 
             {/* RIGHT CARD */}
-            <div className="sticky top-28 bg-gradient-to-br from-[#1E293B] to-[#020617] border border-white/10 rounded-3xl p-8 space-y-6 shadow-xl">
+            <div className="sticky top-28 bg-gradient-to-br from-[#1E293B] to-[#020617] border border-white/10 rounded-3xl p-8 space-y-6 shadow-xl h-fit">
               <h3 className="text-2xl font-semibold">Ready to Join?</h3>
 
               <button
@@ -187,7 +187,7 @@ const Detail = ({ label, value }) => (
 const ConfirmationPopup = ({ onConfirm, onCancel }) => (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
     <div className="bg-[#020617] p-8 rounded-2xl text-center space-y-4">
-      <h2 className="text-xl font-semibold">Confirm Registration?</h2>
+      <h2 className="text-xl font-semibold text-white">Confirm Registration?</h2>
       <div className="flex gap-4 justify-center">
         <button onClick={onCancel} className="px-6 py-2 bg-gray-700 rounded">
           Cancel

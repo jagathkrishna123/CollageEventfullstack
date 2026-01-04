@@ -10,7 +10,7 @@ import { NavLink } from 'react-router-dom'
 
 const Sidebar = () => {
   return (
-    <div className='flex flex-col border-r border-gray-600 min-h-full pt-6 text-gray-400'>
+    <div className='flex flex-col border-r border-gray-600 min-h-full pt-6 text-gray-400 font-out'>
         <NavLink end={true} to='/teacher' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bbg-cyan-800 border-r-4 border-primary"}`}>
             <MdOutlineSpaceDashboard className='text-[18px]'/>
             <p className='hidden md:inline-block'>Dashboard</p>

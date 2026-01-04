@@ -12,7 +12,7 @@ import { CgNotes } from 'react-icons/cg';
 
 const Sidebar = () => {
   return (
-    <div className='flex flex-col border-r-2 border-gray-800 min-h-full pt-6 text-gray-400'>
+    <div className='flex flex-col border-r-2 border-gray-800 min-h-full pt-6 text-gray-400 font-out'>
         <NavLink end={true} to='/admin' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bbg-cyan-800 border-r-4 border-primary"}`}>
             <MdOutlineSpaceDashboard />
             <p className='hidden md:inline-block'>Dashboard</p>

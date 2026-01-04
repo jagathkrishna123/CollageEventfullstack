@@ -198,7 +198,7 @@ const AddEvent = () => {
 
 
   return (
-    <div className="text-white p-6 w-full overflow-y-auto">
+    <div className="text-white p-6 w-full overflow-y-auto font-out">
       <h1 className="text-3xl font-bold mb-8">{isEditMode ? "Edit Event" : "Add New Event"}</h1>
 
       <form

@@ -9,6 +9,7 @@ import img16 from "../assets/img16.jpg"
 import img17 from "../assets/img17.jpg"
 import img18 from "../assets/img18.jpg"
 import img19 from "../assets/img19.jpg"
+
 import img20 from "../assets/img20.jpg"
 import img21 from "../assets/img21.jpg"
 import img22 from "../assets/img22.png"
@@ -16,66 +17,8 @@ import img23 from "../assets/img23.png"
 import img24 from "../assets/img24.jpg"
 import img11 from "../assets/img11.jpg"
 import { FaCheckCircle, FaStar, FaBolt, FaLightbulb } from "react-icons/fa";
-// export const Items = [
-//   { 
-//     id: 1,
-//     Name: "Hackathon",
-//     image: Image1,
-//     Title: "india’s largest student hackathon",
-//     Description:
-//       "Hackathon 2025 is a 24-hour coding and innovation marathon where students collaborate to build powerful, scalable, and impactful solutions to real-world problems. Whether you're a developer, designer, analyst, or idea-driven innovator — this event is your chance to code, create, and compete. Join us to experience intense problem-solving, mentorship from experts, team collaboration, and a chance to bring your ideas to life!"
-//   },
-//   { 
-//     id: 2,
-//     Name: "Design Sprint",
-//     image: Image2,
-//     Title: "Campus Design Sprint – Turning Ideas Into Solutions",
-//     Description:
-//       "Design Sprint 2025 is a high-energy, fast-paced innovation challenge where students collaborate to solve real-world problems through design thinking. Over a span of 2 days, participants will ideate, prototype, test, and pitch their solutions to industry experts. This event is designed to foster creativity, teamwork, and rapid problem-solving—perfect for aspiring designers, developers, innovators, entrepreneurs, and tech enthusiasts."
-//   },
-//   { 
-//     id: 3,
-//     Name: "Tech Meetup",
-//     image: Image3,
-//     Title: "Campus Tech Meetup – Where Ideas Meet Technology",
-//     Description:
-//       "The Tech Meetup 2025 brings together developers, designers, tech enthusiasts, and innovators for an evening of learning, networking, and collaboration. This meetup features expert talks, live demos, panel discussions, and open networking sessions with industry professionals."
-//   },
-// ];
 
-// export const Items = [
-//   { 
-//     id: 1,
-//     Name: "Hackathon",
-//     image: Image1,
-//     Title: "india’s largest student hackathon",
-//     programDate: "March 18, 2025",
-//     programTime: "48 Hours",
-//     Description:
-//       "A high-energy 48-hour coding marathon where students build creative solutions and innovate with real-world challenges."
-//   },
-//   { 
-//     id: 2,
-//     Name: "Design Sprint",
-//     image: Image2,
-//     Title: "Campus Design Sprint – Turning Ideas Into Solutions",
-//     programDate: "April 10, 2025",
-//     programTime: "38 Hours",
-//     Description:
-//       "A fast-paced design challenge where teams ideate, prototype, and pitch solutions using real design-thinking methods."
-//   },
-//   { 
-//     id: 3,
-//     Name: "Tech Meetup",
-//     image: Image3,
-//     Title: "Campus Tech Meetup – Where Ideas Meet Technology",
-//     programDate: "May 5, 2025",
-//     programTime: "20 Hours",
-//     Description:
-//       "A tech gathering featuring expert talks, demos, and networking for students interested in innovation and technology."
-//   },
-// ];
-// Import images
+
 
 //PROGRAMS
 export const Items = [
@@ -113,7 +56,7 @@ export const Items = [
     ]
   },
 
-  { 
+  {
     id: 3,
     Name: "Tech Meetup",
     image: Image3,
@@ -127,6 +70,91 @@ export const Items = [
       { icon: FaStar, name: "Live tech demos" },
       { icon: FaBolt, name: "Networking opportunities" },
       { icon: FaLightbulb, name: "Panel discussions" }
+    ]
+  },
+
+  {
+    id: 4,
+    Name: "AI Workshop",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Title: "AI & Machine Learning Workshop – Future of Technology",
+    programDate: "June 15, 2025",
+    programTime: "16 Hours",
+    Description:
+      "An intensive hands-on workshop on Artificial Intelligence and Machine Learning fundamentals. Learn to build AI models, understand neural networks, and explore practical applications of AI in various industries. Perfect for students interested in cutting-edge technology.",
+    features: [
+      { icon: FaBolt, name: "Hands-on AI training" },
+      { icon: FaCheckCircle, name: "Neural network concepts" },
+      { icon: FaStar, name: "Real-world applications" },
+      { icon: FaLightbulb, name: "Industry experts" }
+    ]
+  },
+
+  {
+    id: 5,
+    Name: "Startup Pitch",
+    image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Title: "Campus Startup Pitch Competition – Turn Ideas into Reality",
+    programDate: "July 10, 2025",
+    programTime: "12 Hours",
+    Description:
+      "A competitive platform for student entrepreneurs to pitch their innovative startup ideas. Get mentorship from successful entrepreneurs, network with investors, and compete for funding and incubation opportunities. Transform your ideas into viable business ventures.",
+    features: [
+      { icon: FaBolt, name: "Pitch your startup idea" },
+      { icon: FaCheckCircle, name: "Mentorship from experts" },
+      { icon: FaStar, name: "Networking opportunities" },
+      { icon: FaLightbulb, name: "Funding chances" }
+    ]
+  },
+
+  {
+    id: 6,
+    Name: "Cyber Security",
+    image: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Title: "Cyber Security Bootcamp – Protect the Digital World",
+    programDate: "August 20, 2025",
+    programTime: "24 Hours",
+    Description:
+      "Comprehensive training on cybersecurity fundamentals, ethical hacking techniques, and digital security best practices. Learn to identify vulnerabilities, implement security measures, and protect systems from cyber threats in this intensive bootcamp.",
+    features: [
+      { icon: FaBolt, name: "Ethical hacking training" },
+      { icon: FaCheckCircle, name: "Security best practices" },
+      { icon: FaStar, name: "Vulnerability assessment" },
+      { icon: FaLightbulb, name: "Certification opportunity" }
+    ]
+  },
+
+  {
+    id: 7,
+    Name: "Data Science",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Title: "Data Science & Analytics Workshop – Unlock Data Insights",
+    programDate: "September 5, 2025",
+    programTime: "18 Hours",
+    Description:
+      "Dive deep into the world of data science with hands-on experience in data analysis, visualization, and machine learning algorithms. Learn Python, R, SQL, and popular data science libraries to extract meaningful insights from complex datasets.",
+    features: [
+      { icon: FaBolt, name: "Data analysis techniques" },
+      { icon: FaCheckCircle, name: "Python & R programming" },
+      { icon: FaStar, name: "Data visualization" },
+      { icon: FaLightbulb, name: "Machine learning basics" }
+    ]
+  },
+
+  {
+    id: 8,
+    Name: "Blockchain",
+    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Title: "Blockchain & Web3 Development – Future of Finance",
+    programDate: "October 12, 2025",
+    programTime: "20 Hours",
+    Description:
+      "Explore the revolutionary world of blockchain technology and Web3 development. Learn to build decentralized applications, understand cryptocurrency systems, and discover how blockchain is transforming industries beyond finance.",
+    features: [
+      { icon: FaBolt, name: "Blockchain fundamentals" },
+      { icon: FaCheckCircle, name: "Smart contract development" },
+      { icon: FaStar, name: "Decentralized apps" },
+      { icon: FaLightbulb, name: "Cryptocurrency systems" }
     ]
   },
 ];
@@ -291,7 +319,7 @@ export const EVENTDATAS = [
 
     // 🔹 Images (links)
     poster: "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-    priceImage: "https://images.unsplash.com/photo-1607082349566-187342175e2f",
+    priceImage: "https://lh3.googleusercontent.com/gg-dl/ABS2GSnpBXA0bLWPT2jk5L_xrGZTwxNk7qdgtw6djzlI32l1aSdHHVwBCOyGE7wm-SX9-2agvVgv_OYVDzK-20o63Kr_R6Ozub2BntEtC_EKZA4hTEmhsI42WrOJ5y2Be9Qn9TSg0Fbe1aFu3hTgeElaQ1DrkcYLhgXbGfFb-mN9sb79rGx0cg=s1024-rj",
     sponsorImages: [
       "https://images.unsplash.com/photo-1529612700005-e35377bf1415",
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
@@ -324,7 +352,7 @@ export const EVENTDATAS = [
     limit: 80,
 
     poster: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-    priceImage: "https://images.unsplash.com/photo-1542744095-291d1f67b221",
+    priceImage: "https://lh3.googleusercontent.com/gg-dl/ABS2GSnpBXA0bLWPT2jk5L_xrGZTwxNk7qdgtw6djzlI32l1aSdHHVwBCOyGE7wm-SX9-2agvVgv_OYVDzK-20o63Kr_R6Ozub2BntEtC_EKZA4hTEmhsI42WrOJ5y2Be9Qn9TSg0Fbe1aFu3hTgeElaQ1DrkcYLhgXbGfFb-mN9sb79rGx0cg=s1024-rj",
     sponsorImages: [
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
     ],
@@ -354,7 +382,7 @@ export const EVENTDATAS = [
     limit: 60,
 
     poster: "https://images.unsplash.com/photo-1609921212029-bb5a28e60960?q=80&w=1152&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    priceImage: "https://images.unsplash.com/photo-1492724441997-5dc865305da7",
+    priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
     sponsorImages: [],
 
     participationType: "individual",
@@ -382,7 +410,7 @@ export const EVENTDATAS = [
     limit: 50,
 
     poster: "https://images.unsplash.com/photo-1504639725590-34d0984388bd",
-    priceImage: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+    priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
     sponsorImages: [
       "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
@@ -413,7 +441,7 @@ export const EVENTDATAS = [
     limit: 100,
 
     poster: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b",
-    priceImage: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0",
+    priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
     sponsorImages: [],
 
     participationType: "individual",
@@ -440,7 +468,7 @@ export const EVENTDATAS = [
   limit: 90,
 
   poster: "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
-  priceImage: "https://images.unsplash.com/photo-1605902711622-cfb43c4437d1",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
   sponsorImages: [
     "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
   ],
@@ -470,7 +498,7 @@ export const EVENTDATAS = [
   limit: 100,
 
   poster: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-  priceImage: "https://images.unsplash.com/photo-1515169067865-5387ec356754",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
   sponsorImages: [
     "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
     "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
@@ -501,7 +529,7 @@ export const EVENTDATAS = [
   limit: 50,
 
   poster: "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  priceImage: "https://images.unsplash.com/photo-1515168833906-d2a3b82b302a",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
   sponsorImages: [],
 
   participationType: "individual",
@@ -529,7 +557,7 @@ export const EVENTDATAS = [
   limit: 120,
 
   poster: "https://images.unsplash.com/photo-1581090700227-1e37b190418e",
-  priceImage: "https://images.unsplash.com/photo-1556157382-97eda2d62296",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
   sponsorImages: [
     "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
   ],
@@ -559,7 +587,7 @@ export const EVENTDATAS = [
   limit: 120,
 
   poster: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-  priceImage: "https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
   sponsorImages: [
     "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
     "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
@@ -572,7 +600,309 @@ export const EVENTDATAS = [
 
   overallIndividualLimit: "",
   departmentIndividualLimit: "",
-}
+},
+
+{
+  id: 11,
+  programName: "AI Workshop",
+  eventName: "Machine Learning Fundamentals",
+  description:
+    "A comprehensive introduction to machine learning algorithms, data preprocessing, and model evaluation techniques.",
+  date: "2025-08-15",
+  startTime: "09:00",
+  endTime: "17:00",
+  venue: "Computer Lab 1",
+  latitude: 11.2580,
+  longitude: 75.7805,
+  incharge: "Dr. Rajesh Gupta",
+  department: "Computer Science",
+  limit: 60,
+
+  poster: "https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=1970&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 60,
+  departmentIndividualLimit: 8,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 12,
+  programName: "Startup Pitch",
+  eventName: "Innovation Showcase",
+  description:
+    "Present your innovative business ideas to industry experts and potential investors. Get valuable feedback and networking opportunities.",
+  date: "2025-09-20",
+  startTime: "14:00",
+  endTime: "18:00",
+  venue: "Auditorium",
+  latitude: 11.2615,
+  longitude: 75.7830,
+  incharge: "Ms. Kavita Sharma",
+  department: "Entrepreneurship",
+  limit: 50,
+
+  poster: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 50,
+  departmentIndividualLimit: 6,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 13,
+  programName: "Cyber Security",
+  eventName: "Ethical Hacking Challenge",
+  description:
+    "Test your cybersecurity skills in this capture-the-flag style competition. Learn about common vulnerabilities and defense strategies.",
+  date: "2025-10-05",
+  startTime: "10:00",
+  endTime: "16:00",
+  venue: "Cyber Lab",
+  latitude: 11.2575,
+  longitude: 75.7800,
+  incharge: "Mr. Vikram Singh",
+  department: "Information Security",
+  limit: 40,
+
+  poster: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+  ],
+
+  participationType: "team",
+  membersPerTeamFromDepartment: 2,
+  teamsPerDepartment: 3,
+
+  overallIndividualLimit: "",
+  departmentIndividualLimit: "",
+},
+
+{
+  id: 14,
+  programName: "Data Science",
+  eventName: "Big Data Analytics Workshop",
+  description:
+    "Learn advanced data analytics techniques using Python and SQL. Work with real datasets to extract valuable business insights.",
+  date: "2025-10-25",
+  startTime: "09:30",
+  endTime: "15:30",
+  venue: "Data Science Lab",
+  latitude: 11.2600,
+  longitude: 75.7820,
+  incharge: "Dr. Priya Mohan",
+  department: "Mathematics & Statistics",
+  limit: 45,
+
+  poster: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 45,
+  departmentIndividualLimit: 6,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 15,
+  programName: "Blockchain",
+  eventName: "DeFi & Smart Contracts",
+  description:
+    "Explore decentralized finance applications and learn to build smart contracts on Ethereum. Understand the future of financial systems.",
+  date: "2025-11-10",
+  startTime: "11:00",
+  endTime: "16:00",
+  venue: "Blockchain Lab",
+  latitude: 11.2585,
+  longitude: 75.7810,
+  incharge: "Mr. Arjun Patel",
+  department: "Computer Applications",
+  limit: 35,
+
+  poster: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 35,
+  departmentIndividualLimit: 5,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 16,
+  programName: "Hackathon",
+  eventName: "FinTech Innovation Hack",
+  description:
+    "Build innovative financial technology solutions. Create apps for banking, payments, insurance, and investment management.",
+  date: "2025-11-25",
+  startTime: "08:00",
+  endTime: "20:00",
+  venue: "Innovation Center",
+  latitude: 11.2620,
+  longitude: 75.7840,
+  incharge: "Ms. Ananya Reddy",
+  department: "Finance & Technology",
+  limit: 80,
+
+  poster: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+  ],
+
+  participationType: "team",
+  membersPerTeamFromDepartment: 4,
+  teamsPerDepartment: 5,
+
+  overallIndividualLimit: "",
+  departmentIndividualLimit: "",
+},
+
+{
+  id: 17,
+  programName: "Design Sprint",
+  eventName: "Mobile App Design Challenge",
+  description:
+    "A focused design sprint to create innovative mobile app concepts. Learn user research, prototyping, and presentation skills.",
+  date: "2025-12-05",
+  startTime: "09:00",
+  endTime: "17:00",
+  venue: "Design Studio",
+  latitude: 11.2570,
+  longitude: 75.7795,
+  incharge: "Mr. Rohan Kumar",
+  department: "Design & Media",
+  limit: 30,
+
+  poster: "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [],
+
+  participationType: "individual",
+  overallIndividualLimit: 30,
+  departmentIndividualLimit: 4,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 18,
+  programName: "Tech Meetup",
+  eventName: "IoT & Embedded Systems",
+  description:
+    "Discover the Internet of Things ecosystem. Learn about sensors, microcontrollers, and building connected devices.",
+  date: "2025-12-20",
+  startTime: "13:00",
+  endTime: "17:00",
+  venue: "Electronics Lab",
+  latitude: 11.2590,
+  longitude: 75.7815,
+  incharge: "Dr. Suresh Nair",
+  department: "Electronics & Communication",
+  limit: 70,
+
+  poster: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 70,
+  departmentIndividualLimit: 9,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 19,
+  programName: "AI Workshop",
+  eventName: "Computer Vision & Image Processing",
+  description:
+    "Hands-on workshop on computer vision techniques using OpenCV and deep learning. Build image recognition and processing applications.",
+  date: "2026-01-15",
+  startTime: "10:00",
+  endTime: "16:00",
+  venue: "AI Research Lab",
+  latitude: 11.2610,
+  longitude: 75.7835,
+  incharge: "Dr. Meera Krishnan",
+  department: "Artificial Intelligence",
+  limit: 40,
+
+  poster: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 40,
+  departmentIndividualLimit: 5,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
+
+{
+  id: 20,
+  programName: "Startup Pitch",
+  eventName: "Social Entrepreneurship Summit",
+  description:
+    "Pitch social impact startup ideas that address community challenges. Connect with social investors and NGOs.",
+  date: "2026-02-01",
+  startTime: "09:00",
+  endTime: "15:00",
+  venue: "Social Innovation Hub",
+  latitude: 11.2588,
+  longitude: 75.7808,
+  incharge: "Ms. Divya Menon",
+  department: "Social Sciences",
+  limit: 60,
+
+  poster: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  priceImage: "https://i.pinimg.com/736x/b1/f3/fb/b1f3fbe8e408d83d311ee49b7fb4d2d7.jpg",
+  sponsorImages: [
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+  ],
+
+  participationType: "individual",
+  overallIndividualLimit: 60,
+  departmentIndividualLimit: 8,
+
+  membersPerTeamFromDepartment: "",
+  teamsPerDepartment: "",
+},
 
 ];
 
