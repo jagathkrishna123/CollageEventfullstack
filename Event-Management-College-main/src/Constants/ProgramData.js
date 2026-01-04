@@ -688,3 +688,63 @@ export const STUDENTS = [
     email: "student11@outlook.com",
   },
 ];
+
+// Demo signup data for students and teachers
+export const SIGNUPDATA = [
+  // Students
+  {
+    id: "student1",
+    userType: "student",
+    registerNumber: "SFAXBCA001",
+    email: "student1@gmail.com",
+    name: "Rahul Sharma",
+    department: "Bachelor of Computer Application",
+    semester: "5th Semester",
+    admissionNumber: "ADM2021001",
+    mobile: "9876543210",
+    password: "student123",
+    confirmPassword: "student123",
+  },
+  {
+    id: "student2",
+    userType: "student",
+    registerNumber: "SFAXBBA002",
+    email: "student5@school.ac.in",
+    name: "Priya Patel",
+    department: "Bachelor of Business Administration",
+    semester: "3rd Semester",
+    admissionNumber: "ADM2021005",
+    mobile: "8765432109",
+    password: "student456",
+    confirmPassword: "student456",
+  },
+  // Teachers
+  {
+    id: "teacher1",
+    userType: "teacher",
+    registerNumber: "AEDXBCM001",
+    email: "teacher4@outlook.com",
+    name: "Dr. Amit Kumar",
+    department: "B.Com (Bachelor of Commerce)",
+    gender: "Male",
+    designation: "Assistant Professor",
+    qualification: "M.Com, Ph.D",
+    mobile: "7654321098",
+    password: "teacher123",
+    confirmPassword: "teacher123",
+  },
+  {
+    id: "teacher2",
+    userType: "teacher",
+    registerNumber: "AEDXSPY001",
+    email: "teacher3@school.ac.in",
+    name: "Prof. Meera Singh",
+    department: "Psychology",
+    gender: "Female",
+    designation: "Associate Professor",
+    qualification: "M.Sc Psychology, M.Phil",
+    mobile: "6543210987",
+    password: "teacher456",
+    confirmPassword: "teacher456",
+  },
+];

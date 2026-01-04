@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TEACHERS, STUDENTS } from "../../Constants/ProgramData";
+import { TEACHERS, STUDENTS, SIGNUPDATA } from "../../Constants/ProgramData";
+import { useAppContext } from "../../context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser } = useAppContext();
   
   // Flow states: 'id-input' | 'otp-verification' | 'signup' | 'login'
   const [step, setStep] = useState("id-input");
@@ -205,53 +207,64 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: signupData.name,
-          email: signupData.email,
-          password: signupData.password,
-          mobile: signupData.mobile,
-          department: signupData.department,
-          semester: signupData.semester || "",
-          admissionNumber: signupData.admissionNumber || "",
-          RegisterNumber: signupData.registerNumber,
-          gender: signupData.gender || "",
-          designation: signupData.designation || "",
-          qualification: signupData.qualification || "",
-        }),
-      });
+      // Simulate signup using SIGNUPDATA
+      const existingUser = SIGNUPDATA.find(user =>
+        user.registerNumber === signupData.registerNumber &&
+        user.email === signupData.email
+      );
 
-      const data = await response.json();
+      if (existingUser) {
+        // Check if all required fields match the dummy data
+        const requiredFields = [
+          'name', 'email', 'password', 'mobile', 'department', 'registerNumber'
+        ];
 
-      if (response.ok) {
-        toast.success(`${userType === "student" ? "Student" : "Teacher"} registered successfully!`);
-        setStep("login");
-        setLoginData((prev) => ({ ...prev, registerNumber: signupData.registerNumber }));
-        // Reset signup form
-        setSignupData({
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          mobile: "",
-          department: "",
-          semester: "",
-          admissionNumber: "",
-          registerNumber: "",
-          gender: "",
-          designation: "",
-          qualification: "",
+        if (userType === 'student') {
+          requiredFields.push('semester', 'admissionNumber');
+        } else if (userType === 'teacher') {
+          requiredFields.push('gender', 'designation', 'qualification');
+        }
+
+        const isValid = requiredFields.every(field => {
+          if (field === 'password') {
+            return signupData.password === existingUser.password;
+          }
+          if (field === 'confirmPassword') {
+            return true; // Already validated above
+          }
+          return signupData[field] === existingUser[field];
         });
+
+        if (isValid) {
+          // Simulate successful registration
+          toast.success(`${userType === "student" ? "Student" : "Teacher"} registered successfully!`);
+          setStep("login");
+          setLoginData((prev) => ({ ...prev, registerNumber: signupData.registerNumber }));
+
+          // Reset signup form
+          setSignupData({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            mobile: "",
+            department: "",
+            semester: "",
+            admissionNumber: "",
+            registerNumber: "",
+            gender: "",
+            designation: "",
+            qualification: "",
+          });
+        } else {
+          toast.error("Registration data doesn't match our records. Please check your information.");
+        }
       } else {
-        toast.error(data.message || "Registration failed");
+        toast.error("Registration number or email not found in our system.");
       }
     } catch (error) {
       console.error("Signup error:", error);
-      toast.error("Network error. Please try again.");
+      toast.error("An error occurred during registration.");
     }
   };
 
@@ -265,32 +278,45 @@ const Login = () => {
     }
 
     try {
-      const endpoint = userType === "student" 
-        ? "http://localhost:3000/student/studentLogin"
-        : "http://localhost:3000/teacher/teacherlogin";
-      
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          registerNumber: loginData.registerNumber,
-          password: loginData.password,
-        }),
-      });
+      // Simulate login using SIGNUPDATA
+      const user = SIGNUPDATA.find(u =>
+        u.registerNumber === loginData.registerNumber &&
+        u.password === loginData.password &&
+        u.userType === userType
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (user) {
         toast.success("Login successful!");
-        // Store token and user data
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data[userType] || data));
-          localStorage.setItem("userType", userType);
+
+        // Create user object for context
+        const userData = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          registerNumber: user.registerNumber,
+          userType: user.userType,
+          department: user.department,
+          mobile: user.mobile,
+        };
+
+        // Add type-specific fields
+        if (userType === "student") {
+          userData.semester = user.semester;
+          userData.admissionNumber = user.admissionNumber;
+        } else if (userType === "teacher") {
+          userData.gender = user.gender;
+          userData.designation = user.designation;
+          userData.qualification = user.qualification;
         }
-        
+
+        // Store user data in localStorage
+        localStorage.setItem("token", "dummy-token-" + Date.now());
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("userType", userType);
+
+        // Set user in context
+        setUser(userData);
+
         // Navigate to appropriate dashboard
         if (userType === "teacher") {
           navigate("/teacher");
@@ -298,11 +324,11 @@ const Login = () => {
           navigate("/");
         }
       } else {
-        toast.error(data.message || "Login failed");
+        toast.error("Invalid credentials. Please check your register number and password.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Network error. Please try again.");
+      toast.error("An error occurred during login.");
     }
   };
 
@@ -537,7 +563,18 @@ const Login = () => {
             >
               Create Account
             </button>
-            
+
+            <p className="mt-4 text-center text-gray-400 text-sm">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => setStep("login")}
+                className="text-blue-400 hover:text-blue-300 underline"
+              >
+                Login here
+              </button>
+            </p>
+
             <button
               type="button"
               onClick={() => setStep("otp-verification")}

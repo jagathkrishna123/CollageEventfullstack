@@ -137,7 +137,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 pt-20">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

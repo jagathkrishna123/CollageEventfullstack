@@ -46,7 +46,7 @@ export default function FooterContents() {
         <div>
           <h3 className="text-lg font-semibold mb-3">Connect With Us</h3>
           <p className="text-gray-300 text-sm mb-4 flex items-center gap-2">
-            <MdEmail size={18} /> yourmail@example.com
+            <MdEmail size={18} /> docet@gmail.com
           </p>
 
           <div className="flex gap-4">
@@ -58,7 +58,7 @@ export default function FooterContents() {
       </div>
 
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-gray-400 text-sm">
-        © {new Date().getFullYear()} YourWebsite. All Rights Reserved.
+        © {new Date().getFullYear()} DOCKET. All Rights Reserved.
       </div>
     </footer>
   );
