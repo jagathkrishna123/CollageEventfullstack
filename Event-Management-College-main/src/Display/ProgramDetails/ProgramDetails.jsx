@@ -14,133 +14,201 @@ const ProgramDetails = () => {
   }, [id]);
 
   return showDetail ? (
-    <div className="min-h-screen  bg-[#03050F] text-white p-8 font-out">
-      <div className="max-w-7xl mx-auto w-full items-center justify-center flex flex-col gap-5 pt-30">
-        <div className="max-w-xs w-full border border-[#2F53E0] rounded-4xl p-2 text-center">
-          <p className="font-semibold text-[16px]">
-            {showDetail.programDate} : {showDetail.programTime}
+    <div className="min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] text-white font-out relative overflow-hidden pt-20">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto w-full p-8 pt-24">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          {/* Date Badge */}
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-full backdrop-blur-sm mb-8">
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <span className="text-blue-300 font-medium text-sm">
+              {showDetail.programDate} • {showDetail.programTime}
+            </span>
+          </div>
+
+          {/* Program Name */}
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent leading-tight">
+            {showDetail.Name}
+          </h1>
+
+          {/* Program Title */}
+          <p className="text-xl md:text-2xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed mb-10">
+            {showDetail.Title}
           </p>
-        </div>
-        <p className="text-[60px] font-bold bg-gradient-to-r from-[#2F53E0] to-[#FCFCFC] bg-clip-text text-transparent">
-          {showDetail.Name}
-        </p>
-        <p className="text-[16px] text-center font-medium font-out max-w-lg">
-          {showDetail.Title}
-        </p>
 
-        <div className="flex flex-row gap-4">
-          <button className="border border-[#FCFCFC] text-[#365EFF] text-[11px] md:text-[14px] px-3 py-2 rounded-xl font-semibold flex gap-2 items-center">
-            <Download className="w-5"/>
-            Download Brochure
-          </button>
+          {/* CTA Button */}
+          <div className="flex justify-center">
+            <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-1">
+              <Download className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              Download Brochure
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+            </button>
+          </div>
         </div>
 
-        {/* features */}
-        <div className="w-full flex justify-center mt-8">
-          <div className="flex flex-row flex-wrap justify-center gap-6">
+        {/* Features Section */}
+        <div className="w-full mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              Program Highlights
+            </h2>
+            <p className="text-gray-400">What makes this program special</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
             {showDetail.features.map((feature, index) => (
               <div
-  key={index}
-  className="
-    group
-    flex flex-col items-center text-center
-    p-3 sm:p-4
-    rounded-xl sm:rounded-2xl
-    bg-white/5 backdrop-blur-md
-    border border-white/10
-    shadow-sm
-    hover:shadow-[0_0_12px_rgba(63,131,248,0.4)]
-    transition-all duration-300
-    cursor-pointer
-    w-[110px] sm:w-[140px]
-  "
->
-  {/* Icon Box */}
-  <div
-    className="
-      flex items-center justify-center
-      w-10 h-10 sm:w-14 sm:h-14
-      rounded-lg sm:rounded-xl
-      bg-gradient-to-br from-[#1a2cff33] to-[#1a2cff11]
-      border border-[#2F53E0]/40
-      group-hover:scale-105
-      group-hover:border-[#2F53E0]
-      transition-all duration-300
-    "
-  >
-    <feature.icon className="text-white text-lg sm:text-2xl drop-shadow" />
-  </div>
+                key={index}
+                className="group flex flex-col items-center text-center p-4 rounded-lg bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-white/10 transition-all duration-300"
+              >
+                {/* Icon Container */}
+                <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-500/10 border border-blue-500/20 group-hover:bg-blue-500/20 group-hover:border-blue-400 transition-all duration-300 mb-3">
+                  <feature.icon className="text-blue-300 text-lg group-hover:text-blue-200 transition-colors duration-300" />
+                </div>
 
-  {/* Feature Name */}
-  <p className="text-white text-xs sm:text-sm font-medium mt-2 sm:mt-3 leading-tight">
-    {feature.name}
-  </p>
-</div>
-
+                {/* Feature Name */}
+                <h3 className="text-white font-medium text-sm text-center leading-tight">
+                  {feature.name}
+                </h3>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* descriptionand image.::::::::::::::::: */}
-        {/* Description + Image Section */}
-        <div className="flex flex-col md:flex-row w-full mt-10 max-w-6xl items-start gap-10">
-          {/* LEFT: DESCRIPTION */}
-          <div className="flex-1 pr-6">
-            <p className="bg-gradient-to-r from-[#2F53E0] to-[#FCFCFC] bg-clip-text text-transparent text-[40px] font-bold">
-              About the {showDetail.Name}
-            </p>
-            <p className="text-white text-md leading-loose">
-              {showDetail.Description}
-            </p>
-          </div>
+        {/* About Section */}
+        <div className="w-full max-w-7xl mx-auto mb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Description */}
+            <div className="order-2 lg:order-1">
+              <div className="mb-6">
+                <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-6">
+                  About the {showDetail.Name}
+                </h2>
+                <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+              </div>
+              <div className="prose prose-lg prose-invert max-w-none">
+                <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                  {showDetail.Description}
+                </p>
+                <div className="flex flex-wrap gap-4 mt-8">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span className="text-blue-300 text-sm font-medium">Expert Mentorship</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="text-purple-300 text-sm font-medium">Hands-on Learning</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                    <span className="text-cyan-300 text-sm font-medium">Industry Ready</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          {/* RIGHT: IMAGE */}
-          <div className="flex-[0.8] flex justify-end">
-            <img
-              src={showDetail.image}
-              alt={showDetail.Name}
-              className="w-[400px] h-auto rounded-xl object-cover"
-            />
+            {/* Image */}
+            <div className="order-1 lg:order-2">
+              <div className="relative group">
+                {/* Glow Effect */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl opacity-75 group-hover:opacity-100 blur-xl transition-opacity duration-500"></div>
+
+                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/10">
+                  <img
+                    src={showDetail.image}
+                    alt={showDetail.Name}
+                    className="w-full h-80 md:h-96 object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+
+                  {/* Floating Badge */}
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                    Featured
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
-     {/* events related */}
-     {/* Filter related events */}
-{EVENTDATAS.filter(e => e.programName === showDetail.Name).length > 0 && (
-  <div className="w-full mt-16">
-    <h2 className="text-[35px] font-bold mb-6">
-      Events under {showDetail.Name}
-    </h2>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-     {EVENTDATAS
-  .filter(e => e.programName === showDetail.Name)
-  .map(event => (
-    <div
-      key={event.id}
-      onClick={() => navigate(`/eventdetails/${event.id}`)}
-      className="bg-white/5 p-5 border border-[#00A9E8] rounded-2xl backdrop-blur-lg hover:shadow-lg transition cursor-pointer"
-    >
-      <img
-        src={event.poster}
-        alt={event.eventName}
-        className="w-full h-40 object-cover rounded-xl mb-4"
-      />
+      {/* Related Events Section */}
+      {EVENTDATAS.filter(e => e.programName === showDetail.Name).length > 0 && (
+        <div className="w-full max-w-7xl mx-auto mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-4">
+              Events under {showDetail.Name}
+            </h2>
+            <p className="text-gray-400 text-lg">Discover exciting opportunities within this program</p>
+          </div>
 
-      <h3 className="text-xl font-semibold">{event.eventName}</h3>
-      <p className="text-gray-300 text-[14px] ">{event.department}</p>
-      <p className="text-gray-300 text-[12px] line-clamp-2">{event.description}</p>
-    </div>
-))}
-    </div>
-  </div>
-)}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {EVENTDATAS
+              .filter(e => e.programName === showDetail.Name)
+              .map(event => (
+                <div
+                  key={event.id}
+                  onClick={() => navigate(`/eventdetails/${event.id}`)}
+                  className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 hover:border-blue-500/50 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer transform hover:-translate-y-2"
+                >
+                  {/* Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+
+                  {/* Image Container */}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={event.poster}
+                      alt={event.eventName}
+                      className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+                    {/* Status Badge */}
+                    <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      Active
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 p-6">
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">
+                      {event.eventName}
+                    </h3>
+                    <p className="text-blue-300 text-sm font-medium mb-3">
+                      {event.department}
+                    </p>
+                    <p className="text-gray-300 text-sm leading-relaxed line-clamp-2">
+                      {event.description}
+                    </p>
+
+                    {/* CTA Indicator */}
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-xs text-gray-400">Click to explore</span>
+                      <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500 transition-colors duration-300">
+                        <svg className="w-3 h-3 text-blue-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
 
     </div>
   ) : (
-    <div className="min-h-screen flex justify-center items-center">
-      <p className="text-gray-500 animate-pulse">Loading...</p>
+    <div className="min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] flex justify-center items-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-300 text-lg font-medium animate-pulse">Loading program details...</p>
+      </div>
     </div>
   );
 };

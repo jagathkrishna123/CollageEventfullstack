@@ -14,9 +14,21 @@ const ICON_OPTIONS = [
   { label: "Star", value: FaStar },
 ];
 
+const CATEGORY_OPTIONS = [
+  "Technical",
+  "Cultural",
+  "Sports",
+  "Academic",
+  "Workshop & Training",
+  "Career & Placement",
+  "Social & Community",
+  "Arts & Creativity"
+];
+
 const AddProgram = () => {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -41,6 +53,7 @@ const AddProgram = () => {
     const newProgram = {
       id: Date.now(),
       Name: name,
+      category: category,
       image: image,
       Title: title,
       programDate: date,
@@ -71,6 +84,24 @@ const AddProgram = () => {
             placeholder="Hackathon"
             required
           />
+        </div>
+
+        {/* Category */}
+        <div className="mb-6">
+          <label className="block text-gray-300 mb-2">Category</label>
+          <select
+            className="w-full p-3 rounded bg-gray-800 text-white outline-none"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Select a category</option>
+            {CATEGORY_OPTIONS.map((cat, index) => (
+              <option key={index} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Title */}

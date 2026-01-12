@@ -31,7 +31,7 @@ export function NavBar() {
   return (
     <nav className="absolute top-0 left-0 w-full z-50">
       <div className=" max-w-7xl w-full mx-auto px-4 md:px-6 lg:px-10 flex-wrap">
-        <div className="flex items-center justify-between w-full flex-wrap pt-4">
+        <div className="grid grid-cols-3 items-center w-full pt-4">
           {/* Logo Section */}
           <div onClick={() => navigate("/")} className="flex items-center w-[205px] h-[70px] cursor-pointer">
             <div className="flex items-center h-[66px]">
@@ -44,50 +44,49 @@ export function NavBar() {
             </div>
           </div>
 
-          {/* Desktop Menu */}
-          
-            {/* Navigation Menu */}
-            <div className="hidden md:flex items-center justify-center gap-8 px-8 py-4 bg-slate-600 backdrop-blur-sm border border-gray-600 rounded-2xl shadow-2xl shadow-purple-500/20">
-              <div className="group cursor-pointer relative">
+          {/* Centered Navigation Menu */}
+          <div className="flex justify-center">
+            <div className="hidden md:flex items-center justify-center gap-8 px-8 py-4 bg-white/10 backdrop-blur-xl border border-blue-600/50 rounded-2xl shadow-2xl shadow-purple-500/20">              <div className="group cursor-pointer relative">
                 <Link
                   to="/"
-                  className="font-sans font-light text-white font-lexend text-[16px] transition-colors group-hover:text-purple-300"
+                  className="font-sans font-light text-white font-lexend text-[16px] transition-colors group-hover:text-blue-300"
                 >
                   Home
                 </Link>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
 
               <div className="group cursor-pointer relative">
                 <Link
                   to="/dashboard"
-                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-purple-300"
+                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300"
                 >
                   Dashboard
                 </Link>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
 
               <div className="group cursor-pointer relative">
                 <Link
                   to="/reports"
-                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-purple-300"
+                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300"
                 >
                   Reports
                 </Link>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
 
               <div className="group cursor-pointer relative">
-                <h3 className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-purple-300">
+                <h3 className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300">
                   About
                 </h3>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full" />
+                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
             </div>
+          </div>
 
-            {/* Right Section - Icons & User Menu */}
-            <div className="flex items-center gap-4 ml-auto">
+          {/* Right Section - Icons & User Menu */}
+          <div className="flex items-center justify-end gap-4">
               {/* Bell Icon with Notification Badge */}
               <div className="relative cursor-pointer group">
                 <HiOutlineBell strokeWidth={1} size={28}
@@ -116,7 +115,7 @@ export function NavBar() {
                   <div className="hidden lg:flex items-center gap-2">
                     <span className="text-white font-light text-sm whitespace-nowrap">
                       {/* Welcome, {user.name.split(' ')[0]} */}
-                      Welcome, {user.name.split(" ").slice(0, 2).join(" ")}
+                      Welcome, {user?.name ? user.name.split(" ").slice(0, 2).join(" ") : user?.email?.split('@')[0] || 'User'}
                     </span>
                   </div>
                   <button
@@ -244,7 +243,7 @@ export function NavBar() {
                         <FaRegUserCircle className="text-white text-2xl" />
                       </div>
                       <p className="text-white font-medium text-sm">
-                        Welcome, {user.name}
+                        Welcome, {user?.name || user?.email?.split('@')[0] || 'User'}
                       </p>
                       <p className="text-gray-400 text-xs mt-1">
                         {user.userType === 'student' ? 'Student' : 'Teacher'}

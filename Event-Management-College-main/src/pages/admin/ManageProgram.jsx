@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 const ManageProgram = () => {
   const [events, setEvents] = useState(EVENTDATAS);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   
@@ -39,6 +41,28 @@ const ManageProgram = () => {
     setEditingEvent(null);
   };
 
+  // 🔹 Pagination Logic
+  const totalPages = Math.ceil(events.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentEvents = events.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <div className="min-h-screen  text-slate-400 p-6 font-out">
       <div className="max-w-7xl mx-auto">
@@ -58,7 +82,7 @@ const ManageProgram = () => {
             </thead>
 
             <tbody>
-              {events.map((event) => (
+              {currentEvents.map((event) => (
                 <tr
                   key={event.id}
                   className="border-t border-white/10 hover:bg-white/5"
@@ -112,6 +136,58 @@ const ManageProgram = () => {
             </tbody>
           </table>
         </div>
+
+        {/* PAGINATION */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6">
+            <div className="text-sm text-slate-400">
+              Showing {startIndex + 1} to {Math.min(endIndex, events.length)} of {events.length} events
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:opacity-50 rounded text-sm transition-colors"
+              >
+                Previous
+              </button>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => {
+                  // Show first page, last page, current page, and pages around current page
+                  return page === 1 ||
+                         page === totalPages ||
+                         (page >= currentPage - 1 && page <= currentPage + 1);
+                })
+                .map((page, index, array) => (
+                  <React.Fragment key={page}>
+                    {index > 0 && array[index - 1] !== page - 1 && (
+                      <span className="px-2 text-slate-500">...</span>
+                    )}
+                    <button
+                      onClick={() => handlePageChange(page)}
+                      className={`px-3 py-2 rounded text-sm transition-colors ${
+                        currentPage === page
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  </React.Fragment>
+                ))}
+
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:opacity-50 rounded text-sm transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* EDIT MODAL */}
         {editingEvent && (

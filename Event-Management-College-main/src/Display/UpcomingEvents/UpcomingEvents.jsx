@@ -1,37 +1,48 @@
 import time from "../../assets/time.svg";
-import { motion } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { Items } from "../../Constants/ProgramData";
 import { useNavigate } from "react-router-dom";
 
 export function UpcomingEvents() {
 
     const carouselRef = useRef(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const navigate = useNavigate()
+    const [isUserInteracting, setIsUserInteracting] = useState(false);
+    const navigate = useNavigate();
 
-    const scrollToIndex = (index) => {
-        const carousel = carouselRef.current;
-        if (carousel) {
-            const child = carousel.children[index];
-            if (child) {
-                carousel.scrollTo({
-                    left: child.offsetLeft,
-                    behavior: "smooth",
-                });
-            }
-        }
-    };
+    // Create duplicated items for seamless looping
+    const duplicatedItems = [...Items, ...Items];
+
+    // Pause auto-scroll when user interacts
+    const handleUserInteraction = useCallback(() => {
+        setIsUserInteracting(true);
+        // Resume auto-scroll after 3 seconds of inactivity
+        setTimeout(() => {
+            setIsUserInteracting(false);
+        }, 3000);
+    }, []);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            const nextIndex = (currentIndex + 1) % Items.length;
-            setCurrentIndex(nextIndex);
-            scrollToIndex(nextIndex);
-        }, 4000); 
+        const carousel = carouselRef.current;
+        if (!carousel) return;
 
-        return () => clearInterval(interval);
-    }, [currentIndex, Items.length]);
+        const scrollSpeed = 1.5; // Increased speed for faster auto-scrolling
+
+        const animate = () => {
+            if (carousel && !isUserInteracting) {
+                carousel.scrollLeft += scrollSpeed;
+
+                // Reset to beginning when reaching halfway through duplicated items
+                if (carousel.scrollLeft >= carousel.scrollWidth / 2) {
+                    carousel.scrollLeft = 0;
+                }
+            }
+        };
+
+        const intervalId = setInterval(animate, 40); // Slightly faster animation interval
+
+        return () => clearInterval(intervalId);
+    }, [isUserInteracting]);
 
     return (
         <div className="flex items-center justify-center w-full py-12">
@@ -50,21 +61,24 @@ export function UpcomingEvents() {
 
                     {/* === Scrollable Events === */}
                     <div className="w-full overflow-hidden">
-                        <motion.div
+                        <div
                             ref={carouselRef}
-                            className="flex flex-row gap-6 overflow-x-auto md:overflow-x-hidden scroll-smooth snap-x snap-mandatory"
-                            drag="x"
-                            dragConstraints={{ left: -300 * (Items.length - 1), right: 0 }}
+                            className="flex flex-row gap-6 overflow-x-auto scroll-smooth cursor-grab active:cursor-grabbing"
+                            style={{ scrollBehavior: 'smooth' }}
+                            onScroll={handleUserInteraction}
+                            onMouseDown={handleUserInteraction}
+                            onTouchStart={handleUserInteraction}
+                            onWheel={handleUserInteraction}
                         >
-                            {Items.map((item, index) => (
-                                <motion.div
-                                    key={index}
-                                    className="flex-shrink-0 flex flex-col overflow-hidden w-full sm:w-[80%] md:w-[45%] lg:w-[30%] snap-start rounded-xl relative"
-                                    whileTap={{ cursor: "grabbing" }}
+                            {duplicatedItems.map((item, index) => (
+                                <div
+                                    key={`${item.id}-${index}`}
+                                    className="flex-shrink-0 flex flex-col overflow-hidden w-full sm:w-[80%] md:w-[45%] lg:w-[30%] rounded-xl relative"
                                 >
                                     {/* Background Image */}
-                                    <div onClick={() => {navigate(`/programdetails/${item.id}`)} }
-                                        className="w-full h-[240px] sm:h-[220px] md:h-[240px] rounded-xl bg-center bg-cover bg-no-repeat cursor-pointer"
+                                    <div
+                                        onClick={() => {navigate(`/programdetails/${item.id}`)} }
+                                        className="w-full h-[240px] sm:h-[220px] md:h-[240px] rounded-xl bg-center bg-cover bg-no-repeat cursor-pointer hover:scale-105 transition-transform duration-300"
                                         style={{
                                             backgroundImage: `url(${item.image})`,
                                         }}
@@ -76,9 +90,9 @@ export function UpcomingEvents() {
                                             {item.Name || "Upcoming Event"}
                                         </h3>
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </div>

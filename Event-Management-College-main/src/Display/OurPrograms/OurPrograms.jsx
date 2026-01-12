@@ -7,6 +7,18 @@ const OurPrograms = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("All");
 
+  const categories = [
+    "All",
+    "Technical",
+    "Cultural",
+    "Sports",
+    "Academic",
+    "Workshop & Training",
+    "Career & Placement",
+    "Social & Community",
+    "Arts & Creativity"
+  ];
+
   // FILTER PROGRAMS BY CATEGORY
   const handleFilterChange = useCallback((filter) => {
     setActiveFilter(filter);
@@ -16,9 +28,7 @@ const OurPrograms = () => {
     if (activeFilter === "All") {
       return Items;
     }
-    // For now, show all programs since Items doesn't have status field
-    // You can add filtering logic based on program names or other criteria
-    return Items;
+    return Items.filter(item => item.category === activeFilter);
   }, [activeFilter]);
 
   return (
@@ -34,7 +44,7 @@ const OurPrograms = () => {
               transition={{ duration: 0.5 }}
               className="text-[24px] md:text-[36px] font-bold font-lexend text-white"
             >
-              <span className="text-cyan-400">Our Programs</span>
+              <span className="text-cyan-400">College Programs</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -47,7 +57,23 @@ const OurPrograms = () => {
           </div>
 
           {/* FILTER BUTTONS */}
-         
+          <div className="w-full flex flex-wrap justify-center gap-3 mt-6">
+            {categories.map((category) => (
+              <motion.button
+                key={category}
+                onClick={() => handleFilterChange(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  activeFilter === category
+                    ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/25'
+                    : 'bg-slate-700/50 text-gray-300 hover:bg-slate-600/50 hover:text-white'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {category}
+              </motion.button>
+            ))}
+          </div>
         </div>
 
         {/* PROGRAMS GRID */}
@@ -70,6 +96,9 @@ const OurPrograms = () => {
 
                 <div className="absolute top-4 left-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1 rounded-full font-semibold shadow-lg">
                   {item.Name}
+                </div>
+                <div className="absolute top-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded-full font-medium">
+                  {item.category}
                 </div>
               </div>
 
@@ -100,7 +129,7 @@ const OurPrograms = () => {
                 <div className="flex flex-wrap gap-2 mt-2">
                   {item.features.slice(0, 3).map((feature, index) => (
                     <div key={index} className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg text-xs text-cyan-300">
-                      <span className="text-cyan-400">{feature.icon}</span>
+                      <span className="text-cyan-400">{React.createElement(feature.icon)}</span>
                       <span>{feature.name}</span>
                     </div>
                   ))}

@@ -70,7 +70,7 @@ const AdminDashboard = () => {
   const recentEvents = EVENTDATAS.slice(0, 5)
 
   return (
-    <div className='flex-1 min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 p-4 md:p-8 font-out'>
+    <div className='flex-1 h-screen overflow-y-auto bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 p-4 md:p-8 font-out'>
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

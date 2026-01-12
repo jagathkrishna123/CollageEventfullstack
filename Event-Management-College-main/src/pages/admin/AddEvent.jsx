@@ -128,6 +128,16 @@ const AddEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Validation for participant limits - ensure minimum of 1
+    if ((name === 'overallIndividualLimit' || name === 'departmentIndividualLimit' ||
+         name === 'teamsPerDepartment' || name === 'membersPerTeamFromDepartment') && value !== '') {
+      const numValue = parseInt(value);
+      if (numValue < 1) {
+        return; // Don't update state if value is below 1
+      }
+    }
+
     setEventData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -396,7 +406,9 @@ const AddEvent = () => {
                 name="overallIndividualLimit"
                 value={eventData.overallIndividualLimit}
                 onChange={handleChange}
+                min="1"
                 className="p-3 bg-gray-800 rounded w-full"
+                placeholder="Minimum: 1"
               />
             </div>
             <div>
@@ -406,7 +418,9 @@ const AddEvent = () => {
                 name="departmentIndividualLimit"
                 value={eventData.departmentIndividualLimit}
                 onChange={handleChange}
+                min="1"
                 className="p-3 bg-gray-800 rounded w-full"
+                placeholder="Minimum: 1"
               />
             </div>
           </div>
@@ -422,7 +436,9 @@ const AddEvent = () => {
                 name="teamsPerDepartment"
                 value={eventData.teamsPerDepartment}
                 onChange={handleChange}
+                min="1"
                 className="p-3 bg-gray-800 rounded w-full"
+                placeholder="Minimum: 1"
               />
             </div>
             <div>
@@ -432,7 +448,9 @@ const AddEvent = () => {
                 name="membersPerTeamFromDepartment"
                 value={eventData.membersPerTeamFromDepartment}
                 onChange={handleChange}
+                min="1"
                 className="p-3 bg-gray-800 rounded w-full"
+                placeholder="Minimum: 1"
               />
             </div>
           </div>

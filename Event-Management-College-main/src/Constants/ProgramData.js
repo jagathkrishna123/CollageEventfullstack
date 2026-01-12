@@ -16,17 +16,18 @@ import img22 from "../assets/img22.png"
 import img23 from "../assets/img23.png"
 import img24 from "../assets/img24.jpg"
 import img11 from "../assets/img11.jpg"
-import { FaCheckCircle, FaStar, FaBolt, FaLightbulb } from "react-icons/fa";
+import { FaCheckCircle, FaStar, FaBolt, FaLightbulb, } from "react-icons/fa";
 
 
 
 //PROGRAMS
 export const Items = [
-  { 
+  {
     id: 1,
     Name: "Hackathon",
+    category: "Technical",
     image: Image1,
-    Title: "india’s largest student hackathon",
+    Title: "india's largest student hackathon",
     programDate: "March 18, 2025",
     programTime: "48 Hours",
     Description:
@@ -39,9 +40,10 @@ export const Items = [
     ]
   },
 
-  { 
+  {
     id: 2,
     Name: "Design Sprint",
+    category: "Workshop & Training",
     image: Image2,
     Title: "Campus Design Sprint – Turning Ideas Into Solutions",
     programDate: "April 10, 2025",
@@ -59,6 +61,7 @@ export const Items = [
   {
     id: 3,
     Name: "Tech Meetup",
+    category: "Technical",
     image: Image3,
     Title: "Campus Tech Meetup – Where Ideas Meet Technology",
     programDate: "May 5, 2025",
@@ -76,6 +79,7 @@ export const Items = [
   {
     id: 4,
     Name: "AI Workshop",
+    category: "Workshop & Training",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     Title: "AI & Machine Learning Workshop – Future of Technology",
     programDate: "June 15, 2025",
@@ -93,6 +97,7 @@ export const Items = [
   {
     id: 5,
     Name: "Startup Pitch",
+    category: "Career & Placement",
     image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     Title: "Campus Startup Pitch Competition – Turn Ideas into Reality",
     programDate: "July 10, 2025",
@@ -110,6 +115,7 @@ export const Items = [
   {
     id: 6,
     Name: "Cyber Security",
+    category: "Workshop & Training",
     image: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     Title: "Cyber Security Bootcamp – Protect the Digital World",
     programDate: "August 20, 2025",
@@ -127,6 +133,7 @@ export const Items = [
   {
     id: 7,
     Name: "Data Science",
+    category: "Workshop & Training",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     Title: "Data Science & Analytics Workshop – Unlock Data Insights",
     programDate: "September 5, 2025",
@@ -144,6 +151,7 @@ export const Items = [
   {
     id: 8,
     Name: "Blockchain",
+    category: "Technical",
     image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     Title: "Blockchain & Web3 Development – Future of Finance",
     programDate: "October 12, 2025",
