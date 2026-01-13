@@ -28,7 +28,7 @@ const EventDetails = () => {
 
   const handleConfirmIndividual = () => {
     setShowConfirm(false);
-    toast.success("Successfully Registered 🎉");
+    toast.success("Successfully Registered");
   };
 
   if (!event) {

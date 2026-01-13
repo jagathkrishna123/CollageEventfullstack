@@ -96,7 +96,7 @@ const AddEvent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] w-full text-white font-out p-6 overflow-y-auto">
+    <div className="min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] w-full text-white font-out p-6">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

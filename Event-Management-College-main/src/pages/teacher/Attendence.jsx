@@ -2,7 +2,7 @@ import React from 'react'
 
 const Attendence = () => {
   return (
-    <div className='text-gray-300'>Attendence</div>
+    <div className='text-gray-300'>Working on Attendence...</div>
   )
 }
 

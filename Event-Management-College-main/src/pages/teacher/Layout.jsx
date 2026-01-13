@@ -16,7 +16,7 @@ const Layout = () => {
                 onClick={()=> navigate('/')} /> */}
             <button onClick={logout} className='text-sm px-8 py-2 bg-blue-800 text-white rounded-full cursor-pointer'>Logout</button>
         </div>
-        <div className='flex min-h-screen'>
+        <div className='flex min-h-screen w-full'>
             <Sidebar/>
             <div className='w-full overflow-y-auto'>
                  <Outlet/>   
