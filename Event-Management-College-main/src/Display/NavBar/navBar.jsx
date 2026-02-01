@@ -47,14 +47,14 @@ export function NavBar() {
           {/* Centered Navigation Menu */}
           <div className="flex justify-center">
             <div className="hidden md:flex items-center justify-center gap-8 px-8 py-4 bg-white/10 backdrop-blur-xl border border-blue-600/50 rounded-2xl shadow-2xl shadow-purple-500/20">              <div className="group cursor-pointer relative">
-                <Link
-                  to="/"
-                  className="font-sans font-light text-white font-lexend text-[16px] transition-colors group-hover:text-blue-300"
-                >
-                  Home
-                </Link>
-                <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
-              </div>
+              <Link
+                to="/"
+                className="font-sans font-light text-white font-lexend text-[16px] transition-colors group-hover:text-blue-300"
+              >
+                Home
+              </Link>
+              <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
+            </div>
 
               <div className="group cursor-pointer relative">
                 <Link
@@ -77,9 +77,11 @@ export function NavBar() {
               </div>
 
               <div className="group cursor-pointer relative">
-                <h3 className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300">
+                <Link
+                  to="/about"
+                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300">
                   About
-                </h3>
+                </Link>
                 <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
             </div>
@@ -87,48 +89,48 @@ export function NavBar() {
 
           {/* Right Section - Icons & User Menu */}
           <div className="flex items-center justify-end gap-4">
-              {/* Bell Icon with Notification Badge */}
-              <div className="relative cursor-pointer group">
-                <HiOutlineBell strokeWidth={1} size={28}
-                  className="text-white text-2xl hover:text-purple-300 transition-colors duration-200"
-                />
-                {notificationCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-xs  rounded-full border-1 border-gray-600">
-                    {notificationCount > 99 ? '99+' : notificationCount}
+            {/* Bell Icon with Notification Badge */}
+            <div onClick={() => user ? navigate("/dashboard") : navigate("/login")} className="relative cursor-pointer group">
+              <HiOutlineBell strokeWidth={1} size={28}
+                className="text-white text-2xl hover:text-purple-300 transition-colors duration-200"
+              />
+              {notificationCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-xs  rounded-full border-1 border-gray-600">
+                  {notificationCount > 99 ? '99+' : notificationCount}
+                </span>
+              )}
+            </div>
+
+            {/* Profile Icon */}
+            <div
+              onClick={() => user ? navigate("/profile") : navigate("/login")}
+              className="cursor-pointer group"
+            >
+              <CircleUserRound strokeWidth={1} size={28}
+                className="text-white text-2xl hover:text-purple-300 transition-colors duration-200"
+              />
+            </div>
+
+            {/* User Menu */}
+            {user ? (
+              <div className="flex items-center gap-3 ml-2">
+                <div className="hidden lg:flex items-center gap-2">
+                  <span className="text-white font-light text-sm whitespace-nowrap">
+                    {/* Welcome, {user.name.split(' ')[0]} */}
+                    Welcome, {user?.name ? user.name.split(" ").slice(0, 2).join(" ") : user?.email?.split('@')[0] || 'User'}
                   </span>
-                )}
-              </div>
-
-              {/* Profile Icon */}
-              <div
-                onClick={() => user ? navigate("/dashboard") : navigate("/login")}
-                className="cursor-pointer group"
-              >
-                <CircleUserRound strokeWidth={1} size={28}
-                  className="text-white text-2xl hover:text-purple-300 transition-colors duration-200"
-                />
-              </div>
-
-              {/* User Menu */}
-              {user ? (
-                <div className="flex items-center gap-3 ml-2">
-                  <div className="hidden lg:flex items-center gap-2">
-                    <span className="text-white font-light text-sm whitespace-nowrap">
-                      {/* Welcome, {user.name.split(' ')[0]} */}
-                      Welcome, {user?.name ? user.name.split(" ").slice(0, 2).join(" ") : user?.email?.split('@')[0] || 'User'}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      // Clear user data
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("user");
-                      localStorage.removeItem("userType");
-                      setUser(null);
-                      toast.success("Logged out successfully!");
-                      navigate("/");
-                    }}
-                    className="
+                </div>
+                <button
+                  onClick={() => {
+                    // Clear user data
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("userType");
+                    setUser(null);
+                    toast.success("Logged out successfully!");
+                    navigate("/");
+                  }}
+                  className="
                       flex items-center justify-center gap-2
                       px-4 py-2 h-[40px]
                       bg-blue-600 hover:bg-blue-700
@@ -138,15 +140,15 @@ export function NavBar() {
                       cursor-pointer
                       shadow-md hover:shadow-lg
                     "
-                  >
-                    <span className="hidden sm:inline">Logout</span>
-                    <span className="sm:hidden">×</span>
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => navigate("/login")}
-                  className="
+                >
+                  <span className="hidden sm:inline">Logout</span>
+                  <span className="sm:hidden">×</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="
                     flex items-center justify-center gap-2
                     px-6 py-2.5 h-[40px]
                     bg-blue-600 hover:bg-blue-700
@@ -156,14 +158,14 @@ export function NavBar() {
                     cursor-pointer
                     shadow-md hover:shadow-lg
                   "
-                >
-                  <h3 className="font-sans text-[16px]">
-                    Login
-                  </h3>
-                </button>
-              )}
-            </div>
-         
+              >
+                <h3 className="font-sans text-[16px]">
+                  Login
+                </h3>
+              </button>
+            )}
+          </div>
+
 
           {/* Mobile Menu Icon */}
           <div className="flex md:hidden items-center justify-center text-white">

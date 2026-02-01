@@ -284,19 +284,13 @@ export const PROGRAMDATAS = [
 export const teacherDashboard_data = {
   "events": 12,
   "upcomingEvents": 3,
-  "completedEvents": 9,
-  "registrations": 240,
-  "attendance": 180,
-  "feedbackReceived": 95
+  "completedEvents": 9
 };
 
 export const adminDashboard_data = {
   "events": 12,
   "upcomingEvents": 3,
-  "completedEvents": 9,
-  "registrations": 240,
-  "attendance": 180,
-  "feedbackReceived": 95
+  "completedEvents": 9
 };
 
 export const PROGRAMS = [

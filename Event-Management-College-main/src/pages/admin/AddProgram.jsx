@@ -30,6 +30,7 @@ const AddProgram = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
+  const [brochure, setBrochure] = useState(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
@@ -55,6 +56,7 @@ const AddProgram = () => {
       Name: name,
       category: category,
       image: image,
+      brochure: brochure,
       Title: title,
       programDate: date,
       programTime: time,
@@ -141,6 +143,17 @@ const AddProgram = () => {
               required
             />
           </div>
+        </div>
+
+        {/* Brochure Upload */}
+        <div className="mb-6">
+          <label className="block text-gray-300 mb-2">Program Brochure (PDF)</label>
+          <input
+            type="file"
+            accept=".pdf"
+            className="text-gray-700 bg-slate-300 p-2 rounded-md cursor-pointer w-full"
+            onChange={(e) => setBrochure(e.target.files[0])}
+          />
         </div>
 
         {/* Image Upload */}

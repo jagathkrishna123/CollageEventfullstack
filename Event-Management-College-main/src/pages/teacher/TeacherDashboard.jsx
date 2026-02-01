@@ -7,10 +7,7 @@ const TeacherDashboard = () => {
     const [dashboardData, setDashboardData] = useState({
     events: 0,
     upcomingEvents:0,
-    completedEvents:0,
-    registrations: 0,
-    attendance:0,
-    feedbackReceived:0,
+    completedEvents:0
   })
 
     const fetchDashboard = async () => {
@@ -43,27 +40,6 @@ const TeacherDashboard = () => {
       bgColor: "from-slate-600 to-slate-700",
       lightBg: "bg-slate-600/10"
     },
-    {
-      title: "Total Registrations",
-      value: dashboardData.registrations,
-      icon: <FaUsers className="w-8 h-8 text-slate-400" />,
-      bgColor: "from-slate-600 to-slate-700",
-      lightBg: "bg-slate-600/10"
-    },
-    {
-      title: "Attendance",
-      value: dashboardData.attendance,
-      icon: <FaUserCheck className="w-8 h-8 text-slate-400" />,
-      bgColor: "from-slate-600 to-slate-700",
-      lightBg: "bg-slate-600/10"
-    },
-    {
-      title: "Feedbacks Received",
-      value: dashboardData.feedbackReceived,
-      icon: <FaStar className="w-8 h-8 text-slate-400" />,
-      bgColor: "from-slate-600 to-slate-700",
-      lightBg: "bg-slate-600/10"
-    }
   ]
 
   // Get recent events (first 5)
