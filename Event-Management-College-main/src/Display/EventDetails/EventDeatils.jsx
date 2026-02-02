@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { EVENTDATAS } from "../../Constants/ProgramData";
 import { BiLocationPlus } from "react-icons/bi";
 import { FaLocationDot } from "react-icons/fa6";
 import { toast } from "react-toastify";
@@ -14,21 +13,67 @@ const EventDetails = () => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    const foundEvent = EVENTDATAS.find((e) => e.id === Number(id));
+    // Fetch events from localStorage
+    const savedEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+    const foundEvent = savedEvents.find((e) => e.id === Number(id));
     setEvent(foundEvent);
   }, [id]);
 
   const handleRegister = () => {
+    if (!event) return;
+
+    // Check if registration is allowed (simple check for now)
+    // Could add more logic here e.g., checking if user is logged in
+
     if (event.participationType === "individual") {
-      setShowConfirm(true); // ✅ show popup here itself
+      setShowConfirm(true);
     } else {
+      // For team events, navigate to a team registration page if it exists
+      // For now, let's just confirm too or redirect
+      // Keeping original logic: navigate(`/event/${event.id}/register`);
+      // Since team registration page might not be set up with local storage yet, 
+      // I'll leave the navigation as is, assuming user will handle that next or it's a placeholder.
       navigate(`/event/${event.id}/register`);
     }
   };
 
   const handleConfirmIndividual = () => {
     setShowConfirm(false);
+
+    // Get current user info if available
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    // Create registration object
+    const registrationData = {
+      id: Date.now(),
+      eventId: event.id,
+      eventName: event.eventName,
+      participationType: "individual",
+      date: new Date().toISOString(),
+      userId: user.id || null, // Link to user if logged in
+      userEmail: user.email || null,
+      registeredBy: user.name || "Guest",
+      status: "confirmed"
+    };
+
+    // Save to localStorage
+    const existingRegistrations = JSON.parse(localStorage.getItem("event_registrations") || "[]");
+
+    // Check if checks if already registered to avoid duplicates?
+    // Good idea to add a simple check
+    const isAlreadyRegistered = existingRegistrations.some(
+      r => String(r.userId) === String(user.id) && Number(r.eventId) === Number(event.id)
+    );
+
+    if (isAlreadyRegistered) {
+      toast.info("You are already registered for this event.");
+      return;
+    }
+
+    localStorage.setItem("event_registrations", JSON.stringify([...existingRegistrations, registrationData]));
+
     toast.success("Successfully Registered");
+    // Ideally, save registration to localStorage here
   };
 
   if (!event) {
@@ -37,6 +82,7 @@ const EventDetails = () => {
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-300 text-lg font-medium animate-pulse">Loading event details...</p>
+          <button onClick={() => navigate(-1)} className="mt-4 text-blue-400 hover:text-blue-300 underline">Go Back</button>
         </div>
       </div>
     );
@@ -45,9 +91,8 @@ const EventDetails = () => {
   return (
     <>
       <div
-        className={`min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] text-white font-out relative overflow-hidden pt-20 pb-20 px-5 transition-all duration-300 ${
-          showConfirm ? "blur-sm" : ""
-        }`}
+        className={`min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] text-white font-out relative overflow-hidden pt-20 pb-20 px-5 transition-all duration-300 ${showConfirm ? "blur-sm" : ""
+          }`}
       >
         {/* Background Effects */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
@@ -62,14 +107,15 @@ const EventDetails = () => {
 
             <div className="relative overflow-hidden rounded-3xl">
               <img
-                src={event.poster}
+                src={event.poster || "https://via.placeholder.com/1200x500"}
                 alt={event.eventName}
                 className="w-full h-[420px] md:h-[480px] object-cover transform hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
 
               {/* Floating Badge */}
-              <div className="absolute top-6 left-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+              <div className="absolute top-6 left-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 flex items-center gap-2 rounded-full text-sm font-semibold shadow-lg">
+                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                 {event.participationType === 'team' ? 'Team Event' : 'Individual Event'}
               </div>
 
@@ -201,7 +247,7 @@ const EventDetails = () => {
                     <div className="flex justify-center">
                       <div className="relative group">
                         <div className="absolute -inset-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-2xl opacity-75 group-hover:opacity-100 blur-xl transition-opacity duration-500"></div>
-                        <img src={event.priceImage} className="relative max-w-md rounded-2xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500" />
+                        <img src={event.priceImage} alt="Prize Details" className="relative max-w-full md:max-w-md rounded-2xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500" />
                       </div>
                     </div>
                   </div>
@@ -225,9 +271,9 @@ const EventDetails = () => {
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                       {event.sponsorImages.map((img, i) => (
-                        <div key={i} className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-blue-500/50 transition-all duration-300 p-4">
+                        <div key={i} className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-blue-500/50 transition-all duration-300 p-4 flex items-center justify-center">
                           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                          <img src={img} className="relative w-full h-20 object-contain filter brightness-110 group-hover:brightness-125 transition-all duration-300" />
+                          <img src={img} alt={`Sponsor ${i + 1}`} className="relative max-h-20 w-auto object-contain filter brightness-110 group-hover:brightness-125 transition-all duration-300" />
                         </div>
                       ))}
                     </div>
@@ -304,7 +350,7 @@ const EventDetails = () => {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-400">Max Participants:</span>
-                      <span className="text-white font-medium">{event.limit}</span>
+                      <span className="text-white font-medium">{event.limit || "Unlimited"}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-400">Starts:</span>
@@ -387,7 +433,7 @@ const ConfirmationPopup = ({ onConfirm, onCancel }) => (
           Confirm Registration
         </h2>
         <p className="text-gray-300 text-sm mb-8">
-          Are you sure you want to register for this event?
+          Are you sure you want to register for this eventx?
         </p>
 
         <div className="flex gap-4 justify-center">

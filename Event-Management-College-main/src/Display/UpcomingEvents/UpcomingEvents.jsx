@@ -1,101 +1,169 @@
-import time from "../../assets/time.svg";
-import { motion, useAnimation } from "framer-motion";
-import { useRef, useEffect, useState, useCallback } from "react";
-import { Items } from "../../Constants/ProgramData";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+    FaBolt,
+    FaCheckCircle,
+    FaLightbulb,
+    FaStar,
+} from "react-icons/fa";
+
+// Map to restore icons
+const ICON_MAP = {
+    "Bolt": FaBolt,
+    "Check Circle": FaCheckCircle,
+    "Lightbulb": FaLightbulb,
+    "Star": FaStar,
+};
 
 export function UpcomingEvents() {
-
-    const carouselRef = useRef(null);
-    const [isUserInteracting, setIsUserInteracting] = useState(false);
+    const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
-    // Create duplicated items for seamless looping
-    const duplicatedItems = [...Items, ...Items];
-
-    // Pause auto-scroll when user interacts
-    const handleUserInteraction = useCallback(() => {
-        setIsUserInteracting(true);
-        // Resume auto-scroll after 3 seconds of inactivity
-        setTimeout(() => {
-            setIsUserInteracting(false);
-        }, 3000);
+    // Load events from localStorage on mount
+    useEffect(() => {
+        const storedPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+        setEvents(storedPrograms);
     }, []);
 
-    useEffect(() => {
-        const carousel = carouselRef.current;
-        if (!carousel) return;
+    if (events.length === 0) {
+        return (
+            <div className="flex items-center justify-center w-full py-20 bg-black/10 rounded-3xl border border-white/5 mx-auto max-w-7xl">
+                <p className="text-gray-500 font-medium">No upcoming programs available at the moment.</p>
+            </div>
+        );
+    }
 
-        const scrollSpeed = 1.5; // Increased speed for faster auto-scrolling
-
-        const animate = () => {
-            if (carousel && !isUserInteracting) {
-                carousel.scrollLeft += scrollSpeed;
-
-                // Reset to beginning when reaching halfway through duplicated items
-                if (carousel.scrollLeft >= carousel.scrollWidth / 2) {
-                    carousel.scrollLeft = 0;
-                }
-            }
-        };
-
-        const intervalId = setInterval(animate, 40); // Slightly faster animation interval
-
-        return () => clearInterval(intervalId);
-    }, [isUserInteracting]);
+    // Duplicating items for seamless loop
+    const displayedItems = [...events, ...events];
 
     return (
-        <div className="flex items-center justify-center w-full py-12">
-            <div className="flex flex-col items-start justify-center w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-2 gap-6">
-
-                {/* === Upcoming Events Section === */}
-                <div className="flex flex-col w-full gap-4">
-                    <div className="flex items-center w-full lg:w-[278px] lg:h-[48px] flex-row">
-                        <div className="flex items-center gap-2 w-full lg:w-[250px] lg:h-[28px]">
-                            <h5 className=" text-[14px] lg:text-[18px] font-semibold text-white font-momo">
-                                UPCOMING PROGRAMS
-                            </h5>
-                            {/* <img src={time} alt="Time icon" className="w-4 h-4" /> */}
-                        </div>
-                    </div>
-
-                    {/* === Scrollable Events === */}
-                    <div className="w-full overflow-hidden">
-                        <div
-                            ref={carouselRef}
-                            className="flex flex-row gap-6 overflow-x-auto scroll-smooth cursor-grab active:cursor-grabbing"
-                            style={{ scrollBehavior: 'smooth' }}
-                            onScroll={handleUserInteraction}
-                            onMouseDown={handleUserInteraction}
-                            onTouchStart={handleUserInteraction}
-                            onWheel={handleUserInteraction}
-                        >
-                            {duplicatedItems.map((item, index) => (
-                                <div
-                                    key={`${item.id}-${index}`}
-                                    className="flex-shrink-0 flex flex-col overflow-hidden w-full sm:w-[80%] md:w-[45%] lg:w-[30%] rounded-xl relative"
-                                >
-                                    {/* Background Image */}
-                                    <div
-                                        onClick={() => {navigate(`/programdetails/${item.id}`)} }
-                                        className="w-full h-[240px] sm:h-[220px] md:h-[240px] rounded-xl bg-center bg-cover bg-no-repeat cursor-pointer hover:scale-105 transition-transform duration-300"
-                                        style={{
-                                            backgroundImage: `url(${item.image})`,
-                                        }}
-                                    ></div>
-
-                                    {/* Text Section */}
-                                    <div className="py-3 px-4 text-left">
-                                        <h3 className="font-sans font-semibold text-white text-lg">
-                                            {item.Name || "Upcoming Event"}
-                                        </h3>
-                                    </div>
-                                </div>
-                            ))}
+        <div className="relative w-full py-16 overflow-hidden font-out">
+            <div className="max-w-7xl mx-auto px-6 mb-10">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="w-1.5 h-10 bg-blue-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.5)]"></div>
+                        <div>
+                            <h2 className="text-3xl font-black text-white tracking-widest uppercase font-momo italic">
+                                Upcoming Programs
+                            </h2>
+                            <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mt-1 ml-1">
+                                Discover what's next in our college
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* === Infinite Auto-Scroll Carousel === */}
+            <div className="w-full relative py-4 mask-fade-edges hover-pause">
+                <motion.div
+                    className="flex flex-row gap-8 w-max px-4"
+                    animate={{
+                        x: [0, -((events.length * 400) + (events.length * 32))], // 400px width + 32px gap
+                    }}
+                    transition={{
+                        x: {
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: events.length * 8, // Adjust for desired speed
+                            ease: "linear",
+                        },
+                    }}
+                    style={{ display: 'flex' }}
+                >
+                    {displayedItems.map((item, index) => (
+                        <motion.div
+                            key={`${item.id}-${index}`}
+                            whileHover={{
+                                y: -12,
+                                scale: 1.02,
+                                transition: { duration: 0.4, ease: "easeOut" }
+                            }}
+                            className="flex-shrink-0 flex flex-col overflow-hidden w-[400px] rounded-[2rem] relative group bg-gradient-to-b from-gray-900/80 to-black border border-white/5 backdrop-blur-xl transition-all duration-500 hover:border-blue-500/40 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6),0_0_30px_rgba(59,130,246,0.15)]"
+                        >
+                            {/* Background Image Container */}
+                            <div
+                                onClick={() => navigate(`/programdetails/${item.id}`)}
+                                className="w-full h-[260px] cursor-pointer relative overflow-hidden"
+                            >
+                                <motion.div
+                                    className="absolute inset-0 bg-center bg-cover bg-no-repeat"
+                                    whileHover={{ scale: 1.15 }}
+                                    transition={{ duration: 0.8 }}
+                                    style={{
+                                        backgroundImage: `url(${item.image || "https://images.unsplash.com/photo-1540575861501-7ad058ad382d?auto=format&fit=crop&q=80&w=800"})`,
+                                    }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80"></div>
+                                <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors duration-500"></div>
+
+                                <div className="absolute top-6 left-6 flex gap-3">
+                                    <span className="px-4 py-1.5 bg-blue-600 rounded-full text-[10px] font-black text-white uppercase tracking-[0.15em] backdrop-blur-xl shadow-2xl border border-white/20">
+                                        Active
+                                    </span>
+                                    {item.category && (
+                                        <span className="px-4 py-1.5 bg-white/10 rounded-full text-[10px] font-black text-white uppercase tracking-[0.15em] backdrop-blur-xl border border-white/10">
+                                            {item.category}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Event Details Content */}
+                            <div className="py-8 px-8 text-left flex flex-col gap-6">
+                                <div>
+                                    <h3 className="font-sans font-black text-white text-2xl group-hover:text-blue-400 transition-colors duration-300 mb-2 leading-tight">
+                                        {item.Name || "Upcoming Event"}
+                                    </h3>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                        <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                                            {item.department || "General Event"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Feature Pills */}
+                                {/* {item.features && item.features.length > 0 && (
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {item.features.slice(0, 4).map((f, i) => {
+                                            const IconComp = ICON_MAP[f.iconLabel] || FaBolt;
+                                            return (
+                                                <div key={i} className="flex items-center gap-3 text-[11px] text-gray-300 bg-white/[0.03] p-3 rounded-2xl border border-white/5 group-hover:bg-white/5 transition-all duration-300">
+                                                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 transition-colors">
+                                                        <IconComp className="text-blue-500 text-sm" />
+                                                    </div>
+                                                    <span className="truncate font-bold tracking-wide uppercase">{f.name}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )} */}
+
+                                <div className="pt-2">
+                                    <button
+                                        onClick={() => navigate(`/programdetails/${item.id}`)}
+                                        className="w-full py-4 bg-white/[0.05] hover:bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-500 border border-white/10 hover:border-blue-500 group-hover:shadow-[0_0_30px_rgba(37,99,235,0.2)]"
+                                    >
+                                        Explore Program
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+            </div>
+
+            <style jsx>{`
+                .mask-fade-edges {
+                    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+                    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+                }
+                .hover-pause:hover > div {
+                    animation-play-state: paused !important;
+                }
+            `}</style>
         </div>
     );
 }

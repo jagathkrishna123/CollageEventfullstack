@@ -1,27 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TEACHERS, STUDENTS, SIGNUPDATA } from "../../Constants/ProgramData";
 import { useAppContext } from "../../context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const { setUser } = useAppContext();
-  
+
   // Flow states: 'id-input' | 'otp-verification' | 'signup' | 'login'
   const [step, setStep] = useState("id-input");
   const [userType, setUserType] = useState(null); // 'student' | 'teacher'
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState("");
-  
+
   // ID Input state
   const [idInput, setIdInput] = useState("");
-  
+
   // OTP state
   const [otp, setOtp] = useState("");
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
-  
+
   // Signup form state
   const [signupData, setSignupData] = useState({
     name: "",
@@ -37,7 +36,7 @@ const Login = () => {
     designation: "", // For teachers
     qualification: "", // For teachers
   });
-  
+
   // Login form state
   const [loginData, setLoginData] = useState({
     registerNumber: "",
@@ -62,6 +61,7 @@ const Login = () => {
   const extractDepartment = (id) => {
     // Format: AEDXBCM002, SFAXBCA001, or SFAYBBA003
     // Extract the department code (3 letters after the separator letter like X or Y)
+    // Matches patterns like SFAXBCA... where X is the 4th char acting as separator
     const match = id.match(/[A-Z]{3}[A-Z]([A-Z]{3})/);
     if (match && match[1]) {
       const deptCode = match[1];
@@ -74,7 +74,7 @@ const Login = () => {
   const handleIdSubmit = (e) => {
     e.preventDefault();
     const id = idInput.trim().toUpperCase();
-    
+
     if (!id) {
       toast.error("Please enter an ID");
       return;
@@ -83,58 +83,69 @@ const Login = () => {
     // Check if ID starts with SFA (Student) or AED (Teacher)
     let foundEmail = "";
     let foundUserType = "";
-    
+
     if (id.startsWith("SFA")) {
-      // Find student in STUDENTS array
-      const student = STUDENTS.find((s) => s.regNo === id);
+      // Find student in localStorage 'students_list'
+      const storedStudents = JSON.parse(localStorage.getItem("students_list") || "[]");
+      const student = storedStudents.find((s) => s.regNo === id);
+
       if (!student) {
-        toast.error("Student ID not found. Please contact administrator.");
+        toast.error("Student ID not found in records. Please ask coordinator to add you.");
         return;
       }
+
       foundUserType = "student";
       foundEmail = student.email;
-      const detectedDept = extractDepartment(id);
-      setUserType("student");
-      setUserEmail(student.email);
-      setUserId(id);
-      setSignupData((prev) => ({ 
-        ...prev, 
-        registerNumber: id, 
-        email: student.email,
-        department: detectedDept
-      }));
+
     } else if (id.startsWith("AED")) {
-      // Find teacher in TEACHERS array
-      const teacher = TEACHERS.find((t) => t.teacherId === id);
+      // Find teacher in localStorage 'teachers_list'
+      const storedTeachers = JSON.parse(localStorage.getItem("teachers_list") || "[]");
+      const teacher = storedTeachers.find((t) => t.teacherId === id);
+
       if (!teacher) {
-        toast.error("Teacher ID not found. Please contact administrator.");
+        toast.error("Teacher ID not found in records. Please ask administrator to add you.");
         return;
       }
+
       foundUserType = "teacher";
       foundEmail = teacher.email;
-      const detectedDept = extractDepartment(id);
-      setUserType("teacher");
-      setUserEmail(teacher.email);
-      setUserId(id);
-      setSignupData((prev) => ({ 
-        ...prev, 
-        registerNumber: id, 
-        email: teacher.email,
-        department: detectedDept
-      }));
+
     } else {
       toast.error("Invalid ID format. ID must start with 'SFA' (Student) or 'AED' (Teacher)");
       return;
     }
 
-    // Generate and "send" OTP
+    // Common logic after user is found
+    const detectedDept = extractDepartment(id);
+    setUserType(foundUserType);
+    setUserEmail(foundEmail);
+    setUserId(id);
+    setSignupData((prev) => ({
+      ...prev,
+      registerNumber: id,
+      email: foundEmail,
+      department: detectedDept
+    }));
+
+    // Check if user is already registered (has an account with password)
+    const registeredUsers = JSON.parse(localStorage.getItem("registered_users") || "[]");
+    const isRegistered = registeredUsers.some(u => u.registerNumber === id);
+
+    if (isRegistered) {
+      // If already registered, go straight to login
+      toast.info("Account found! Please login.");
+      setStep("login");
+      setLoginData(prev => ({ ...prev, registerNumber: id }));
+      return;
+    }
+
+    // Generate and "send" OTP for new signup
     const newOtp = generateOTP();
     setGeneratedOtp(newOtp);
     setOtpSent(true);
     setStep("otp-verification");
-    
+
     // In production, this would call a backend API to send OTP via email
-    // For now, we'll show it in console and toast (for testing)
     console.log(`OTP for ${id}: ${newOtp}`);
     toast.info(`OTP sent to ${foundEmail}. For testing, check console.`);
   };
@@ -142,7 +153,7 @@ const Login = () => {
   // Handle OTP verification
   const handleOtpVerify = (e) => {
     e.preventDefault();
-    
+
     if (!otp) {
       toast.error("Please enter OTP");
       return;
@@ -159,7 +170,7 @@ const Login = () => {
   // Handle signup submission
   const handleSignup = async (e) => {
     e.preventDefault();
-    
+
     // Validation
     if (!signupData.name || !signupData.password || !signupData.mobile || !signupData.department) {
       toast.error("Please fill all required fields");
@@ -181,16 +192,6 @@ const Login = () => {
       return;
     }
 
-    if (userType === "teacher" && !signupData.designation) {
-      toast.error("Designation is required for teachers");
-      return;
-    }
-
-    if (userType === "teacher" && !signupData.qualification) {
-      toast.error("Qualification is required for teachers");
-      return;
-    }
-
     if (signupData.password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
@@ -207,61 +208,47 @@ const Login = () => {
     }
 
     try {
-      // Simulate signup using SIGNUPDATA
-      const existingUser = SIGNUPDATA.find(user =>
-        user.registerNumber === signupData.registerNumber &&
-        user.email === signupData.email
-      );
+      // Save to 'registered_users'
+      const registeredUsers = JSON.parse(localStorage.getItem("registered_users") || "[]");
 
-      if (existingUser) {
-        // Check if all required fields match the dummy data
-        const requiredFields = [
-          'name', 'email', 'password', 'mobile', 'department', 'registerNumber'
-        ];
+      // Remove old entry if exists (though we check in ID step, safety first)
+      const updatedUsers = registeredUsers.filter(u => u.registerNumber !== signupData.registerNumber);
 
-        if (userType === 'student') {
-          requiredFields.push('semester', 'admissionNumber');
-        } else if (userType === 'teacher') {
-          requiredFields.push('gender', 'designation', 'qualification');
-        }
+      const newUser = {
+        ...signupData,
+        userType,
+        id: Date.now().toString(), // Simple ID generation
+        createdAt: new Date().toISOString()
+      };
 
-        const isValid = requiredFields.every(field => {
-          if (field === 'password') {
-            return signupData.password === existingUser.password;
-          }
-          if (field === 'confirmPassword') {
-            return true; // Already validated above
-          }
-          return signupData[field] === existingUser[field];
-        });
+      // Don't save confirmPassword
+      delete newUser.confirmPassword;
 
-        if (isValid) {
-          // Simulate successful registration
-          toast.success(`${userType === "student" ? "Student" : "Teacher"} registered successfully!`);
-          setStep("login");
-          setLoginData((prev) => ({ ...prev, registerNumber: signupData.registerNumber }));
+      updatedUsers.push(newUser);
+      localStorage.setItem("registered_users", JSON.stringify(updatedUsers));
 
-          // Reset signup form
-          setSignupData({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            mobile: "",
-            department: "",
-            semester: "",
-            admissionNumber: "",
-            registerNumber: "",
-            gender: "",
-            designation: "",
-            qualification: "",
-          });
-        } else {
-          toast.error("Registration data doesn't match our records. Please check your information.");
-        }
-      } else {
-        toast.error("Registration number or email not found in our system.");
-      }
+      toast.success(`${userType === "student" ? "Student" : "Teacher"} registered successfully!`);
+
+      // Auto go to login
+      setStep("login");
+      setLoginData((prev) => ({ ...prev, registerNumber: signupData.registerNumber }));
+
+      // Reset signup form
+      setSignupData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        mobile: "",
+        department: "",
+        semester: "",
+        admissionNumber: "",
+        registerNumber: "",
+        gender: "",
+        designation: "",
+        qualification: "",
+      });
+
     } catch (error) {
       console.error("Signup error:", error);
       toast.error("An error occurred during registration.");
@@ -271,55 +258,39 @@ const Login = () => {
   // Handle login submission
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     if (!loginData.registerNumber || !loginData.password) {
       toast.error("Please enter register number and password");
       return;
     }
 
     try {
-      // Simulate login using SIGNUPDATA
-      const user = SIGNUPDATA.find(u =>
+      // Find user in registered_users
+      const registeredUsers = JSON.parse(localStorage.getItem("registered_users") || "[]");
+
+      const user = registeredUsers.find(u =>
         u.registerNumber === loginData.registerNumber &&
-        u.password === loginData.password &&
-        u.userType === userType
+        u.password === loginData.password
       );
 
       if (user) {
         toast.success("Login successful!");
 
-        // Create user object for context
-        const userData = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          registerNumber: user.registerNumber,
-          userType: user.userType,
-          department: user.department,
-          mobile: user.mobile,
-        };
-
-        // Add type-specific fields
-        if (userType === "student") {
-          userData.semester = user.semester;
-          userData.admissionNumber = user.admissionNumber;
-        } else if (userType === "teacher") {
-          userData.gender = user.gender;
-          userData.designation = user.designation;
-          userData.qualification = user.qualification;
-        }
+        // Create user object for context (Sanitize critical data if needed)
+        const userData = { ...user };
+        delete userData.password; // Don't keep password in context/storage
 
         // Store user data in localStorage
-        localStorage.setItem("token", "dummy-token-" + Date.now());
+        localStorage.setItem("token", "local-token-" + Date.now());
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("userType", userType);
+        localStorage.setItem("userType", user.userType);
 
         // Set user in context
         setUser(userData);
 
         // Navigate to appropriate dashboard
-        if (userType === "teacher") {
-          navigate("/teacher");
+        if (user.userType === "teacher") {
+          navigate("/"); // Assuming teacher dashboard is also at root or has specific route
         } else {
           navigate("/");
         }
@@ -349,7 +320,7 @@ const Login = () => {
           <form onSubmit={handleIdSubmit} className="bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl p-8 shadow-xl">
             <h2 className="text-2xl font-semibold text-white mb-2">Verify</h2>
             <p className="text-gray-400 mb-6">Enter your ID to continue</p>
-            
+
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Register Number/ID</label>
               <input
@@ -361,7 +332,7 @@ const Login = () => {
                 required
               />
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
@@ -400,7 +371,7 @@ const Login = () => {
                 required
               />
             </div>
-            
+
             <div className="flex gap-2">
               <button
                 type="submit"
@@ -416,7 +387,7 @@ const Login = () => {
                 Resend
               </button>
             </div>
-            
+
             <button
               type="button"
               onClick={() => {
@@ -455,7 +426,7 @@ const Login = () => {
               {userType === "student" ? "Student" : "Teacher"} Signup
             </h2>
             <p className="text-gray-400 mb-6">Complete your registration</p>
-            
+
             <div className="space-y-4">
               <Input
                 label="Full Name"
@@ -463,7 +434,7 @@ const Login = () => {
                 onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
                 required
               />
-              
+
               <Input
                 label="Email"
                 type="email"
@@ -472,7 +443,7 @@ const Login = () => {
                 disabled
                 className="bg-gray-800/30"
               />
-              
+
               <Input
                 label="Register Number/ID"
                 value={signupData.registerNumber}
@@ -480,7 +451,7 @@ const Login = () => {
                 disabled
                 className="bg-gray-800/30"
               />
-              
+
               <Input
                 label="Mobile Number"
                 type="tel"
@@ -489,7 +460,7 @@ const Login = () => {
                 placeholder="10 digits"
                 required
               />
-              
+
               <Input
                 label="Department"
                 value={signupData.department}
@@ -497,10 +468,10 @@ const Login = () => {
                 disabled
                 className="bg-gray-800/30"
               />
-              
+
               {userType === "student" && (
                 <>
-                <Input
+                  <Input
                     label="Semester"
                     value={signupData.semester}
                     onChange={(e) => setSignupData({ ...signupData, semester: e.target.value })}
@@ -512,7 +483,7 @@ const Login = () => {
                     onChange={(e) => setSignupData({ ...signupData, admissionNumber: e.target.value.toUpperCase() })}
                     required
                   />
-                  
+
                 </>
               )}
 
@@ -548,7 +519,7 @@ const Login = () => {
                   />
                 </>
               )}
-              
+
               <Input
                 label="Password"
                 type="password"
@@ -567,7 +538,7 @@ const Login = () => {
                 minLength={6}
               />
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition mt-6"
@@ -601,7 +572,7 @@ const Login = () => {
           <form onSubmit={handleLogin} className="bg-gray-700/30 backdrop-blur-lg border border-white/10 rounded-xl p-8 shadow-xl">
             <h2 className="text-2xl font-semibold text-white mb-2">Login</h2>
             <p className="text-gray-400 mb-6">Enter your credentials to continue</p>
-            
+
             <div className="space-y-4">
               <Input
                 label="Register Number"
@@ -609,7 +580,7 @@ const Login = () => {
                 onChange={(e) => setLoginData({ ...loginData, registerNumber: e.target.value.toUpperCase() })}
                 required
               />
-              
+
               <Input
                 label="Password"
                 type="password"
@@ -618,14 +589,14 @@ const Login = () => {
                 required
               />
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition mt-6"
             >
               Login
             </button>
-            
+
             <p className="mt-4 text-center text-gray-400 text-sm">
               Don't have an account?{" "}
               <button
@@ -633,6 +604,7 @@ const Login = () => {
                 onClick={() => {
                   setStep("id-input");
                   setIdInput("");
+                  setOtp("");
                   setUserType(null);
                   setUserEmail("");
                   setUserId("");

@@ -56,6 +56,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/profile" element={<UserProfile />} />
+
         <Route path='/teacher' element={true ? <Layout /> : <Login />}>
           <Route index element={<TeacherDashboard />} />
           <Route path='teacher-add-program' element={<TeacherAddProgram />} />
@@ -66,6 +67,7 @@ function App() {
           <Route path='addstudent' element={<AddStudent />} />
           <Route path='addreports' element={<AddReports />} />
         </Route>
+        
         <Route path='/admin' element={true ? <AdminLayout /> : <Login />}>
           <Route index element={<AdminDashboard />} />
           <Route path='admin-add-program' element={<AddProgram />} />

@@ -30,7 +30,7 @@ export function NavBar() {
   }, [setUser]);
   return (
     <nav className="absolute top-0 left-0 w-full z-50">
-      <div className=" max-w-7xl w-full mx-auto px-4 md:px-6 lg:px-10 flex-wrap">
+      <div className=" max-w-[1440px] w-full mx-auto px-4 md:px-6 lg:px-10 flex-wrap">
         <div className="grid grid-cols-3 items-center w-full pt-4">
           {/* Logo Section */}
           <div onClick={() => navigate("/")} className="flex items-center w-[205px] h-[70px] cursor-pointer">
@@ -49,7 +49,7 @@ export function NavBar() {
             <div className="hidden md:flex items-center justify-center gap-8 px-8 py-4 bg-white/10 backdrop-blur-xl border border-blue-600/50 rounded-2xl shadow-2xl shadow-purple-500/20">              <div className="group cursor-pointer relative">
               <Link
                 to="/"
-                className="font-sans font-light text-white font-lexend text-[16px] transition-colors group-hover:text-blue-300"
+                className="font-sans font-light text-white font-lexend text-[15px] transition-colors group-hover:text-blue-300"
               >
                 Home
               </Link>
@@ -57,19 +57,28 @@ export function NavBar() {
             </div>
 
               <div className="group cursor-pointer relative">
-                <Link
-                  to="/dashboard"
-                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300"
-                >
-                  Dashboard
-                </Link>
+                {user?.userType === "teacher" ? (
+                  <Link
+                    to="/teacher"
+                    className="font-sans font-light font-lexend text-white text-[15px] transition-colors group-hover:text-blue-300"
+                  >
+                    Teacher Dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    to="/dashboard"
+                    className="font-sans font-light font-lexend text-white text-[15px] transition-colors group-hover:text-blue-300"
+                  >
+                    User Dashboard
+                  </Link>
+                )}
                 <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
               </div>
 
               <div className="group cursor-pointer relative">
                 <Link
                   to="/reports"
-                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300"
+                  className="font-sans font-light font-lexend text-white text-[15px] transition-colors group-hover:text-blue-300"
                 >
                   Reports
                 </Link>
@@ -79,7 +88,7 @@ export function NavBar() {
               <div className="group cursor-pointer relative">
                 <Link
                   to="/about"
-                  className="font-sans font-light font-lexend text-white text-[16px] transition-colors group-hover:text-blue-300">
+                  className="font-sans font-light font-lexend text-white text-[15px] transition-colors group-hover:text-blue-300">
                   About
                 </Link>
                 <div className="absolute -bottom-2 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-600 group-hover:w-full transition-all duration-300 rounded-full" />
@@ -90,7 +99,7 @@ export function NavBar() {
           {/* Right Section - Icons & User Menu */}
           <div className="flex items-center justify-end gap-4">
             {/* Bell Icon with Notification Badge */}
-            <div onClick={() => user ? navigate("/dashboard") : navigate("/login")} className="relative cursor-pointer group">
+            <div onClick={() => user ? navigate(user.userType === "teacher" ? "/teacher" : "/dashboard") : navigate("/login")} className="relative cursor-pointer group">
               <HiOutlineBell strokeWidth={1} size={28}
                 className="text-white text-2xl hover:text-purple-300 transition-colors duration-200"
               />
@@ -211,11 +220,11 @@ export function NavBar() {
                   Home
                 </Link>
                 <Link
-                  to="/dashboard"
+                  to={user?.userType === "teacher" ? "/teacher" : "/dashboard"}
                   onClick={() => setMobileView(false)}
                   className="py-3 px-3 border-b border-gray-700 hover:bg-gray-800 rounded-lg transition-colors"
                 >
-                  Dashboard
+                  {user?.userType === "teacher" ? "Teacher Dashboard" : "Dashboard"}
                 </Link>
                 <Link
                   to="/reports"
@@ -256,12 +265,12 @@ export function NavBar() {
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => {
-                          navigate("/dashboard");
+                          navigate(user?.userType === "teacher" ? "/teacher" : "/dashboard");
                           setMobileView(false);
                         }}
                         className="py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition"
                       >
-                        Dashboard
+                        {user?.userType === "teacher" ? "Teacher Dashboard" : "Dashboard"}
                       </button>
                       <button
                         onClick={() => {

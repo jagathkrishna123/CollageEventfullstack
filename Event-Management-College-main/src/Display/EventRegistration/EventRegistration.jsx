@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { EVENTDATAS } from "../../Constants/ProgramData";
 import { toast } from "react-toastify";
 
 const EventRegistration = () => {
@@ -11,7 +10,6 @@ const EventRegistration = () => {
 
   // 🔹 popup states
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
 
   // Team form state
   const [teamData, setTeamData] = useState({
@@ -21,7 +19,9 @@ const EventRegistration = () => {
   });
 
   useEffect(() => {
-    const foundEvent = EVENTDATAS.find((e) => e.id === Number(id));
+    // Fetch events from localStorage instead of dummy data
+    const allEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+    const foundEvent = allEvents.find((e) => e.id === Number(id));
     setEvent(foundEvent);
 
     if (foundEvent?.participationType === "team") {
@@ -29,7 +29,7 @@ const EventRegistration = () => {
         department: "",
         semester: "",
         members: Array.from(
-          { length: foundEvent.membersPerTeamFromDepartment },
+          { length: Number(foundEvent.membersPerTeamFromDepartment) || 0 },
           () => ({ name: "", regNo: "" })
         ),
       });
@@ -39,7 +39,11 @@ const EventRegistration = () => {
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        Event not found
+        {/* Loading or Event Not Found state can be improved */}
+        <div className="text-center">
+          <h2 className="text-xl">Event not found</h2>
+          <button onClick={() => navigate(-1)} className="mt-4 text-blue-400 underline">Go Back</button>
+        </div>
       </div>
     );
   }
@@ -48,10 +52,20 @@ const EventRegistration = () => {
      INDIVIDUAL REGISTRATION
      ========================= */
   if (event.participationType === "individual") {
+    // NOTE: Individual registration is typically handled in EventDetails or a simpler flow. 
+    // If we land here for individual, verify we want to auto-confirm or show a summary?
+    // For now, based on existing logic, we auto-show confirmation.
     return (
       <>
         <ConfirmationPopup
           onConfirm={() => {
+            // Save individual registration
+            saveRegistration({
+              eventId: event.id,
+              eventName: event.eventName,
+              participationType: "individual",
+              date: new Date().toISOString(),
+            });
             toast.success("Successfully Registered");
             navigate(-1);
           }}
@@ -78,18 +92,44 @@ const EventRegistration = () => {
   const handleConfirmRegistration = () => {
     setShowConfirm(false);
 
-    // 🔹 backend call can go here
-    console.log("Team Registration Data:", teamData);
+    // 🔹 backend call / localStorage save
+    const registrationData = {
+      eventId: event.id,
+      eventName: event.eventName,
+      participationType: "team",
+      teamData: teamData,
+      date: new Date().toISOString(),
+      status: "pending"
+    };
+
+    saveRegistration(registrationData);
 
     toast.success("Successfully Registered");
     navigate(-1);
+  };
+
+  const saveRegistration = (data) => {
+    // Get current user info if available
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    const finalData = {
+      ...data,
+      id: Date.now(),
+      userId: user.id || null, // Link to user if logged in
+      userEmail: user.email || null,
+      registeredBy: user.name || "Guest"
+    };
+
+    const existingRegistrations = JSON.parse(localStorage.getItem("event_registrations") || "[]");
+    localStorage.setItem("event_registrations", JSON.stringify([...existingRegistrations, finalData]));
+    console.log("Registration Saved:", finalData);
   };
 
   return (
     <div className="min-h-screen bg-[#020617] text-white flex items-center justify-center px-4 pt-20">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/5 border border-white/10 rounded-2xl p-8 w-full max-w-xl space-y-5"
+        className="bg-white/5 border border-white/10 rounded-2xl p-8 w-full max-w-xl space-y-5 mt-20"
       >
         <h2 className="text-2xl font-semibold mb-2">
           Team Registration

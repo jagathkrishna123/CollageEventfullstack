@@ -1,16 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { EVENTDATAS, Items, } from "../../Constants/ProgramData";
+// import { EVENTDATAS, Items, } from "../../Constants/ProgramData"; 
 import { Download } from "lucide-react";
+import {
+  FaBolt,
+  FaCheckCircle,
+  FaLightbulb,
+  FaStar,
+} from "react-icons/fa";
+
+// Map to restore icons from localStorage string labels
+const ICON_MAP = {
+  "Bolt": FaBolt,
+  "Check Circle": FaCheckCircle,
+  "Lightbulb": FaLightbulb,
+  "Star": FaStar,
+};
 
 const ProgramDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showDetail, setShowDetail] = useState(null);
+  const [linkedEvents, setLinkedEvents] = useState([]);
 
   useEffect(() => {
-    const selectedItem = Items.find((item) => item.id === Number(id));
-    setShowDetail(selectedItem);
+    // Fetch Program from localStorage
+    const storedPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+    const selectedItem = storedPrograms.find((item) => item.id === Number(id));
+
+    if (selectedItem) {
+      // Restore icons from labels
+      const featuresWithIcons = (selectedItem.features || []).map(f => ({
+        ...f,
+        icon: ICON_MAP[f.iconLabel] || FaBolt
+      }));
+      setShowDetail({ ...selectedItem, features: featuresWithIcons });
+
+      // Fetch Events linked to this program
+      const allEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+      // filter where event.programId matches this program's ID
+      const programEvents = allEvents.filter(e => e.programId === Number(id));
+      setLinkedEvents(programEvents);
+    }
   }, [id]);
 
   return showDetail ? (
@@ -60,7 +91,7 @@ const ProgramDetails = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            {showDetail.features.map((feature, index) => (
+            {showDetail.features && showDetail.features.map((feature, index) => (
               <div
                 key={index}
                 className="group flex flex-col items-center text-center p-4 rounded-lg bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-white/10 transition-all duration-300"
@@ -119,7 +150,7 @@ const ProgramDetails = () => {
 
                 <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/10">
                   <img
-                    src={showDetail.image}
+                    src={showDetail.image || "https://via.placeholder.com/600x400"}
                     alt={showDetail.Name}
                     className="w-full h-80 md:h-96 object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
@@ -138,8 +169,8 @@ const ProgramDetails = () => {
       </div>
 
       {/* Related Events Section */}
-      {EVENTDATAS.filter(e => e.programName === showDetail.Name).length > 0 && (
-        <div className="w-full max-w-7xl mx-auto mb-20">
+      {linkedEvents.length > 0 && (
+        <div className="w-full max-w-7xl mx-auto mb-20 px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-4">
               Events under {showDetail.Name}
@@ -148,56 +179,54 @@ const ProgramDetails = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {EVENTDATAS
-              .filter(e => e.programName === showDetail.Name)
-              .map(event => (
-                <div
-                  key={event.id}
-                  onClick={() => navigate(`/eventdetails/${event.id}`)}
-                  className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 hover:border-blue-500/50 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer transform hover:-translate-y-2"
-                >
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+            {linkedEvents.map(event => (
+              <div
+                key={event.id}
+                onClick={() => navigate(`/eventdetails/${event.id}`)}
+                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 hover:border-blue-500/50 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer transform hover:-translate-y-2"
+              >
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
 
-                  {/* Image Container */}
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={event.poster}
-                      alt={event.eventName}
-                      className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                {/* Image Container */}
+                <div className="relative overflow-hidden">
+                  <img
+                    src={event.poster || "https://via.placeholder.com/300"}
+                    alt={event.eventName}
+                    className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 
-                    {/* Status Badge */}
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                      Active
-                    </div>
+                  {/* Status Badge */}
+                  <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    Active
                   </div>
+                </div>
 
-                  {/* Content */}
-                  <div className="relative z-10 p-6">
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">
-                      {event.eventName}
-                    </h3>
-                    <p className="text-blue-300 text-sm font-medium mb-3">
-                      {event.department}
-                    </p>
-                    <p className="text-gray-300 text-sm leading-relaxed line-clamp-2">
-                      {event.description}
-                    </p>
+                {/* Content */}
+                <div className="relative z-10 p-6">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">
+                    {event.eventName}
+                  </h3>
+                  <p className="text-blue-300 text-sm font-medium mb-3">
+                    {event.department}
+                  </p>
+                  <p className="text-gray-300 text-sm leading-relaxed line-clamp-2">
+                    {event.description}
+                  </p>
 
-                    {/* CTA Indicator */}
-                    <div className="flex items-center justify-between mt-4">
-                      <span className="text-xs text-gray-400">Click to explore</span>
-                      <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500 transition-colors duration-300">
-                        <svg className="w-3 h-3 text-blue-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
+                  {/* CTA Indicator */}
+                  <div className="flex items-center justify-between mt-4">
+                    <span className="text-xs text-gray-400">Click to explore</span>
+                    <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500 transition-colors duration-300">
+                      <svg className="w-3 h-3 text-blue-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -208,6 +237,7 @@ const ProgramDetails = () => {
       <div className="text-center">
         <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
         <p className="text-gray-300 text-lg font-medium animate-pulse">Loading program details...</p>
+        <button onClick={() => navigate("/")} className="mt-4 text-blue-400 hover:text-blue-300 underline">Back to Home</button>
       </div>
     </div>
   );

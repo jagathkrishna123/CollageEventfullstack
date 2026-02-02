@@ -37,11 +37,16 @@ const TeacherAddProgram = () => {
   const [features, setFeatures] = useState([]);
 
   const [featureIcon, setFeatureIcon] = useState(FaBolt);
+  const [featureIconLabel, setFeatureIconLabel] = useState("Bolt");
   const [featureName, setFeatureName] = useState("");
 
   const addFeature = () => {
     if (featureName.trim() === "") return;
-    setFeatures((prev) => [...prev, { icon: featureIcon, name: featureName }]);
+    if (features.length >= 4) {
+      alert("Maximum 4 features allowed");
+      return;
+    }
+    setFeatures((prev) => [...prev, { iconLabel: featureIconLabel, name: featureName }]);
     setFeatureName("");
   };
 
@@ -49,22 +54,59 @@ const TeacherAddProgram = () => {
     setFeatures((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
+  // Helper to convert file to Base64
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let imageBase64 = null;
+    if (image) {
+      try {
+        imageBase64 = await toBase64(image);
+      } catch (error) {
+        console.error("Error converting image:", error);
+        alert("Error processing image");
+        return;
+      }
+    }
+
     const newProgram = {
       id: Date.now(),
       Name: name,
       category: category,
-      image: image,
+      image: imageBase64,
       brochure: brochure,
       Title: title,
       programDate: date,
       programTime: time,
       Description: description,
-      features: features,
+      features: features, // Now contains { iconLabel, name }
     };
+
+    // Save to localStorage
+    const existingPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+    localStorage.setItem("all_programs", JSON.stringify([...existingPrograms, newProgram]));
+
     console.log("Program Created:", newProgram);
-    alert("Program created! Check console output.");
+    alert("Program created successfully and saved!");
+
+    // Reset form
+    setName("");
+    setTitle("");
+    setCategory("");
+    setImage(null);
+    setBrochure(null);
+    setDate("");
+    setTime("");
+    setDescription("");
+    setFeatures([]);
   };
 
   return (
@@ -226,6 +268,7 @@ const TeacherAddProgram = () => {
                       (item) => item.label === e.target.value
                     );
                     setFeatureIcon(selected.value);
+                    setFeatureIconLabel(selected.label);
                   }}
                 >
                   {ICON_OPTIONS.map((item, i) => (
@@ -257,25 +300,28 @@ const TeacherAddProgram = () => {
               {/* Display Added Features */}
               {features.length > 0 && (
                 <div className="space-y-3 mt-6">
-                  {features.map((f, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/10 shadow-md"
-                    >
-                      <div className="flex items-center gap-3 text-white">
-                        {React.createElement(f.icon, { className: "text-blue-400 text-xl" })}
-                        <span>{f.name}</span>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => removeFeature(index)}
-                        className="text-red-500 hover:text-red-400 transition-colors duration-200 text-xl"
+                  {features.map((f, index) => {
+                    const IconComp = ICON_OPTIONS.find(opt => opt.label === f.iconLabel)?.value || FaBolt;
+                    return (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/10 shadow-md"
                       >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
+                        <div className="flex items-center gap-3 text-white">
+                          <IconComp className="text-blue-400 text-xl" />
+                          <span>{f.name}</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeFeature(index)}
+                          className="text-red-500 hover:text-red-400 transition-colors duration-200 text-xl"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>

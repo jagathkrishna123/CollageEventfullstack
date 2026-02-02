@@ -1,138 +1,165 @@
-
-import React, { useState } from "react";
-import { EVENTDATAS } from "../../Constants/ProgramData";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 
 const ManageProgram = () => {
-  const [events, setEvents] = useState(EVENTDATAS);
-  const [editingEvent, setEditingEvent] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("events"); // 'programs' or 'events'
 
-  
+  const [programs, setPrograms] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-  // 🔹 Approve Event
-  const handleApprove = (id) => {
-    setEvents((prev) =>
-      prev.map((event) =>
-        event.id === id ? { ...event, status: "approved" } : event
-      )
-    );
+  useEffect(() => {
+    // Load data from localStorage
+    const loadedPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+    const loadedEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+
+    // Ensure data integrity (e.g. valid IDs)
+    setPrograms(loadedPrograms);
+    setEvents(loadedEvents);
+  }, []);
+
+  // 🔹 Delete Item
+  const handleDelete = (id, type) => {
+    if (!window.confirm("Are you sure you want to delete this item?")) return;
+
+    if (type === "program") {
+      const updated = programs.filter(p => p.id !== id);
+      setPrograms(updated);
+      localStorage.setItem("all_programs", JSON.stringify(updated));
+    } else {
+      const updated = events.filter(e => e.id !== id);
+      setEvents(updated);
+      localStorage.setItem("all_events", JSON.stringify(updated));
+    }
   };
 
-  // 🔹 Reject Event
-  const handleReject = (id) => {
-    setEvents((prev) =>
-      prev.map((event) =>
-        event.id === id ? { ...event, status: "rejected" } : event
-      )
-    );
+  // 🔹 Edit Item
+  const handleEdit = (item, type) => {
+    if (type === "program") {
+      navigate('/admin/admin-add-program', { state: { programData: item } });
+    } else {
+      // For Admin Add Event
+      navigate(`/admin/addevent/${item.id}`, { state: { eventData: item } });
+    }
   };
 
-  // 🔹 Save Edited Event
-  const handleSaveEdit = () => {
-    setEvents((prev) =>
-      prev.map((event) =>
-        event.id === editingEvent.id ? editingEvent : event
-      )
+  // 🔹 Toggle Status (Mock approval for now)
+  const handleToggleStatus = (id, currentStatus) => {
+    // This logic updates local state and storage for events
+    // Assuming 'status' field exists or we create it
+    const newStatus = currentStatus === "approved" ? "rejected" : "approved";
+
+    const updatedEvents = events.map(e =>
+      e.id === id ? { ...e, status: newStatus } : e
     );
-    setEditingEvent(null);
+    setEvents(updatedEvents);
+    localStorage.setItem("all_events", JSON.stringify(updatedEvents));
   };
+
 
   // 🔹 Pagination Logic
-  const totalPages = Math.ceil(events.length / itemsPerPage);
+  const data = activeTab === "programs" ? programs : events;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentEvents = events.slice(startIndex, endIndex);
+  const currentItems = data.slice(startIndex, startIndex + itemsPerPage);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  const handlePageChange = (page) => setCurrentPage(page);
 
   return (
-    <div className="min-h-screen  text-slate-400 p-6 font-out">
+    <div className="min-h-screen text-slate-400 p-6 font-out">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl font-semibold mb-6">Manage Events</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-semibold">Manage Content</h1>
+          <div className="flex bg-slate-800 rounded-lg p-1">
+            <button
+              onClick={() => { setActiveTab("programs"); setCurrentPage(1); }}
+              className={`px-4 py-2 rounded-md ${activeTab === 'programs' ? 'bg-cyan-600 text-white' : 'hover:bg-slate-700'}`}
+            >
+              Programs
+            </button>
+            <button
+              onClick={() => { setActiveTab("events"); setCurrentPage(1); }}
+              className={`px-4 py-2 rounded-md ${activeTab === 'events' ? 'bg-cyan-600 text-white' : 'hover:bg-slate-700'}`}
+            >
+              Events
+            </button>
+          </div>
+        </div>
 
-        {/* EVENTS TABLE */}
+        {/* TABLE */}
         <div className="overflow-x-auto">
           <table className="w-full border border-white/10 rounded-xl">
             <thead className="bg-white/5">
               <tr>
-                <th className="p-3 text-left">Event</th>
-                <th className="p-3">Department</th>
+                <th className="p-3 text-left">Name</th>
                 <th className="p-3">Date</th>
-                <th className="p-3">Status</th>
-                <th className="p-3">Actions</th>
+                {activeTab === 'events' && <th className="p-3">Program</th>}
+                {activeTab === 'events' && <th className="p-3">Status</th>}
+                <th className="p-3 text-center">Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              {currentEvents.map((event) => (
-                <tr
-                  key={event.id}
-                  className="border-t border-white/10 hover:bg-white/5"
-                >
-                  <td className="p-3">{event.eventName}</td>
-                  <td className="p-3 text-center">{event.department}</td>
-                  <td className="p-3 text-center">{event.date}</td>
+              {currentItems.length > 0 ? (
+                currentItems.map((item) => (
+                  <tr key={item.id} className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-3">
+                      <div className="font-medium text-white">{item.Name || item.eventName}</div>
+                      <div className="text-xs">{item.category}</div>
+                    </td>
+                    <td className="p-3 text-center">{item.programDate || item.date}</td>
 
-                  {/* STATUS */}
-                  <td className="p-3 text-center">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs ${
-                        event.status === "approved"
-                          ? "bg-green-600"
-                          : event.status === "rejected"
-                          ? "bg-red-600"
-                          : "bg-yellow-600"
-                      }`}
-                    >
-                      {event.status}
-                    </span>
-                  </td>
+                    {activeTab === 'events' && (
+                      <td className="p-3 text-center text-sm">{item.programName || "-"}</td>
+                    )}
 
-                  {/* ACTIONS */}
-                  <td className="p-3 flex gap-2 justify-center">
-                   <button
-  onClick={() => navigate(`/admin/addevent/${event.id}`, { state: { eventData: event } })}
-  className="px-3 py-1 bg-blue-600 rounded text-white"
->
-  Edit
-</button>
+                    {activeTab === 'events' && (
+                      <td className="p-3 text-center">
+                        <span className={`px-2 py-1 rounded text-xs ${item.status === 'approved' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                          {item.status || "Pending"}
+                        </span>
+                      </td>
+                    )}
 
-                    <button
-                      onClick={() => handleApprove(event.id)}
-                      disabled={event.status === "approved"}
-                      className="px-3 py-1 text-green-600 border border-green-600 font-medium rounded text-sm disabled:opacity-50"
-                    >
-                      Approve
-                    </button>
+                    <td className="p-3 flex gap-3 justify-center">
+                      <button
+                        onClick={() => handleEdit(item, activeTab === "programs" ? "program" : "event")}
+                        className="p-2 bg-blue-600/20 text-blue-400 rounded hover:bg-blue-600 hover:text-white transition-colors"
+                        title="Edit"
+                      >
+                        <FaEdit />
+                      </button>
 
-                    <button
-                      onClick={() => handleReject(event.id)}
-                      disabled={event.status === "rejected"}
-                      className="px-3 py-1 text-red-600 border border-red-600 font-medium rounded text-sm disabled:opacity-50"
-                    >
-                      Reject
-                    </button>
+                      {activeTab === 'events' && (
+                        <button
+                          onClick={() => handleToggleStatus(item.id, item.status)}
+                          className={`p-2 rounded hover:text-white transition-colors ${item.status === 'approved' ? 'bg-red-500/20 text-red-400 hover:bg-red-500' : 'bg-green-500/20 text-green-400 hover:bg-green-500'}`}
+                          title={item.status === 'approved' ? "Reject" : "Approve"}
+                        >
+                          {item.status === 'approved' ? <FaTimes /> : <FaCheck />}
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => handleDelete(item.id, activeTab === "programs" ? "program" : "event")}
+                        className="p-2 bg-red-600/20 text-red-400 rounded hover:bg-red-600 hover:text-white transition-colors"
+                        title="Delete"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="p-8 text-center text-slate-500">
+                    No {activeTab} found.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -141,99 +168,28 @@ const ManageProgram = () => {
         {totalPages > 1 && (
           <div className="flex items-center justify-between mt-6">
             <div className="text-sm text-slate-400">
-              Showing {startIndex + 1} to {Math.min(endIndex, events.length)} of {events.length} events
+              Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, data.length)} of {data.length} items
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={handlePrevPage}
+                onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:opacity-50 rounded text-sm transition-colors"
+                className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 rounded text-sm transition-colors"
               >
                 Previous
               </button>
 
-              {/* Page Numbers */}
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(page => {
-                  // Show first page, last page, current page, and pages around current page
-                  return page === 1 ||
-                         page === totalPages ||
-                         (page >= currentPage - 1 && page <= currentPage + 1);
-                })
-                .map((page, index, array) => (
-                  <React.Fragment key={page}>
-                    {index > 0 && array[index - 1] !== page - 1 && (
-                      <span className="px-2 text-slate-500">...</span>
-                    )}
-                    <button
-                      onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 rounded text-sm transition-colors ${
-                        currentPage === page
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  </React.Fragment>
-                ))}
+              <span className="px-3 py-2 text-white bg-blue-600 rounded text-sm">
+                {currentPage}
+              </span>
 
               <button
-                onClick={handleNextPage}
+                onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:opacity-50 rounded text-sm transition-colors"
+                className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 rounded text-sm transition-colors"
               >
                 Next
               </button>
-            </div>
-          </div>
-        )}
-
-        {/* EDIT MODAL */}
-        {editingEvent && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-[#020617] p-6 rounded-lg w-full max-w-lg">
-              <h2 className="text-xl font-semibold mb-4">Edit Event</h2>
-
-              <input
-                type="text"
-                value={editingEvent.eventName}
-                onChange={(e) =>
-                  setEditingEvent({
-                    ...editingEvent,
-                    eventName: e.target.value,
-                  })
-                }
-                className="w-full p-2 mb-3 bg-transparent border border-white/20 rounded"
-                placeholder="Event Name"
-              />
-
-              <textarea
-                value={editingEvent.description}
-                onChange={(e) =>
-                  setEditingEvent({
-                    ...editingEvent,
-                    description: e.target.value,
-                  })
-                }
-                className="w-full p-2 mb-4 bg-transparent border border-white/20 rounded"
-                placeholder="Description"
-              />
-
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setEditingEvent(null)}
-                  className="px-4 py-2 bg-gray-600 rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSaveEdit}
-                  className="px-4 py-2 bg-indigo-600 rounded"
-                >
-                  Save
-                </button>
-              </div>
             </div>
           </div>
         )}

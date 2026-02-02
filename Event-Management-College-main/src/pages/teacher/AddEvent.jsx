@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { PROGRAMS } from "../../Constants/ProgramData";
+import React, { useState, useEffect } from "react";
 
 const AddEvent = () => {
+  const [programs, setPrograms] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+
   const [eventData, setEventData] = useState({
     programName: "",
+    programId: "",
     eventName: "",
     description: "",
     date: "",
@@ -23,44 +25,68 @@ const AddEvent = () => {
     sponsorImages: [],
 
     // Participation
-    participationType: "",
+    participationType: "individual",
     overallIndividualLimit: "",
     departmentIndividualLimit: "",
     membersPerTeamFromDepartment: "",
     teamsPerDepartment: "",
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  useEffect(() => {
+    // Load Programs
+    const storedPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+    setPrograms(storedPrograms);
 
-  const filteredPrograms = PROGRAMS.filter((program) =>
-    program.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    // Load Teachers
+    const registeredUsers = JSON.parse(localStorage.getItem("registered_users") || "[]");
+    const teacherList = registeredUsers.filter(u => u.userType === "teacher");
+    setTeachers(teacherList);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEventData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProgramSelect = (program) => {
-    setEventData((prev) => ({ ...prev, programName: program.name }));
-    setSearchTerm(program.name);
-    setShowSuggestions(false);
+  const handleProgramSelect = (e) => {
+    const selectedId = Number(e.target.value);
+    const selectedProgram = programs.find(p => p.id === selectedId);
+    if (selectedProgram) {
+      setEventData(prev => ({
+        ...prev,
+        programName: selectedProgram.Name,
+        programId: selectedProgram.id
+      }));
+    }
   };
 
-  const handlePosterImage = (e) => {
-    setEventData((prev) => ({ ...prev, poster: e.target.files[0] }));
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
+  const handlePosterImage = async (e) => {
+    if (e.target.files[0]) {
+      const base64 = await toBase64(e.target.files[0]);
+      setEventData((prev) => ({ ...prev, poster: base64 }));
+    }
   };
 
-  const handlePriceImage = (e) => {
-    setEventData((prev) => ({ ...prev, priceImage: e.target.files[0] }));
+  const handlePriceImage = async (e) => {
+    if (e.target.files[0]) {
+      const base64 = await toBase64(e.target.files[0]);
+      setEventData((prev) => ({ ...prev, priceImage: base64 }));
+    }
   };
 
-  const handleSponsorImages = (e) => {
+  const handleSponsorImages = async (e) => {
     const files = Array.from(e.target.files);
+    const base64Files = await Promise.all(files.map(f => toBase64(f)));
     setEventData((prev) => ({
       ...prev,
-      sponsorImages: [...prev.sponsorImages, ...files].slice(0, 3),
+      sponsorImages: [...prev.sponsorImages, ...base64Files].slice(0, 3),
     }));
   };
 
@@ -74,25 +100,41 @@ const AddEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const formData = new FormData();
-
-      Object.entries(eventData).forEach(([key, value]) => {
-        if (key === "sponsorImages") {
-          value.forEach((img) => formData.append("sponsorImages", img));
-        } else {
-          formData.append(key, value);
-        }
-      });
-
-      await axios.post("http://localhost:3000/event/addEvent", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      alert("Event added successfully");
-    } catch (error) {
-      console.error(error.response?.data || error.message);
+    if (!eventData.programId) {
+      alert("Please select a program");
+      return;
     }
+
+    const newEvent = { ...eventData, id: Date.now() };
+    const events = JSON.parse(localStorage.getItem("all_events") || "[]");
+    localStorage.setItem("all_events", JSON.stringify([...events, newEvent]));
+
+    alert("Event added successfully (Local)");
+
+    // Clear form
+    setEventData({
+      programName: eventData.programName, // keep program info maybe? mostly users want reset
+      programId: eventData.programId,
+      eventName: "",
+      description: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      venue: "",
+      latitude: "",
+      longitude: "",
+      incharge: "",
+      department: "",
+      limit: "",
+      poster: null,
+      priceImage: null,
+      sponsorImages: [],
+      participationType: "individual",
+      overallIndividualLimit: "",
+      departmentIndividualLimit: "",
+      membersPerTeamFromDepartment: "",
+      teamsPerDepartment: "",
+    });
   };
 
   return (
@@ -116,34 +158,21 @@ const AddEvent = () => {
             onSubmit={handleSubmit}
             className="relative bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 rounded-3xl shadow-2xl p-8 md:p-12"
           >
-            {/* PROGRAM SEARCH */}
-            <div className="mb-8 relative">
+            {/* PROGRAM SELECTION */}
+            <div className="mb-8">
               <label className="block mb-3 text-gray-200 font-semibold text-lg">Program Name</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  placeholder="Search and select a program..."
-                  className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                />
-                {showSuggestions && (
-                  <ul className="absolute w-full bg-slate-800/95 backdrop-blur-lg border border-white/10 mt-2 rounded-2xl shadow-2xl z-10 max-h-48 overflow-y-auto">
-                    {filteredPrograms.map((program) => (
-                      <li
-                        key={program.id}
-                        onClick={() => handleProgramSelect(program)}
-                        className="p-4 hover:bg-blue-500/20 cursor-pointer transition-colors duration-200 border-b border-white/5 last:border-b-0 first:rounded-t-2xl last:rounded-b-2xl"
-                      >
-                        <span className="text-white font-medium">{program.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              <select
+                className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
+                onChange={handleProgramSelect}
+                value={eventData.programId || ""}
+              >
+                <option value="" disabled className="bg-gray-800">Select a Program</option>
+                {programs.map((prog) => (
+                  <option key={prog.id} value={prog.id} className="bg-gray-800">
+                    {prog.Name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* EVENT NAME */}
@@ -153,8 +182,10 @@ const AddEvent = () => {
                 type="text"
                 name="eventName"
                 placeholder="Enter event name..."
+                value={eventData.eventName}
                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -164,9 +195,11 @@ const AddEvent = () => {
               <textarea
                 name="description"
                 placeholder="Describe the event details, objectives, and what participants can expect..."
+                value={eventData.description}
                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300 resize-none"
                 rows="4"
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -179,8 +212,10 @@ const AddEvent = () => {
                   <input
                     type="date"
                     name="date"
+                    value={eventData.date}
                     className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
+                    required
                   />
                 </div>
 
@@ -189,8 +224,10 @@ const AddEvent = () => {
                   <input
                     type="time"
                     name="startTime"
+                    value={eventData.startTime}
                     className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
+                    required
                   />
                 </div>
 
@@ -199,8 +236,10 @@ const AddEvent = () => {
                   <input
                     type="time"
                     name="endTime"
+                    value={eventData.endTime}
                     className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
+                    required
                   />
                 </div>
               </div>
@@ -212,9 +251,11 @@ const AddEvent = () => {
               <input
                 type="text"
                 name="venue"
+                value={eventData.venue}
                 placeholder="Enter event venue/location..."
                 className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -228,6 +269,7 @@ const AddEvent = () => {
                     type="number"
                     step="any"
                     name="latitude"
+                    value={eventData.latitude}
                     placeholder="e.g., 11.2588"
                     className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
@@ -239,6 +281,7 @@ const AddEvent = () => {
                     type="number"
                     step="any"
                     name="longitude"
+                    value={eventData.longitude}
                     placeholder="e.g., 75.7804"
                     className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
@@ -256,21 +299,47 @@ const AddEvent = () => {
                   <input
                     type="text"
                     name="department"
+                    value={eventData.department}
                     placeholder="Organizing department..."
                     className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
+                    required
                   />
                 </div>
 
                 <div>
                   <label className="block mb-2 text-gray-300 font-medium">Event Incharge</label>
-                  <input
-                    type="text"
-                    name="incharge"
-                    placeholder="Faculty coordinator..."
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                    onChange={handleChange}
-                  />
+                  <div className="bg-white/5 border border-white/20 rounded-2xl p-4 max-h-40 overflow-y-auto backdrop-blur-sm">
+                    {teachers.length === 0 ? (
+                      <p className="text-gray-500 text-sm">No registered teachers found.</p>
+                    ) : (
+                      teachers.map((teacher) => (
+                        <label key={teacher.id} className="flex items-center gap-3 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
+                          <input
+                            type="checkbox"
+                            value={teacher.name}
+                            checked={eventData.incharge.split(", ").includes(teacher.name)}
+                            onChange={(e) => {
+                              const name = e.target.value;
+                              const currentIncharges = eventData.incharge ? eventData.incharge.split(", ") : [];
+
+                              let newIncharges;
+                              if (e.target.checked) {
+                                newIncharges = [...currentIncharges, name];
+                              } else {
+                                newIncharges = currentIncharges.filter(i => i !== name);
+                              }
+
+                              setEventData(prev => ({ ...prev, incharge: newIncharges.join(", ") }));
+                            }}
+                            className="w-5 h-5 text-blue-500 rounded focus:ring-blue-600 bg-gray-700 border-gray-600"
+                          />
+                          <span className="text-gray-200">{teacher.name} <span className="text-gray-500 text-sm">({teacher.department})</span></span>
+                        </label>
+                      ))
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2 ml-1">Selected: {eventData.incharge || "None"}</p>
                 </div>
               </div>
             </div>
@@ -284,6 +353,7 @@ const AddEvent = () => {
                     type="radio"
                     name="participationType"
                     value="individual"
+                    checked={eventData.participationType === "individual"}
                     onChange={handleChange}
                     className="w-5 h-5 text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500 focus:ring-2"
                   />
@@ -294,6 +364,7 @@ const AddEvent = () => {
                     type="radio"
                     name="participationType"
                     value="team"
+                    checked={eventData.participationType === "team"}
                     onChange={handleChange}
                     className="w-5 h-5 text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500 focus:ring-2"
                   />
@@ -312,6 +383,7 @@ const AddEvent = () => {
                     <input
                       type="number"
                       name="overallIndividualLimit"
+                      value={eventData.overallIndividualLimit}
                       placeholder="Total participants allowed"
                       min="1"
                       className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
@@ -323,6 +395,7 @@ const AddEvent = () => {
                     <input
                       type="number"
                       name="departmentIndividualLimit"
+                      value={eventData.departmentIndividualLimit}
                       placeholder="Max per department"
                       min="1"
                       className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
@@ -343,6 +416,7 @@ const AddEvent = () => {
                     <input
                       type="number"
                       name="teamsPerDepartment"
+                      value={eventData.teamsPerDepartment}
                       placeholder="Number of teams per dept"
                       min="1"
                       className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
@@ -354,6 +428,7 @@ const AddEvent = () => {
                     <input
                       type="number"
                       name="membersPerTeamFromDepartment"
+                      value={eventData.membersPerTeamFromDepartment}
                       placeholder="Team size"
                       min="1"
                       className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
@@ -382,7 +457,7 @@ const AddEvent = () => {
                   {eventData.poster && (
                     <div className="mt-3 relative group">
                       <img
-                        src={URL.createObjectURL(eventData.poster)}
+                        src={eventData.poster}
                         alt="Event poster preview"
                         className="w-32 h-32 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
                       />
@@ -404,7 +479,7 @@ const AddEvent = () => {
                   {eventData.priceImage && (
                     <div className="mt-3 relative group">
                       <img
-                        src={URL.createObjectURL(eventData.priceImage)}
+                        src={eventData.priceImage}
                         alt="Prize information preview"
                         className="w-32 h-32 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
                       />
@@ -435,7 +510,7 @@ const AddEvent = () => {
                     {eventData.sponsorImages.map((img, i) => (
                       <div key={i} className="relative group">
                         <img
-                          src={URL.createObjectURL(img)}
+                          src={img}
                           alt={`Sponsor ${i + 1}`}
                           className="w-24 h-24 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
                         />

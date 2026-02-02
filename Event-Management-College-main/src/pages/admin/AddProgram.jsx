@@ -1,11 +1,11 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaBolt,
   FaCheckCircle,
   FaLightbulb,
   FaStar,
 } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ICON_OPTIONS = [
   { label: "Bolt", value: FaBolt },
@@ -26,10 +26,15 @@ const CATEGORY_OPTIONS = [
 ];
 
 const AddProgram = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const existingProgram = location.state?.programData || null;
+
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null); // For showing existing image
   const [brochure, setBrochure] = useState(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -37,11 +42,31 @@ const AddProgram = () => {
   const [features, setFeatures] = useState([]);
 
   const [featureIcon, setFeatureIcon] = useState(FaBolt);
+  const [featureIconLabel, setFeatureIconLabel] = useState("Bolt");
   const [featureName, setFeatureName] = useState("");
+
+  // Populate form if editing
+  useEffect(() => {
+    if (existingProgram) {
+      setName(existingProgram.Name);
+      setTitle(existingProgram.Title);
+      setCategory(existingProgram.category || "");
+      setDate(existingProgram.programDate);
+      setTime(existingProgram.programTime);
+      setDescription(existingProgram.Description);
+      setFeatures(existingProgram.features || []);
+      setImagePreview(existingProgram.image);
+      // Note: we can't set file inputs programmatically, so 'image' and 'brochure' stay null unless user picks new ones
+    }
+  }, [existingProgram]);
 
   const addFeature = () => {
     if (featureName.trim() === "") return;
-    setFeatures((prev) => [...prev, { icon: featureIcon, name: featureName }]);
+    if (features.length >= 4) {
+      alert("Maximum 4 features allowed");
+      return;
+    }
+    setFeatures((prev) => [...prev, { iconLabel: featureIconLabel, name: featureName }]);
     setFeatureName("");
   };
 
@@ -49,27 +74,82 @@ const AddProgram = () => {
     setFeatures((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
+  // Helper to convert file to Base64
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newProgram = {
-      id: Date.now(),
+
+    let imageBase64 = imagePreview; // Default to existing image
+    if (image) {
+      try {
+        imageBase64 = await toBase64(image);
+      } catch (error) {
+        console.error("Error converting image:", error);
+        alert("Error processing image");
+        return;
+      }
+    }
+
+    const programData = {
+      id: existingProgram ? existingProgram.id : Date.now(),
       Name: name,
       category: category,
-      image: image,
-      brochure: brochure,
+      image: imageBase64,
+      brochure: brochure, // In a real app we'd upload this too
       Title: title,
       programDate: date,
       programTime: time,
       Description: description,
       features: features,
     };
-    console.log("Program Created:", newProgram);
-    alert("Program created! Check console output.");
+
+    // Save to localStorage
+    const existingPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+
+    let updatedPrograms;
+    if (existingProgram) {
+      // Update existing
+      updatedPrograms = existingPrograms.map(p =>
+        p.id === existingProgram.id ? programData : p
+      );
+      alert("Program updated successfully!");
+    } else {
+      // Create new
+      updatedPrograms = [...existingPrograms, programData];
+      alert("Program created successfully!");
+    }
+
+    localStorage.setItem("all_programs", JSON.stringify(updatedPrograms));
+    console.log(existingProgram ? "Program Updated:" : "Program Created:", programData);
+
+    // Reset or Navigate back
+    if (existingProgram) {
+      navigate(-1); // Go back to manage page
+    } else {
+      // Reset form
+      setName("");
+      setTitle("");
+      setCategory("");
+      setImage(null);
+      setImagePreview(null);
+      setBrochure(null);
+      setDate("");
+      setTime("");
+      setDescription("");
+      setFeatures([]);
+    }
   };
 
   return (
     <div className="text-gray-200 p-6 font-out">
-      <h1 className="text-3xl font-bold mb-8">Add New Program</h1>
+      <h1 className="text-3xl font-bold mb-8">{existingProgram ? "Edit Program" : "Add New Program"}</h1>
 
       <form
         onSubmit={handleSubmit}
@@ -159,6 +239,11 @@ const AddProgram = () => {
         {/* Image Upload */}
         <div className="mb-6">
           <label className="block text-gray-300 mb-2">Program Image</label>
+          {imagePreview && (
+            <div className="mb-2">
+              <img src={imagePreview} alt="Preview" className="h-32 object-cover rounded" />
+            </div>
+          )}
           <input
             type="file"
             className="text-gray-700 bg-slate-300 p-2 rounded-md cursor-pointer"
@@ -193,6 +278,7 @@ const AddProgram = () => {
                   (item) => item.label === e.target.value
                 );
                 setFeatureIcon(selected.value);
+                setFeatureIconLabel(selected.label);
               }}
             >
               {ICON_OPTIONS.map((item, i) => (
@@ -223,25 +309,28 @@ const AddProgram = () => {
 
           {/* Display Added Features */}
           <div className="space-y-3">
-            {features.map((f, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center bg-gray-900 p-3 rounded border border-gray-700"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <f.icon className="text-blue-400" />
-                  <span>{f.name}</span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => removeFeature(index)}
-                  className="text-red-500 text-xl"
+            {features.map((f, index) => {
+              const IconComp = ICON_OPTIONS.find(opt => opt.label === f.iconLabel)?.value || FaBolt;
+              return (
+                <div
+                  key={index}
+                  className="flex justify-between items-center bg-gray-900 p-3 rounded border border-gray-700"
                 >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <div className="flex items-center gap-3 text-white">
+                    <IconComp className="text-blue-400" />
+                    <span>{f.name}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => removeFeature(index)}
+                    className="text-red-500 text-xl"
+                  >
+                    ✕
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -250,11 +339,10 @@ const AddProgram = () => {
           type="submit"
           className="w-full bg-cyan-800 hover:bg-cyan-900 p-3 rounded-lg font-semibold mt-4"
         >
-          Create Program
+          {existingProgram ? "Update Program" : "Create Program"}
         </button>
       </form>
     </div>
   );
 };
-
 export default AddProgram;

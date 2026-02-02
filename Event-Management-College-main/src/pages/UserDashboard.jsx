@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import { EVENTDATAS } from "../Constants/ProgramData";
+import { useAppContext } from "../context/AppContext";
 
 const STORAGE_KEY = "user_ratings";
+const ATTENDANCE_KEY = "event_attendance";
 
 const UserDashboard = () => {
+  const { user } = useAppContext();
+
   const [userStats, setUserStats] = useState({
     totalEvents: 0,
     upcomingEvents: 0,
@@ -18,60 +21,104 @@ const UserDashboard = () => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
 
-  // Mock user data - in real app this would come from authentication context
-  const mockUserData = {
-    registeredEvents: [1, 2, 3, 4], // Event IDs the user has registered for
-    attendanceHistory: [
-      { eventId: 1, attended: true },
-      { eventId: 2, attended: true },
-      { eventId: 3, attended: false },
-      { eventId: 4, attended: true },
-    ]
-  };
+  /* New State for Attendance Modal */
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
 
   useEffect(() => {
-    loadUserData();
-  }, []);
+    if (user) {
+      loadUserData();
+    }
+  }, [user]);
 
   const loadUserData = () => {
-    // Filter events that user has registered for
-    const userRegisteredEvents = EVENTDATAS.filter(event =>
-      mockUserData.registeredEvents.includes(event.id)
+    // Fetch all required data from localStorage
+    const allEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+    const allRegistrations = JSON.parse(localStorage.getItem("event_registrations") || "[]");
+    const attendanceRecords = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || "[]");
+
+    // Filter registrations for this user
+    // Assuming registrations stored userId or we match by some other unique prop if needed
+    // In EventRegistration we saved: userId: user.id
+    const myRegistrations = allRegistrations.filter(
+      reg => String(reg.userId) === String(user.id) || reg.userEmail === user.email
     );
+
+    // Map registrations to full event details
+    const myEvents = myRegistrations.map(reg => {
+      const eventDetails = allEvents.find(e => e.id === Number(reg.eventId));
+      if (!eventDetails) return null;
+
+      // Check attendance
+      const attendanceRecord = attendanceRecords.find(
+        att => String(att.userId) === String(user.id) && Number(att.eventId) === Number(reg.eventId)
+      );
+
+      const isAttended = !!attendanceRecord;
+      const attendanceStatus = attendanceRecord?.status || (isAttended ? 'approved' : null);
+
+      return {
+        ...eventDetails,
+        registrationDate: reg.date,
+        attended: isAttended,
+        attendanceStatus: attendanceStatus, // 'pending' or 'approved'
+        isUpcoming: new Date(eventDetails.date) > new Date()
+      };
+    }).filter(Boolean); // Remove nulls if event not found
 
     // Calculate stats
     const now = new Date();
-    const upcoming = userRegisteredEvents.filter(event =>
-      new Date(event.date) > now
-    ).length;
+    const upcoming = myEvents.filter(e => e.isUpcoming).length;
+    const completed = myEvents.filter(e => !e.isUpcoming).length;
+    // Count as "attended" only if approved or just count all submissions? 
+    // For now counting all for stats, or maybe just approved? 
+    // Let's count all non-null attendance for now to reflect activity.
+    const attendedCount = myEvents.filter(e => e.attended).length;
 
-    const completed = userRegisteredEvents.filter(event =>
-      new Date(event.date) <= now
-    ).length;
-
-    const attendedEvents = mockUserData.attendanceHistory.filter(record => record.attended).length;
-    const attendancePercentage = mockUserData.registeredEvents.length > 0
-      ? Math.round((attendedEvents / mockUserData.registeredEvents.length) * 100)
+    // Attendance percentage based on COMPLETED events (events that have passed)
+    // or based on total registered? Usually based on total registered makes sense for dashboard
+    const attendancePercentage = myEvents.length > 0
+      ? Math.round((attendedCount / myEvents.length) * 100)
       : 0;
 
     setUserStats({
-      totalEvents: userRegisteredEvents.length,
+      totalEvents: myEvents.length,
       upcomingEvents: upcoming,
       completedEvents: completed,
       attendancePercentage: attendancePercentage,
     });
 
-    // Add attendance status to events
-    const eventsWithAttendance = userRegisteredEvents.map(event => {
-      const attendanceRecord = mockUserData.attendanceHistory.find(record => record.eventId === event.id);
-      return {
-        ...event,
-        attended: attendanceRecord ? attendanceRecord.attended : false,
-        isUpcoming: new Date(event.date) > now,
-      };
-    });
+    setRegisteredEvents(myEvents);
+  };
 
-    setRegisteredEvents(eventsWithAttendance);
+  const handleAttendance = (eventId) => {
+    const records = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || "[]");
+
+    // Prevent duplicate attendance
+    const alreadyMarked = records.some(
+      r => String(r.userId) === String(user.id) && Number(r.eventId) === Number(eventId)
+    );
+
+    if (alreadyMarked) {
+      toast.info("Attendance already submitted.");
+      return;
+    }
+
+    const newRecord = {
+      id: Date.now(),
+      userId: user.id,
+      eventId: Number(eventId),
+      date: new Date().toISOString(),
+      status: 'pending' // Mark as pending
+    };
+
+    localStorage.setItem(ATTENDANCE_KEY, JSON.stringify([...records, newRecord]));
+    // toast.success("Attendance marked successfully!"); // Removed toast in favor of modal
+
+    // Show Modal
+    setShowAttendanceModal(true);
+
+    // Refresh data
+    loadUserData();
   };
 
   const handleRatingSubmit = (eventId) => {
@@ -85,13 +132,13 @@ const UserDashboard = () => {
 
     // Check if user already rated this event
     const existingRatingIndex = existingRatings.findIndex(
-      r => r.eventId === eventId && r.userId === "currentUser" // In real app, use actual user ID
+      r => Number(r.eventId) === Number(eventId) && String(r.userId) === String(user.id)
     );
 
     const newRating = {
       id: Date.now().toString(),
       eventId: eventId,
-      userId: "currentUser", // In real app, use actual user ID
+      userId: user.id,
       rating: rating,
       review: review,
       eventName: ratingModal.eventName,
@@ -136,13 +183,21 @@ const UserDashboard = () => {
     );
   };
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
+        <p>Please login to view dashboard</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 pt-20">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">User Dashboard</h1>
-          <p className="text-gray-400">Track your event participation and provide feedback</p>
+          <p className="text-gray-400">Welcome, {user.name}!</p>
         </div>
 
         {/* Stats Cards */}
@@ -216,13 +271,12 @@ const UserDashboard = () => {
                       <p className="text-gray-400 text-sm">{event.programName}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        event.isUpcoming
-                          ? 'bg-blue-500/20 text-blue-400'
-                          : event.attended
-                            ? 'bg-green-500/20 text-green-400'
-                            : 'bg-red-500/20 text-red-400'
-                      }`}>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${event.isUpcoming
+                        ? 'bg-blue-500/20 text-blue-400'
+                        : event.attended
+                          ? 'bg-green-500/20 text-green-400'
+                          : 'bg-red-500/20 text-red-400'
+                        }`}>
                         {event.isUpcoming ? 'Upcoming' : event.attended ? 'Attended' : 'Missed'}
                       </span>
                     </div>
@@ -242,28 +296,72 @@ const UserDashboard = () => {
                       <span>📍</span>
                       <span>{event.venue}</span>
                     </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <span>🏷️</span>
+                      <span className="capitalize">{event.participationType}</span>
+                    </div>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                    {event.description}
-                  </p>
+                  {/* Actions */}
+                  <div className="flex gap-2 mt-4">
+                    {/* Attendance Button */}
+                    {!event.isUpcoming && (
+                      <button
+                        onClick={() => handleAttendance(event.id)}
+                        disabled={event.attended}
+                        className={`flex-1 py-2 rounded-lg font-medium transition ${event.attended
+                            ? 'bg-yellow-600/50 text-white cursor-not-allowed'
+                            : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          }`}
+                      >
+                        {event.attended
+                          ? (event.attendanceStatus === 'pending' ? 'Pending Approval' : 'Attended ✓')
+                          : 'Mark Attendance'}
+                      </button>
+                    )}
 
-                  {/* Rating Button */}
-                  {!event.isUpcoming && (
-                    <button
-                      onClick={() => setRatingModal(event)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
-                    >
-                      Rate This Event
-                    </button>
-                  )}
+                    {/* Rating Button */}
+                    {!event.isUpcoming && (
+                      <button
+                        onClick={() => setRatingModal(event)}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
+                      >
+                        Rate
+                      </button>
+                    )}
+                  </div>
+
                 </motion.div>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      {/* Attendance Confirmation Modal */}
+      {showAttendanceModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-gray-800 rounded-xl shadow-2xl max-w-sm w-full p-6 text-center border border-white/10"
+          >
+            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Success</h3>
+            <p className="text-gray-300 mb-6">Attendance submitted. Waiting for teacher approval.</p>
+            <button
+              onClick={() => setShowAttendanceModal(false)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+            >
+              Done
+            </button>
+          </motion.div>
+        </div>
+      )}
 
       {/* Rating Modal */}
       {ratingModal && (

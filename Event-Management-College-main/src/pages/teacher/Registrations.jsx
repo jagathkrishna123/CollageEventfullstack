@@ -1,74 +1,165 @@
-import React, { useState } from 'react';
-import { EVENTDATAS, SIGNUPDATA } from '../../Constants/ProgramData';
+import React, { useState, useEffect } from 'react';
+import { useAppContext } from '../../context/AppContext';
 
 const Registrations = () => {
+  const { user } = useAppContext();
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [myEvents, setMyEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filter only students from SIGNUPDATA
-  const students = SIGNUPDATA.filter((user) => user.userType === 'student');
+  useEffect(() => {
+    if (user) {
+      loadData();
+    }
+  }, [user]);
+
+  const loadData = () => {
+    setLoading(true);
+    // 1. Fetch all events
+    const allEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+
+    // 2. Filter events where this teacher is in charge
+    const teacherEvents = allEvents.filter(event =>
+      event.incharge && event.incharge.includes(user.name)
+    );
+
+    // 3. Fetch all registrations and users
+    const allRegistrations = JSON.parse(localStorage.getItem("event_registrations") || "[]");
+    const allUsers = JSON.parse(localStorage.getItem("registered_users") || "[]");
+
+    setMyEvents(teacherEvents);
+    setRegistrations(allRegistrations);
+    setUsers(allUsers);
+    setLoading(false);
+  };
+
+  // Get registered students for a specific event
+  const getEventStudents = (eventId) => {
+    const eventRegs = registrations.filter(reg => String(reg.eventId) === String(eventId));
+    return eventRegs.map(reg => {
+      const student = users.find(u => String(u.id) === String(reg.userId));
+      return {
+        ...student,
+        regId: reg.id,
+        regStatus: reg.status,
+        regDate: reg.registrationDate
+      };
+    }).filter(s => s.id);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex-1 h-screen bg-[#03050F] flex items-center justify-center">
+        <div className="text-blue-500 font-bold animate-pulse">Loading Registrations Dashboard...</div>
+      </div>
+    );
+  }
+
+  const selectedEventStudents = selectedEvent ? getEventStudents(selectedEvent.id) : [];
 
   return (
-    <div className="flex-1 h-screen overflow-y-auto bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 p-4 md:p-8 font-out text-gray-300">
+    <div className="flex-1 h-screen overflow-y-auto bg-[#03050F] p-4 md:p-10 font-out text-gray-300">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-8 pb-2 border-b border-white/10">
-          {selectedEvent ? 'Event Registrations' : 'All Events'}
-        </h1>
+        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-black bg-gradient-to-r from-blue-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-2">
+              {selectedEvent ? 'Event Roster' : 'My Event Registrations'}
+            </h1>
+            <p className="text-gray-500 font-medium tracking-wide">
+              {selectedEvent ? `Reviewing participants for "${selectedEvent.eventName}"` : 'Manage students registered for the events you are leading'}
+            </p>
+          </div>
+
+          {selectedEvent && (
+            <button
+              onClick={() => setSelectedEvent(null)}
+              className="px-6 py-3 bg-white/[0.05] border border-white/10 hover:bg-white/[0.1] text-white rounded-2xl transition-all shadow-xl flex items-center gap-3 font-bold text-sm uppercase tracking-widest"
+            >
+              &larr; All My Events
+            </button>
+          )}
+        </div>
 
         {selectedEvent ? (
           // Detailed View: Registered Students for a specific event
           <div className="animate-fadeIn">
-            <button
-              onClick={() => setSelectedEvent(null)}
-              className="mb-6 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl transition-all shadow-lg flex items-center gap-2"
-            >
-              &larr; Back to Events
-            </button>
-
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl mb-6">
-              <h2 className="text-2xl font-bold text-white mb-2">{selectedEvent.eventName}</h2>
-              <div className="flex gap-4 text-sm text-gray-400 mb-4">
-                <span className="flex items-center gap-1">📅 {selectedEvent.date}</span>
-                <span className="flex items-center gap-1">📍 {selectedEvent.venue}</span>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+              <div className="lg:col-span-2 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+                <h2 className="text-3xl font-black text-white mb-4 leading-tight">{selectedEvent.eventName}</h2>
+                <div className="flex flex-wrap gap-6 text-sm">
+                  <div className="flex items-center gap-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-xl border border-blue-500/20">
+                    <span>📅</span> {selectedEvent.date}
+                  </div>
+                  <div className="flex items-center gap-2 bg-purple-500/10 text-purple-400 px-4 py-2 rounded-xl border border-purple-500/20">
+                    <span>📍</span> {selectedEvent.venue}
+                  </div>
+                </div>
               </div>
-              <p className="text-gray-400 mb-6">{selectedEvent.description}</p>
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 shadow-2xl flex flex-col justify-center items-center text-center">
+                <span className="text-5xl font-black text-white mb-2">{selectedEventStudents.length}</span>
+                <span className="text-xs font-black text-blue-100 uppercase tracking-[0.2em]">Registered Students</span>
+              </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-              <div className="p-6 border-b border-white/10">
-                <h3 className="text-xl font-bold text-white">
-                  Registered Students ({students.length})
-                </h3>
+            <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
+              <div className="p-8 border-b border-white/10 flex items-center justify-between">
+                <h3 className="text-xl font-black text-white tracking-tight">Participant Directory</h3>
+                {selectedEventStudents.length > 0 && (
+                  <span className="text-[10px] font-black font-mono text-gray-500 uppercase">Export Table (Coming Soon)</span>
+                )}
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-gray-300">
-                  <thead className="bg-white/5 text-gray-400 uppercase text-xs">
-                    <tr>
-                      <th className="px-6 py-4">Reg No</th>
-                      <th className="px-6 py-4">Name</th>
-                      <th className="px-6 py-4">Department</th>
-                      <th className="px-6 py-4">Semester</th>
-                      <th className="px-6 py-4">Contact</th>
+                  <thead>
+                    <tr className="bg-white/[0.03] text-gray-500 uppercase text-[10px] font-black tracking-[0.2em]">
+                      <th className="px-8 py-5">Roll No</th>
+                      <th className="px-8 py-5">Student Identity</th>
+                      <th className="px-8 py-5">Classification</th>
+                      <th className="px-8 py-5">Communication</th>
+                      <th className="px-8 py-5 text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/10">
-                    {students.map((student) => (
-                      <tr key={student.id} className="hover:bg-white/5 transition-colors">
-                        <td className="px-6 py-4 font-medium text-white">{student.registerNumber}</td>
-                        <td className="px-6 py-4">
+                  <tbody className="divide-y divide-white/5">
+                    {selectedEventStudents.map((student) => (
+                      <tr key={student.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="px-8 py-6 font-mono font-black text-blue-500/80">{student.registerNumber}</td>
+                        <td className="px-8 py-6">
                           <div className="flex flex-col">
-                            <span className="text-white font-medium">{student.name}</span>
-                            <span className="text-xs text-gray-500">{student.email}</span>
+                            <span className="text-white font-black text-lg">{student.name}</span>
+                            <span className="text-xs text-gray-500 font-medium">{student.email}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4">{student.department}</td>
-                        <td className="px-6 py-4">{student.semester}</td>
-                        <td className="px-6 py-4">{student.mobile}</td>
+                        <td className="px-8 py-6">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-xs bg-white/5 px-2 py-0.5 rounded-lg w-max border border-white/5 text-gray-300">{student.department}</span>
+                            <span className="text-[10px] font-bold text-gray-500 uppercase">Sem: {student.semester}</span>
+                          </div>
+                        </td>
+                        <td className="px-8 py-6">
+                          <p className="text-gray-300 font-bold text-sm tracking-widest">{student.mobile}</p>
+                        </td>
+                        <td className="px-8 py-6 text-right">
+                          <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest leading-none ${student.regStatus === 'confirmed' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
+                            }`}>
+                            {student.regStatus || 'Enrolled'}
+                          </span>
+                        </td>
                       </tr>
                     ))}
-                    {students.length === 0 && (
+                    {selectedEventStudents.length === 0 && (
                       <tr>
-                        <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
-                          No students registered yet.
+                        <td colSpan="5" className="px-8 py-24 text-center">
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="w-20 h-20 bg-white/[0.02] rounded-full flex items-center justify-center border border-white/5">
+                              <span className="text-4xl grayscale opacity-30">👥</span>
+                            </div>
+                            <div>
+                              <p className="text-white font-black text-xl mb-1">No Active Registrations</p>
+                              <p className="text-gray-500 font-medium">As soon as students join, they will appear in this directory.</p>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     )}
@@ -78,56 +169,67 @@ const Registrations = () => {
             </div>
           </div>
         ) : (
-          // List View: All Events
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {EVENTDATAS.map((event) => (
-              <div
-                key={event.id}
-                onClick={() => setSelectedEvent(event)}
-                className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl cursor-pointer hover:scale-[1.02] transition-all duration-300 group"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={event.poster}
-                    alt={event.eventName}
-                    className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-90" />
-                  <div className="absolute bottom-0 left-0 p-5">
-                    <span className="px-2 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-bold rounded mb-2 inline-block shadow-lg">
-                      {event.programName}
-                    </span>
-                    <h2 className="text-xl font-bold text-white leading-tight shadow-sm">
-                      {event.eventName}
-                    </h2>
+          // List View: All Relevant Events
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {myEvents.map((event) => {
+              const studentsCount = getEventStudents(event.id).length;
+              return (
+                <div
+                  key={event.id}
+                  onClick={() => setSelectedEvent(event)}
+                  className="bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl hover:shadow-blue-500/10 cursor-pointer hover:border-blue-500/40 transition-all duration-700 group relative flex flex-col"
+                >
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={event.image || event.poster}
+                      alt={event.eventName}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 ease-in-out"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#03050F] to-transparent" />
+                    <div className="absolute bottom-6 left-6 pr-6">
+                      <span className="px-3 py-1 bg-blue-600/80 backdrop-blur-md text-white text-[10px] font-black rounded-lg mb-3 inline-block shadow-2xl border border-white/20 uppercase tracking-widest">
+                        {event.programName}
+                      </span>
+                      <h2 className="text-2xl font-black text-white leading-tight drop-shadow-2xl">
+                        {event.eventName}
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="p-8 pt-4 flex-1 flex flex-col">
+                    <div className="space-y-4 text-sm text-gray-500 mb-8">
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg opacity-40">📅</span>
+                        <span className="font-bold tracking-tight text-gray-400">{event.date}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg opacity-40">📍</span>
+                        <span className="font-medium truncate text-gray-400">{event.venue}</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-auto pt-6 border-t border-white/5 flex justify-between items-end">
+                      <div className="flex flex-col">
+                        <span className="text-4xl font-black text-white">{studentsCount}</span>
+                        <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Participants</span>
+                      </div>
+                      <div className="h-14 w-14 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:bg-blue-600 group-hover:border-blue-500 flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                        <span className="text-white text-xl group-hover:translate-x-1 transition-transform">&rarr;</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <div className="p-6">
-                  <div className="space-y-3 text-sm text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <span>📅</span>
-                      <span>{event.date} • {event.startTime} - {event.endTime}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span>📍</span>
-                      <span>{event.venue}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span>👨‍🏫</span>
-                      <span>{event.incharge}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-white/10 flex justify-between items-center">
-                    <span className="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">Limit: {event.limit}</span>
-                    <span className="text-blue-400 text-sm font-medium group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                      View Registrations &rarr;
-                    </span>
-                  </div>
+              );
+            })}
+            {myEvents.length === 0 && (
+              <div className="col-span-full py-32 text-center bg-white/[0.01] rounded-[3rem] border-2 border-dashed border-white/5">
+                <div className="max-w-md mx-auto">
+                  <span className="text-6xl mb-6 block grayscale">📭</span>
+                  <h3 className="text-2xl font-black text-white mb-2">No Managed Events Found</h3>
+                  <p className="text-gray-500 font-medium">You haven't been assigned as an incharge for any events yet. Contact the administrator to get started.</p>
                 </div>
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>

@@ -37,7 +37,7 @@ const UserProfile = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 p-6 md:p-12 font-out">
             <div className="max-w-4xl mx-auto">
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl mt-20">
 
                     {/* Header / Cover Area */}
                     <div className="h-48 bg-gradient-to-r from-blue-600 to-purple-600 relative">
