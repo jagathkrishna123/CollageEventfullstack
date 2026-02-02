@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { BsCalendarDate } from 'react-icons/bs';
+import { IoLocationSharp } from "react-icons/io5";
+import { MdOutlineKeyboardDoubleArrowRight } from 'react-icons/md';
 
 const Registrations = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -169,14 +172,14 @@ const Registrations = () => {
                 <div className="p-7 pt-5">
                   <div className="space-y-4 text-sm text-gray-400">
                     <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                      <span className="text-lg">📅</span>
+                      <span className="text-lg"><BsCalendarDate className='text-red-400'/></span>
                       <div>
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-tighter">Event Date</p>
                         <p className="text-gray-200 font-medium">{event.date}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                      <span className="text-lg">📍</span>
+                      <span className="text-lg"><IoLocationSharp className='text-green-700'/></span>
                       <div>
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-tighter">Location</p>
                         <p className="text-gray-200 font-medium truncate max-w-[180px]">{event.venue}</p>
@@ -190,7 +193,7 @@ const Registrations = () => {
                       <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Enrolled</span>
                     </div>
                     <div className="h-12 w-12 rounded-2xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-all group-hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]">
-                      <span className="text-white text-xl">&rarr;</span>
+                      <span className="text-white text-xl"><MdOutlineKeyboardDoubleArrowRight /></span>
                     </div>
                   </div>
                 </div>

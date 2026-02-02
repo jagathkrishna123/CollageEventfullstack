@@ -206,7 +206,7 @@ const OurPrograms = () => {
                     }}
                     className="mt-4 w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
                   >
-                    View Recap
+                    View
                   </motion.button>
 
                 </div>

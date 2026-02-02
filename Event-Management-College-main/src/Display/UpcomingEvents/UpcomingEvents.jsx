@@ -20,10 +20,18 @@ export function UpcomingEvents() {
     const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
-    // Load events from localStorage on mount
     useEffect(() => {
         const storedPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
-        setEvents(storedPrograms);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const upcoming = storedPrograms.filter(prog => {
+            if (!prog.programDate) return false;
+            const progDate = new Date(prog.programDate);
+            return progDate >= today;
+        });
+
+        setEvents(upcoming);
     }, []);
 
     if (events.length === 0) {
@@ -56,7 +64,8 @@ export function UpcomingEvents() {
             </div>
 
             {/* === Infinite Auto-Scroll Carousel === */}
-            <div className="w-full relative py-4 mask-fade-edges hover-pause">
+            <div className="w-full relative py-4 mask-fade-edges overflow-x-auto">
+
                 <motion.div
                     className="flex flex-row gap-8 w-max px-4"
                     animate={{
@@ -66,7 +75,7 @@ export function UpcomingEvents() {
                         x: {
                             repeat: Infinity,
                             repeatType: "loop",
-                            duration: events.length * 8, // Adjust for desired speed
+                            duration: events.length * 5, // Adjust for desired speed
                             ease: "linear",
                         },
                     }}

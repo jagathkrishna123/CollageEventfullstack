@@ -8,6 +8,8 @@ const EventDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isTeacher = user.userType === "teacher";
 
   // 🔹 individual confirmation popup
   const [showConfirm, setShowConfirm] = useState(false);
@@ -22,8 +24,10 @@ const EventDetails = () => {
   const handleRegister = () => {
     if (!event) return;
 
-    // Check if registration is allowed (simple check for now)
-    // Could add more logic here e.g., checking if user is logged in
+    if (isTeacher) {
+      toast.warning("Teachers are not allowed to register for events.");
+      return;
+    }
 
     if (event.participationType === "individual") {
       setShowConfirm(true);
@@ -334,13 +338,23 @@ const EventDetails = () => {
                     </p>
                   </div>
 
-                  <button
-                    onClick={handleRegister}
-                    className="group relative w-full py-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 font-semibold text-lg text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative z-10">Register Now</span>
-                  </button>
+                  {new Date(event.date) < new Date().setHours(0, 0, 0, 0) ? (
+                    <div className="w-full py-4 rounded-2xl bg-gray-800/50 border border-white/10 text-gray-500 font-bold text-center uppercase tracking-widest">
+                      Registration Closed
+                    </div>
+                  ) : isTeacher ? (
+                    <div className="w-full py-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 font-bold text-center uppercase tracking-widest">
+                      Student Event Only
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleRegister}
+                      className="group relative w-full py-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 font-semibold text-lg text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <span className="relative z-10">Register Now</span>
+                    </button>
+                  )}
 
                   {/* Quick Info */}
                   <div className="mt-6 space-y-3">

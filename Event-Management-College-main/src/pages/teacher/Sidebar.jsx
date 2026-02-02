@@ -1,55 +1,87 @@
-import React from 'react'
-import { CgNotes } from 'react-icons/cg'
-import { FaStarHalfStroke } from 'react-icons/fa6'
-import { IoMdAddCircleOutline } from 'react-icons/io'
-import { MdOutlineAddBox, MdOutlineGroupAdd, MdOutlineSpaceDashboard } from 'react-icons/md'
-import { PiUserCheckBold } from 'react-icons/pi'
-import { TbReportMedical } from 'react-icons/tb'
-import { NavLink } from 'react-router-dom'
-// import { assets } from '../../assets/assets'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { CgNotes } from 'react-icons/cg';
+import { FaStarHalfStroke } from 'react-icons/fa6';
+import { IoMdAddCircleOutline } from 'react-icons/io';
+import { MdOutlineAddBox, MdOutlineGroupAdd, MdOutlineSpaceDashboard } from 'react-icons/md';
+import { PiUserCheckBold } from 'react-icons/pi';
+import { TbReportMedical } from 'react-icons/tb';
 
 const Sidebar = () => {
-  return (
-    <div className='flex flex-col border-r border-gray-600 min-h-full pt-6 text-gray-400 font-out'>
-        <NavLink end={true} to='/teacher' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bbg-cyan-800 border-r-4 border-primary"}`}>
-            <MdOutlineSpaceDashboard className='text-[18px]'/>
-            <p className='hidden md:inline-block'>Dashboard</p>
-        </NavLink>
+    const menuItems = [
+        { to: '/teacher', icon: MdOutlineSpaceDashboard, label: 'Dashboard', end: true },
+        { to: '/teacher/teacher-add-program', icon: MdOutlineAddBox, label: 'Add Program' },
+        { to: '/teacher/addevent', icon: IoMdAddCircleOutline, label: 'Add Event' },
+        { to: '/teacher/rating', icon: FaStarHalfStroke, label: 'Rating' },
+        { to: '/teacher/attendence', icon: PiUserCheckBold, label: 'Attendance' },
+        { to: '/teacher/registrations', icon: CgNotes, label: 'Registrations' },
+        { to: '/teacher/addstudent', icon: MdOutlineGroupAdd, label: 'Add Students' },
+        { to: '/teacher/addreports', icon: TbReportMedical, label: 'Add Reports' },
+    ];
 
-        <NavLink  to='/teacher/teacher-add-program' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-                   <MdOutlineAddBox className='text-[18px]' />
-                    <p className='hidden md:inline-block'>Add Program</p>
-        </NavLink>
+    return (
+        <div className='flex flex-col bg-white/[0.02] backdrop-blur-xl border-r border-white/10 h-full overflow-y-auto py-8 text-gray-400 font-out sticky top-0'>
+            <div className="px-4 space-y-2">
+                {menuItems.map((item, index) => (
+                    <NavLink
+                        key={index}
+                        to={item.to}
+                        end={item.end}
+                        className={({ isActive }) =>
+                            `group relative flex items-center gap-4 py-3.5 px-4 rounded-2xl transition-all duration-300 overflow-hidden ${isActive
+                                ? "bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-400"
+                                : "hover:bg-white/5 hover:text-gray-200"
+                            }`
+                        }
+                    >
+                        {({ isActive }) => (
+                            <>
+                                {/* Active Indicator Glow */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="activeGlowTeacher"
+                                        className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5"
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                    />
+                                )}
 
-        <NavLink  to='/teacher/addevent' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <IoMdAddCircleOutline className='text-[18px]'/>
-            <p className='hidden md:inline-block'>Add Event</p>
-        </NavLink>
+                                {/* Active Border */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="activeBorderTeacher"
+                                        className="absolute left-0 top-2 bottom-2 w-1 bg-gradient-to-b from-indigo-400 to-purple-500 rounded-full"
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                    />
+                                )}
 
-        <NavLink  to='/teacher/rating' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <FaStarHalfStroke className='text-[18px]' />
-            <p className='hidden md:inline-block'>Rating</p>
-        </NavLink>
+                                <item.icon className={`text-xl relative z-10 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-indigo-400" : "text-gray-500 group-hover:text-gray-300"}`} />
+                                <span className='hidden md:inline-block font-bold text-sm tracking-wide relative z-10 uppercase opacity-80 group-hover:opacity-100'>
+                                    {item.label}
+                                </span>
 
-        <NavLink  to='/teacher/attendence' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <PiUserCheckBold className='text-[18px]'/>
-            <p className='hidden md:inline-block'>Attendance</p>
-        </NavLink>
+                                {/* Hover Particle Effect */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
+                            </>
+                        )}
+                    </NavLink>
+                ))}
+            </div>
 
-        <NavLink  to='/teacher/registrations' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <CgNotes className='text-[18px]' />
-            <p className='hidden md:inline-block'>Registrations</p>
-        </NavLink>
-        <NavLink  to='/teacher/addstudent' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <MdOutlineGroupAdd className='text-[18px]'/>
-            <p className='hidden md:inline-block'>Add Students</p>
-        </NavLink>
-        <NavLink  to='/teacher/addreports' className={({isActive})=> `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-64 cursor-pointer ${isActive && "bg-cyan-800 border-r-4 border-primary"}`}>
-            <TbReportMedical  className='text-[18px]'/>
-            <p className='hidden md:inline-block'>Add Reports</p>
-        </NavLink>
-    </div>
-  )
-}
+            {/* Footer Info */}
+            <div className="mt-auto px-6 py-8 border-t border-white/5 hidden md:block">
+                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 mb-1">Status</p>
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.5)]"></span>
+                        <span className="text-xs font-bold text-gray-400">Teacher Portal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
-export default Sidebar
+export default Sidebar;

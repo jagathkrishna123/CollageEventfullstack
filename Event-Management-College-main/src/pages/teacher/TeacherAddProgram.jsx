@@ -19,9 +19,9 @@ const CATEGORY_OPTIONS = [
   "Cultural",
   "Sports",
   "Academic",
-  "Workshop & Training",
-  "Career & Placement",
-  "Social & Community",
+  // "Workshop & Training",
+  // "Career & Placement",
+  // "Social & Community",
   "Arts & Creativity"
 ];
 

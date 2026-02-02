@@ -149,11 +149,11 @@ const Attendence = () => {
                         </td>
                         <td className="px-8 py-6 text-right">
                           <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/5 ${student.attendanceStatus === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                              student.attendanceStatus === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                                student.attendanceStatus === 'rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                  'bg-gray-800 text-gray-600'
+                            student.attendanceStatus === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                              student.attendanceStatus === 'rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                                'bg-gray-800 text-gray-600'
                             }`}>
-                            {student.attendanceStatus.replace('-', ' ')}
+                            {(student.attendanceStatus || 'not-marked').replace('-', ' ')}
                           </span>
                         </td>
                       </tr>
