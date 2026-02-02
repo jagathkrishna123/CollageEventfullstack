@@ -100,12 +100,25 @@ const AddProgram = () => {
       }
     }
 
+    let brochureBase64 = null;
+    if (brochure instanceof File) {
+      try {
+        brochureBase64 = await toBase64(brochure);
+      } catch (error) {
+        console.error("Error converting brochure:", error);
+        alert("Error processing brochure");
+        return;
+      }
+    } else if (existingProgram && existingProgram.brochure) {
+      brochureBase64 = existingProgram.brochure;
+    }
+
     const programData = {
       id: existingProgram ? existingProgram.id : Date.now(),
       Name: name,
       category: category,
       image: imageBase64,
-      brochure: brochure,
+      brochure: brochureBase64,
       Title: title,
       programDate: date,
       programTime: time,
@@ -113,19 +126,29 @@ const AddProgram = () => {
       features: features,
     };
 
-    const existingPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+    // Save to localStorage
+    try {
+      const existingPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
 
-    let updatedPrograms;
-    if (existingProgram) {
-      updatedPrograms = existingPrograms.map(p =>
-        p.id === existingProgram.id ? programData : p
-      );
-    } else {
-      updatedPrograms = [...existingPrograms, programData];
+      let updatedPrograms;
+      if (existingProgram) {
+        updatedPrograms = existingPrograms.map(p =>
+          p.id === existingProgram.id ? programData : p
+        );
+      } else {
+        updatedPrograms = [...existingPrograms, programData];
+      }
+
+      localStorage.setItem("all_programs", JSON.stringify(updatedPrograms));
+      navigate(-1);
+    } catch (error) {
+      console.error("Storage error:", error);
+      if (error.name === 'QuotaExceededError' || error.message.includes('quota')) {
+        alert("Action Failed: Browser memory is full. Please use a smaller PDF brochure or image, or delete some old entries.");
+      } else {
+        alert("Failed to save program details.");
+      }
     }
-
-    localStorage.setItem("all_programs", JSON.stringify(updatedPrograms));
-    navigate(-1);
   };
 
   return (

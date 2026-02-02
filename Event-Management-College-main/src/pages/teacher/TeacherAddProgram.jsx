@@ -77,36 +77,56 @@ const TeacherAddProgram = () => {
       }
     }
 
+    let brochureBase64 = null;
+    if (brochure) {
+      try {
+        brochureBase64 = await toBase64(brochure);
+      } catch (error) {
+        console.error("Error converting brochure:", error);
+        alert("Error processing brochure");
+        return;
+      }
+    }
+
     const newProgram = {
       id: Date.now(),
       Name: name,
       category: category,
       image: imageBase64,
-      brochure: brochure,
+      brochure: brochureBase64,
       Title: title,
       programDate: date,
       programTime: time,
       Description: description,
-      features: features, // Now contains { iconLabel, name }
+      features: features,
     };
 
     // Save to localStorage
-    const existingPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
-    localStorage.setItem("all_programs", JSON.stringify([...existingPrograms, newProgram]));
+    try {
+      const existingPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
+      localStorage.setItem("all_programs", JSON.stringify([...existingPrograms, newProgram]));
 
-    console.log("Program Created:", newProgram);
-    alert("Program created successfully and saved!");
+      console.log("Program Created:", newProgram);
+      alert("Program created successfully and saved!");
 
-    // Reset form
-    setName("");
-    setTitle("");
-    setCategory("");
-    setImage(null);
-    setBrochure(null);
-    setDate("");
-    setTime("");
-    setDescription("");
-    setFeatures([]);
+      // Reset form
+      setName("");
+      setTitle("");
+      setCategory("");
+      setImage(null);
+      setBrochure(null);
+      setDate("");
+      setTime("");
+      setDescription("");
+      setFeatures([]);
+    } catch (error) {
+      console.error("Storage error:", error);
+      if (error.name === 'QuotaExceededError') {
+        alert("Memory full! Could not save program. Try using a smaller PDF or image.");
+      } else {
+        alert("Failed to save program.");
+      }
+    }
   };
 
   return (
