@@ -43,7 +43,7 @@ const Layout = () => {
                 <Sidebar />
 
                 {/* PAGE CONTENT */}
-                <div className="flex-1 p-8 overflow-visible">
+                <div className="flex-1 p-8 overflow-visible bg-[#03050F]">
                     <Outlet />
                 </div>
             </div>

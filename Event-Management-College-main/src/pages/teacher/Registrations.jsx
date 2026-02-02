@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
+import { FiArrowRightCircle } from 'react-icons/fi';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 
 const Registrations = () => {
   const { user } = useAppContext();
@@ -214,7 +216,7 @@ const Registrations = () => {
                         <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Participants</span>
                       </div>
                       <div className="h-14 w-14 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:bg-blue-600 group-hover:border-blue-500 flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
-                        <span className="text-white text-xl group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        <span className="text-white text-xl group-hover:translate-x-1 transition-transform"><MdKeyboardDoubleArrowRight className='text-2xl' /></span>
                       </div>
                     </div>
                   </div>

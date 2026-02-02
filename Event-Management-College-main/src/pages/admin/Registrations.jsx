@@ -147,7 +147,7 @@ const Registrations = () => {
               <div
                 key={event.id}
                 onClick={() => setSelectedEvent(event)}
-                className="bg-gray-900 border border-white/5 rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(59,130,246,0.1)] cursor-pointer hover:border-blue-500/30 transition-all duration-500 group relative"
+                className="bg-gray-900 border border-blue-500/50 rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(59,130,246,0.1)] cursor-pointer hover:border-blue-500/30 transition-all duration-500 group relative"
               >
                 <div className="relative h-56 overflow-hidden">
                   <img

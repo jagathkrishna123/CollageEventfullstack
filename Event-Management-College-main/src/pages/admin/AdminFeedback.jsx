@@ -85,7 +85,7 @@ const AdminFeedback = () => {
   }
 
   return (
-    <div className="flex-1 p-4 md:p-10 bg-gray-900 overflow-y-auto">
+    <div className="flex-1 p-4 md:p-10  overflow-y-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
