@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMapMarkerAlt,
+  FaUserTie,
+  FaUsers,
+  FaImage,
+  FaTrophy,
+  FaRegHandshake,
+  FaPlus,
+  FaTrash,
+  FaCloudUploadAlt,
+  FaArrowLeft
+} from "react-icons/fa";
 
 const AddEvent = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const isEditMode = Boolean(id);
 
   const [programs, setPrograms] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [eventData, setEventData] = useState({
     programName: "",
-    programId: "", // Store ID for linking
+    programId: "",
     eventName: "",
     description: "",
     date: "",
@@ -23,13 +40,9 @@ const AddEvent = () => {
     incharge: "",
     department: "",
     limit: "",
-
-    // Images
     poster: null,
     priceImage: null,
     sponsorImages: [],
-
-    // Participation
     participationType: "individual",
     overallIndividualLimit: "",
     departmentIndividualLimit: "",
@@ -37,30 +50,28 @@ const AddEvent = () => {
     teamsPerDepartment: "",
   });
 
-  // Load Programs and Event Data (if editing)
   useEffect(() => {
-    // 1. Load Programs
+    loadData();
+  }, [id, isEditMode]);
+
+  const loadData = () => {
+    setLoading(true);
     const storedPrograms = JSON.parse(localStorage.getItem("all_programs") || "[]");
     setPrograms(storedPrograms);
 
-    // 2. Load Teachers
     const registeredUsers = JSON.parse(localStorage.getItem("registered_users") || "[]");
     const teacherList = registeredUsers.filter(u => u.userType === "teacher");
     setTeachers(teacherList);
 
-    // 2. Load Event for Editing
     if (isEditMode) {
       const allEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
       const eventToEdit = allEvents.find(e => e.id === Number(id));
-
       if (eventToEdit) {
         setEventData(eventToEdit);
-      } else {
-        // Fallback: check navigation state or basic error handle
-        console.warn("Event not found in local storage for editing");
       }
     }
-  }, [id, isEditMode]);
+    setLoading(false);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,7 +90,6 @@ const AddEvent = () => {
     }
   };
 
-  // Helper for Base64
   const toBase64 = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -119,336 +129,452 @@ const AddEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!eventData.programId) {
       alert("Please select a program");
       return;
     }
 
     const events = JSON.parse(localStorage.getItem("all_events") || "[]");
-
     if (isEditMode) {
-      // Update existing
       const updatedEvents = events.map(ev => ev.id === Number(id) ? { ...eventData, id: Number(id) } : ev);
       localStorage.setItem("all_events", JSON.stringify(updatedEvents));
-      alert("Event updated successfully (Local)");
+      alert("Event updated successfully!");
     } else {
-      // Add new using simple ID generation
       const newEvent = { ...eventData, id: Date.now() };
       localStorage.setItem("all_events", JSON.stringify([...events, newEvent]));
-      alert("Event added successfully (Local)");
-      // Clear form roughly/navigate? Keeping it simple.
+      alert("Event added successfully!");
     }
+    navigate(-1);
   };
 
+  if (loading) {
+    return (
+      <div className="flex-1 h-screen flex items-center justify-center bg-[#03050F]">
+        <div className="text-blue-500 font-bold animate-pulse text-xl uppercase tracking-widest">Initialising Entry Flow...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="text-white p-6 w-full overflow-y-auto font-out">
-      <h1 className="text-3xl font-bold mb-8">{isEditMode ? "Edit Event" : "Add New Event"}</h1>
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-5xl mx-auto"
-      >
-        {/* PROGRAM SELECTION */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Program Name</label>
-          <select
-            className="w-full p-3 bg-gray-800 rounded text-white outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={handleProgramSelect}
-            value={eventData.programId || ""}
+    <div className="flex-1 min-h-screen bg-[#03050F] p-4 md:p-10 font-out text-gray-300 overflow-y-auto">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <motion.div
+            initial={{ opacity: 0, x: -25 }}
+            animate={{ opacity: 1, x: 0 }}
           >
-            <option value="" disabled>Select a Program</option>
-            {programs.map((prog) => (
-              <option key={prog.id} value={prog.id}>
-                {prog.Name}
-              </option>
-            ))}
-          </select>
+            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
+              {isEditMode ? "Edit Event" : "Orchestrate Event"}
+            </h1>
+            <p className="text-gray-500 text-lg font-medium">Fine-tune the parameters of your college experience.</p>
+          </motion.div>
+
+          <button
+            onClick={() => navigate(-1)}
+            className="w-fit px-6 py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 rounded-2xl text-white font-bold text-sm uppercase tracking-widest flex items-center gap-3 transition-all"
+          >
+            <FaArrowLeft /> Back
+          </button>
         </div>
 
-        {/* EVENT NAME */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Event Name</label>
-          <input
-            type="text"
-            name="eventName"
-            value={eventData.eventName}
-            onChange={handleChange}
-            className="w-full p-3 bg-gray-800 rounded"
-            required
-          />
-        </div>
-
-        {/* DESCRIPTION */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Description</label>
-          <textarea
-            name="description"
-            value={eventData.description}
-            onChange={handleChange}
-            className="w-full p-3 bg-gray-800 rounded"
-            rows="4"
-            required
-          />
-        </div>
-
-        {/* DATE & TIME */}
-        <div className="grid md:grid-cols-3 gap-6 mb-6">
-          <div>
-            <label className="block mb-2 text-gray-300">Event Date</label>
-            <input
-              type="date"
-              name="date"
-              value={eventData.date}
-              onChange={handleChange}
-              className="w-full p-3 bg-gray-800 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 text-gray-300">Start Time</label>
-            <input
-              type="time"
-              name="startTime"
-              value={eventData.startTime}
-              onChange={handleChange}
-              className="w-full p-3 bg-gray-800 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 text-gray-300">End Time</label>
-            <input
-              type="time"
-              name="endTime"
-              value={eventData.endTime}
-              onChange={handleChange}
-              className="w-full p-3 bg-gray-800 rounded"
-              required
-            />
-          </div>
-        </div>
-
-        {/* VENUE */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Venue</label>
-          <input
-            type="text"
-            name="venue"
-            value={eventData.venue}
-            onChange={handleChange}
-            className="w-full p-3 bg-gray-800 rounded"
-            required
-          />
-        </div>
-
-        {/* LAT & LNG */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Venue Location</label>
-          <div className="grid md:grid-cols-2 gap-6">
-            <input
-              type="number"
-              step="any"
-              name="latitude"
-              value={eventData.latitude}
-              onChange={handleChange}
-              placeholder="Latitude"
-              className="p-3 bg-gray-800 rounded w-full"
-            />
-            <input
-              type="number"
-              step="any"
-              name="longitude"
-              value={eventData.longitude}
-              placeholder="Longitude"
-              className="p-3 bg-gray-800 rounded w-full"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        {/* DEPARTMENT & INCHARGE */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label className="block mb-2 text-gray-300">Department</label>
-            <input
-              type="text"
-              name="department"
-              value={eventData.department}
-              onChange={handleChange}
-              className="w-full p-3 bg-gray-800 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 text-gray-300">Incharge</label>
-            <div className="bg-gray-800 p-3 rounded w-full max-h-40 overflow-y-auto border border-gray-700">
-              {teachers.length === 0 ? (
-                <p className="text-gray-500 text-sm">No registered teachers found.</p>
-              ) : (
-                teachers.map((teacher) => (
-                  <label key={teacher.id} className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-gray-700/50 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      value={teacher.name}
-                      checked={eventData.incharge.split(", ").includes(teacher.name)}
-                      onChange={(e) => {
-                        const name = e.target.value;
-                        const currentIncharges = eventData.incharge ? eventData.incharge.split(", ") : [];
-
-                        let newIncharges;
-                        if (e.target.checked) {
-                          newIncharges = [...currentIncharges, name];
-                        } else {
-                          newIncharges = currentIncharges.filter(i => i !== name);
-                        }
-
-                        setEventData(prev => ({ ...prev, incharge: newIncharges.join(", ") }));
-                      }}
-                      className="w-4 h-4 text-blue-500 rounded focus:ring-blue-600 bg-gray-700 border-gray-600"
-                    />
-                    <span className="text-gray-200 text-sm">{teacher.name} ({teacher.department})</span>
-                  </label>
-                ))
-              )}
-            </div>
-            <p className="text-xs text-gray-500 mt-1">Selected: {eventData.incharge || "None"}</p>
-          </div>
-        </div>
-
-        {/* PARTICIPATION TYPE */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Participation Type</label>
-          <div className="flex gap-6">
-
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="participationType"
-                value="individual"
-                checked={eventData.participationType === "individual"}
-                onChange={handleChange}
-              />
-              Individual
-            </label>
-
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="participationType"
-                value="team"
-                checked={eventData.participationType === "team"}
-                onChange={handleChange}
-              />
-              Team
-            </label>
-
-          </div>
-        </div>
-
-
-        {/* INDIVIDUAL */}
-        {eventData.participationType === "individual" && (
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="block mb-2 text-gray-300">Overall Participant Limit</label>
-              <input
-                type="number"
-                name="overallIndividualLimit"
-                value={eventData.overallIndividualLimit}
-                onChange={handleChange}
-                min="1"
-                className="p-3 bg-gray-800 rounded w-full"
-                placeholder="Minimum: 1"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-gray-300">Participants Per Department</label>
-              <input
-                type="number"
-                name="departmentIndividualLimit"
-                value={eventData.departmentIndividualLimit}
-                onChange={handleChange}
-                min="1"
-                className="p-3 bg-gray-800 rounded w-full"
-                placeholder="Minimum: 1"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* TEAM */}
-        {eventData.participationType === "team" && (
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="block mb-2 text-gray-300">Teams Per Department</label>
-              <input
-                type="number"
-                name="teamsPerDepartment"
-                value={eventData.teamsPerDepartment}
-                onChange={handleChange}
-                min="1"
-                className="p-3 bg-gray-800 rounded w-full"
-                placeholder="Minimum: 1"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-gray-300">Members Per Team</label>
-              <input
-                type="number"
-                name="membersPerTeamFromDepartment"
-                value={eventData.membersPerTeamFromDepartment}
-                onChange={handleChange}
-                min="1"
-                className="p-3 bg-gray-800 rounded w-full"
-                placeholder="Minimum: 1"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* EVENT POSTER */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Event Poster</label>
-          <input type="file" accept="image/*" onChange={handlePosterImage} />
-          {eventData.poster && <img src={eventData.poster} className="w-24 mt-2 rounded" />}
-        </div>
-
-        {/* PRICE IMAGE */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Price Image</label>
-          <input type="file" accept="image/*" onChange={handlePriceImage} />
-          {eventData.priceImage && <img src={eventData.priceImage} className="w-24 mt-2 rounded" />}
-        </div>
-
-        {/* SPONSORS */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-300">Sponsor Images (Max 3)</label>
-          <input type="file" accept="image/*" multiple onChange={handleSponsorImages} />
-
-          <div className="flex gap-3 mt-3">
-            {eventData.sponsorImages.map((img, i) => (
-              <div key={i} className="relative">
-                <img src={img} className="w-20 h-20 object-cover rounded" />
-                <button
-                  type="button"
-                  onClick={() => removeSponsorImage(i)}
-                  className="absolute -top-2 -right-2 bg-red-600 text-xs px-1 rounded"
-                >
-                  ✕
-                </button>
+        <motion.form
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          onSubmit={handleSubmit}
+          className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-8 md:p-14 rounded-[3.5rem] shadow-2xl space-y-14"
+        >
+          {/* Section 1: Event Identity */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/20">
+                <FaCalendarAlt />
               </div>
-            ))}
-          </div>
-        </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Core Configuration</h2>
+            </div>
 
-        <button className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold">
-          {isEditMode ? "Update Event" : "Add Event"}
-        </button>
-      </form>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-6">
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Parent Program</label>
+                  <select
+                    className="w-full p-4 rounded-2xl bg-[#0a0d1f] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold cursor-pointer appearance-none"
+                    onChange={handleProgramSelect}
+                    value={eventData.programId || ""}
+                  >
+                    <option value="" disabled className="bg-gray-900">Select Program</option>
+                    {programs.map((prog) => (
+                      <option key={prog.id} value={prog.id} className="bg-gray-900">
+                        {prog.Name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Event Name</label>
+                  <input
+                    type="text"
+                    name="eventName"
+                    value={eventData.eventName}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold text-lg"
+                    placeholder="e.g. Code Sprint"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Detailed Synopsis</label>
+                <textarea
+                  name="description"
+                  value={eventData.description}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all h-[152px] resize-none font-medium leading-relaxed"
+                  placeholder="Describe the objective and format of this event..."
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Logistics */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                <FaClock />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Timeline & Location</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={eventData.date}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Start Time</label>
+                <input
+                  type="time"
+                  name="startTime"
+                  value={eventData.startTime}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">End Time</label>
+                <input
+                  type="time"
+                  name="endTime"
+                  value={eventData.endTime}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Venue Name</label>
+                <input
+                  type="text"
+                  name="venue"
+                  value={eventData.venue}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  placeholder="Seminar Hall 1"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Geographical Offsets (Lat, Lng)</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="number"
+                    step="any"
+                    name="latitude"
+                    value={eventData.latitude}
+                    onChange={handleChange}
+                    placeholder="Latitude"
+                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono text-sm"
+                  />
+                  <input
+                    type="number"
+                    step="any"
+                    name="longitude"
+                    value={eventData.longitude}
+                    placeholder="Longitude"
+                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono text-sm"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Host Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={eventData.department}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  placeholder="CS & Engineering"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Governance */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-violet-600/20 rounded-xl flex items-center justify-center text-violet-400 border border-violet-500/20">
+                <FaUserTie />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Event Stewardship</h2>
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem]">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 block ml-1 text-center">Assign Event Incharges</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
+                {teachers.length === 0 ? (
+                  <p className="col-span-full text-center text-gray-600 font-bold py-10 uppercase tracking-widest text-xs">No registered teachers found in system.</p>
+                ) : (
+                  teachers.map((teacher) => {
+                    const isSelected = eventData.incharge.split(", ").includes(teacher.name);
+                    return (
+                      <label
+                        key={teacher.id}
+                        className={`flex items-center gap-4 p-4 rounded-2xl border transition-all cursor-pointer group ${isSelected ? 'bg-violet-600/20 border-violet-500/50' : 'bg-white/[0.02] border-white/5 hover:border-white/20'
+                          }`}
+                      >
+                        <input
+                          type="checkbox"
+                          value={teacher.name}
+                          checked={isSelected}
+                          onChange={(e) => {
+                            const name = e.target.value;
+                            const currentIncharges = eventData.incharge ? eventData.incharge.split(", ") : [];
+                            let newIncharges = e.target.checked ? [...currentIncharges, name] : currentIncharges.filter(i => i !== name);
+                            setEventData(prev => ({ ...prev, incharge: newIncharges.join(", ") }));
+                          }}
+                          className="hidden"
+                        />
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isSelected ? 'bg-violet-600 text-white' : 'bg-white/5 text-gray-500 group-hover:text-gray-300'
+                          }`}>
+                          <FaUserTie />
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                          <p className={`font-bold text-sm truncate ${isSelected ? 'text-white' : 'text-gray-400'}`}>{teacher.name}</p>
+                          <p className="text-[10px] text-gray-500 font-medium truncate uppercase tracking-tighter">{teacher.department}</p>
+                        </div>
+                      </label>
+                    );
+                  })
+                )}
+              </div>
+              <p className="text-[10px] font-black text-violet-400 mt-6 text-center uppercase tracking-widest">Selected: {eventData.incharge || "None"}</p>
+            </div>
+          </div>
+
+          {/* Section 4: Participation Mechanics */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                <FaUsers />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Participation Protocols</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-6">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 block ml-1">Archetype</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setEventData(prev => ({ ...prev, participationType: "individual" }))}
+                    className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-4 ${eventData.participationType === "individual" ? 'bg-emerald-600/20 border-emerald-500' : 'bg-white/[0.02] border-white/5 grayscale opacity-40'
+                      }`}
+                  >
+                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl">👤</div>
+                    <span className="font-black text-xs uppercase tracking-[0.2em] text-white">Individual</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEventData(prev => ({ ...prev, participationType: "team" }))}
+                    className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-4 ${eventData.participationType === "team" ? 'bg-emerald-600/20 border-emerald-500' : 'bg-white/[0.02] border-white/5 grayscale opacity-40'
+                      }`}
+                  >
+                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl">👥</div>
+                    <span className="font-black text-xs uppercase tracking-[0.2em] text-white">Group / Team</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <AnimatePresence mode="wait">
+                  {eventData.participationType === "individual" ? (
+                    <motion.div
+                      key="individual"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                    >
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Global Limit</label>
+                        <input
+                          type="number"
+                          name="overallIndividualLimit"
+                          value={eventData.overallIndividualLimit}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 100"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Per Department</label>
+                        <input
+                          type="number"
+                          name="departmentIndividualLimit"
+                          value={eventData.departmentIndividualLimit}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 10"
+                        />
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="team"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                    >
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Teams Per Dept.</label>
+                        <input
+                          type="number"
+                          name="teamsPerDepartment"
+                          value={eventData.teamsPerDepartment}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 2"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Members / Team</label>
+                        <input
+                          type="number"
+                          name="membersPerTeamFromDepartment"
+                          value={eventData.membersPerTeamFromDepartment}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 4"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 5: Visual Brand */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-pink-600/20 rounded-xl flex items-center justify-center text-pink-400 border border-pink-500/20">
+                <FaImage />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Visual Identity & Recognition</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {/* Event Poster */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Master Poster</label>
+                <div className="relative group aspect-square rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-blue-500/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden">
+                  {eventData.poster ? (
+                    <img src={eventData.poster} className="absolute inset-0 w-full h-full object-cover" alt="Poster" />
+                  ) : (
+                    <div className="space-y-3">
+                      <FaCloudUploadAlt className="text-3xl text-gray-700 group-hover:text-blue-400 transition-all mx-auto" />
+                      <p className="text-gray-600 font-bold uppercase text-[8px] tracking-[0.2em]">Upload JPG/PNG</p>
+                    </div>
+                  )}
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handlePosterImage} />
+                </div>
+              </div>
+
+              {/* Price Image */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Grand Prize</label>
+                <div className="relative group aspect-square rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-amber-500/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden">
+                  {eventData.priceImage ? (
+                    <img src={eventData.priceImage} className="absolute inset-0 w-full h-full object-cover" alt="Price" />
+                  ) : (
+                    <div className="space-y-3">
+                      <FaTrophy className="text-3xl text-gray-700 group-hover:text-amber-500 transition-all mx-auto" />
+                      <p className="text-gray-600 font-bold uppercase text-[8px] tracking-[0.2em]">Upload Trophy Asset</p>
+                    </div>
+                  )}
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handlePriceImage} />
+                </div>
+              </div>
+
+              {/* Sponsors */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Sponsors (Max 3)</label>
+                <div className="relative group aspect-square rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-pink-500/30 transition-all p-4 flex flex-col justify-center gap-3 overflow-hidden">
+                  <div className="grid grid-cols-2 gap-2 h-full">
+                    {eventData.sponsorImages.map((img, i) => (
+                      <div key={i} className="relative rounded-xl overflow-hidden border border-white/10 aspect-square">
+                        <img src={img} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeSponsorImage(i)}
+                          className="absolute -top-1 -right-1 bg-red-600 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                    {eventData.sponsorImages.length < 3 && (
+                      <div className="relative rounded-xl overflow-hidden border border-dashed border-white/10 aspect-square flex items-center justify-center opacity-30 group-hover:opacity-100 transition-all">
+                        <FaRegHandshake className="text-xl" />
+                        <input type="file" accept="image/*" multiple className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleSponsorImages} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Suite */}
+          <div className="pt-10 flex flex-col md:flex-row gap-6">
+            <button
+              type="submit"
+              className="flex-1 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] transition-all shadow-2xl shadow-blue-900/40 active:scale-[0.98]"
+            >
+              {isEditMode ? "Propagate Updates" : "Deploy Event"}
+            </button>
+          </div>
+        </motion.form>
+      </div>
     </div>
   );
 };
