@@ -176,7 +176,7 @@ const EventDetails = () => {
                   <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5">
                     <FaCalendarAlt className="text-xl" />
                   </div>
-                  <h3 className="text-xl font-black text-white uppercase tracking-widest">Event Timeline</h3>
+                  <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-widest">Event Timeline</h3>
                 </div>
                 <div className="space-y-4">
                   <StatItem icon={FaCalendarAlt} label="Event Date" value={event.date} />
@@ -195,7 +195,7 @@ const EventDetails = () => {
                   <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
                     <FaMapMarkerAlt className="text-xl" />
                   </div>
-                  <h3 className="text-xl font-black text-white uppercase tracking-widest">Event Location</h3>
+                  <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-widest">Event Location</h3>
                 </div>
                 <div className="space-y-4">
                   <StatItem icon={FaMapMarkerAlt} label="Sector / Venue" value={event.venue} />
@@ -237,12 +237,12 @@ const EventDetails = () => {
               viewport={{ once: true }}
               className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-10 rounded-[2.5rem]"
             >
-              <div className="flex items-center justify-between mb-10">
+              <div className="flex flex-col md:flex-row gap-3 items-center justify-between mb-10">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center text-cyan-400 border border-cyan-500/20">
                     <BiWorld size={20} />
                   </div>
-                  <h2 className="text-2xl font-black text-white uppercase tracking-[0.2em]">Geospatial Data</h2>
+                  <h2 className="text-lg md:text-2xl font-black text-white uppercase tracking-[0.2em]">Geospatial Data</h2>
                 </div>
                 <button
                   onClick={() => window.open(`https://www.google.com/maps?q=${event.latitude},${event.longitude}`, '_blank')}
@@ -251,7 +251,7 @@ const EventDetails = () => {
                   <FaChevronRight /> Link Interface
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-6 p-6 bg-black/20 rounded-3xl border border-white/5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-black/20 rounded-3xl border border-white/5">
                 <div>
                   <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1 text-center">Latitude Index</p>
                   <p className="text-xl font-bold text-white tracking-widest text-center">{event.latitude}</p>

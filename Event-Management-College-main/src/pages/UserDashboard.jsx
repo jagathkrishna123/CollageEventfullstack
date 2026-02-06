@@ -199,7 +199,7 @@ const UserDashboard = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">User Dashboard</h1>
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">User Dashboard</h1>
           <p className="text-gray-400">Welcome, {user.name}!</p>
         </div>
 

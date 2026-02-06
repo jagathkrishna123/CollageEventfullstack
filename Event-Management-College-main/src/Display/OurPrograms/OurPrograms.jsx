@@ -77,8 +77,8 @@ const OurPrograms = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-2 overflow-x-hidden min-h-screen">
-      <div className="flex flex-col w-full p-2 pt-20">
+    <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 md:py-10 overflow-x-hidden min-h-screen font-out">
+      <div className="flex flex-col w-full pt-24 md:pt-28">
 
         {/* SECTION TITLE */}
         <div className="w-full flex flex-col md:flex-row mt-8 px-1">
@@ -95,7 +95,7 @@ const OurPrograms = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-gray-400 mt-2 text-lg"
+              className="text-gray-400 mt-2 text-lg hidden md:block"
             >
               Explore our history of successful events and workshops
             </motion.p>
@@ -103,16 +103,16 @@ const OurPrograms = () => {
 
           {/* FILTER BUTTONS */}
           <div className="w-full flex flex-wrap justify-center gap-4 mt-6">
-  {categories.map((category) => {
-    const isActive = activeFilter === category
+            {categories.map((category) => {
+              const isActive = activeFilter === category
 
-    return (
-      <motion.button
-        key={category}
-        onClick={() => handleFilterChange(category)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className={`
+              return (
+                <motion.button
+                  key={category}
+                  onClick={() => handleFilterChange(category)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`
           px-6 py-2.5
           rounded-full
           text-sm font-semibold
@@ -120,24 +120,23 @@ const OurPrograms = () => {
           transition-all duration-300
           backdrop-blur-md
           h-fit
-          ${
-            isActive
-              ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
-              : "bg-slate-800/60 text-gray-300 hover:bg-slate-700/60 hover:text-white"
-          }
+          ${isActive
+                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
+                      : "bg-slate-800/60 text-gray-300 hover:bg-slate-700/60 hover:text-white"
+                    }
         `}
-      >
-        {category}
-      </motion.button>
-    )
-  })}
-</div>
+                >
+                  {category}
+                </motion.button>
+              )
+            })}
+          </div>
 
         </div>
 
         {/* PROGRAMS GRID */}
         {filteredPrograms.length > 0 ? (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-8">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mt-10">
             {filteredPrograms.map((item) => (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -152,7 +151,7 @@ const OurPrograms = () => {
                   <img
                     src={item.image || "https://via.placeholder.com/400x300"}
                     alt={item.Name}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-48 md:h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
 
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1 rounded-full font-semibold shadow-lg">
@@ -164,11 +163,11 @@ const OurPrograms = () => {
                 </div>
 
                 {/* PROGRAM DETAILS */}
-                <div className="flex flex-col w-full p-6 gap-4">
+                <div className="flex flex-col w-full p-5 md:p-6 gap-3 md:gap-4">
 
                   {/* TITLE */}
                   <div>
-                    <h3 className="font-bold text-xl text-white mb-1">
+                    <h3 className="font-bold text-lg md:text-xl text-white mb-1">
                       {item.Title}
                     </h3>
                     <div className="flex items-center gap-4 text-sm text-gray-400">

@@ -18,18 +18,19 @@ const Sidebar = () => {
         { to: '/teacher/registrations', icon: CgNotes, label: 'Registrations' },
         { to: '/teacher/addstudent', icon: MdOutlineGroupAdd, label: 'Add Students' },
         { to: '/teacher/addreports', icon: TbReportMedical, label: 'Add Reports' },
+        { to: '/teacher/teacher-notification', icon: TbReportMedical, label: 'Notification' },
     ];
 
     return (
         <div className='flex flex-col bg-white/[0.02] backdrop-blur-xl border-r border-white/10 h-full overflow-y-auto py-8 text-gray-400 font-out sticky top-0'>
-            <div className="px-4 space-y-2">
+            <div className="px-1 space-y-2">
                 {menuItems.map((item, index) => (
                     <NavLink
                         key={index}
                         to={item.to}
                         end={item.end}
                         className={({ isActive }) =>
-                            `group relative flex items-center gap-4 py-3.5 px-4 rounded-2xl transition-all duration-300 overflow-hidden ${isActive
+                            `group relative flex items-center gap-4 py-3.5 px-4 rounded-md transition-all duration-300 overflow-hidden ${isActive
                                 ? "bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-400"
                                 : "hover:bg-white/5 hover:text-gray-200"
                             }`

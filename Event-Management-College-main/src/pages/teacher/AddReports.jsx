@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Items } from "../../Constants/ProgramData";
 import { toast } from "react-toastify";
 
 const STORAGE_KEY = "reports_list";
@@ -15,9 +14,17 @@ const AddReports = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
 
+  // Fetch events from localStorage
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const allEvents = JSON.parse(localStorage.getItem("all_events") || "[]");
+    setEvents(allEvents);
+  }, []);
+
   // Filter programs based on search term
-  const filteredPrograms = Items.filter((program) =>
-    program.Name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPrograms = events.filter((program) =>
+    program.eventName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle program search input
@@ -30,8 +37,8 @@ const AddReports = () => {
 
   // Handle program selection
   const handleProgramSelect = (program) => {
-    setFormData((prev) => ({ ...prev, programName: program.Name }));
-    setSearchTerm(program.Name);
+    setFormData((prev) => ({ ...prev, programName: program.eventName }));
+    setSearchTerm(program.eventName);
     setShowSuggestions(false);
   };
 
@@ -153,7 +160,7 @@ const AddReports = () => {
                     onClick={() => handleProgramSelect(program)}
                     className="px-4 py-3 hover:bg-gray-700 cursor-pointer text-white border-b border-gray-700 last:border-b-0"
                   >
-                    {program.Name}
+                    {program.eventName}
                   </div>
                 ))}
               </div>

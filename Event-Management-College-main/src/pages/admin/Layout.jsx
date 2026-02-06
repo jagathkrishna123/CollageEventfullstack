@@ -44,7 +44,7 @@ const Layout = () => {
                 <Sidebar />
 
                 {/* PAGE CONTENT */}
-                <div className="flex-1 p-8 overflow-y-auto bg-[#03050F]">
+                <div className="flex-1 p-2 md:p-8 overflow-y-auto bg-[#03050F]">
                     <Outlet />
                 </div>
             </div>

@@ -172,7 +172,7 @@ const AddTeacher = () => {
               <FaChalkboardTeacher />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Faculty Enrollment
               </h1>
               <p className="text-gray-500 text-lg font-medium">Provision access and manage teacher accounts.</p>
@@ -228,8 +228,8 @@ const AddTeacher = () => {
             <button
               onClick={handleAddOrUpdate}
               className={`w-full md:flex-1 py-5 rounded-3xl font-black text-sm uppercase tracking-[0.3em] transition-all shadow-2xl active:scale-[0.98] flex items-center justify-center gap-3 ${editIndex !== null
-                  ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-orange-900/40"
-                  : "bg-gradient-to-r from-indigo-600 to-purple-700 text-white shadow-indigo-900/40"
+                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-orange-900/40"
+                : "bg-gradient-to-r from-indigo-600 to-purple-700 text-white shadow-indigo-900/40"
                 }`}
             >
               <FaUserPlus /> {editIndex !== null ? "Apply Changes" : "Add Teacher"}

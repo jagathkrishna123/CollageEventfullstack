@@ -33,7 +33,7 @@ const Layout = () => {
 
             <div className='flex flex-1 overflow-hidden'>
                 <Sidebar />
-                <div className='flex-1 overflow-y-auto p-8 bg-[#03050F]'>
+                <div className='flex-1 overflow-y-auto p-2 md:p-8 bg-[#03050F]'>
                     <Outlet />
                 </div>
             </div>

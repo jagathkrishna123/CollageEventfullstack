@@ -32,6 +32,7 @@ import Rating from "./pages/teacher/Rating";
 import UserProfile from "./pages/UserProfile";
 import About from "./pages/About";
 import AdminFeedback from "./pages/admin/AdminFeedback";
+import AdminNotification from "./pages/admin/AdminNotification";
 
 function App() {
   const { pathname } = useLocation()
@@ -45,7 +46,7 @@ function App() {
       <div className="w-full">
         {!hideLayout && <NavBar />}
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="bottom-right" autoClose={800} />
       <Routes>
         <Route path="/" element={<Display />} />
         <Route path="/programdetails/:id" element={<ProgramDetails />} />
@@ -78,6 +79,7 @@ function App() {
           <Route path='registrations' element={<AdminRegistrations />} />
           <Route path='attendence' element={<AdminAttendence />} />
           <Route path='addteacher' element={<AddTeacher />} />
+          <Route path='admin-notification' element={<AdminNotification />} />
         </Route>
       </Routes>
       {!hideLayout && <FooterContents />}

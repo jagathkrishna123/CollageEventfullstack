@@ -64,22 +64,15 @@ export function UpcomingEvents() {
             </div>
 
             {/* === Infinite Auto-Scroll Carousel === */}
-            <div className="w-full relative py-4 mask-fade-edges overflow-x-auto">
+            <div className="w-full relative py-6 mask-fade-edges overflow-x-auto hover-pause">
 
-                <motion.div
-                    className="flex flex-row gap-8 w-max px-4"
-                    animate={{
-                        x: [0, -((events.length * 400) + (events.length * 32))], // 400px width + 32px gap
+                <div
+                    className="flex flex-row gap-8 w-max px-4 animate-scroll"
+                    style={{
+                        display: 'flex',
+                        "--scroll-width": `-${(events.length * 400) + (events.length * 32)}px`,
+                        "--scroll-duration": `${events.length * 5}s`
                     }}
-                    transition={{
-                        x: {
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: events.length * 5, // Adjust for desired speed
-                            ease: "linear",
-                        },
-                    }}
-                    style={{ display: 'flex' }}
                 >
                     {displayedItems.map((item, index) => (
                         <motion.div
@@ -89,7 +82,7 @@ export function UpcomingEvents() {
                                 scale: 1.02,
                                 transition: { duration: 0.4, ease: "easeOut" }
                             }}
-                            className="flex-shrink-0 flex flex-col overflow-hidden w-[400px] rounded-[2rem] relative group bg-gradient-to-b from-gray-900/80 to-black border border-white/5 backdrop-blur-xl transition-all duration-500 hover:border-blue-500/40 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6),0_0_30px_rgba(59,130,246,0.15)]"
+                            className="flex-shrink-0 flex flex-col mt-2 overflow-hidden w-[400px] rounded-[2rem] relative group bg-gradient-to-b from-gray-900/80 to-black border border-white/5 backdrop-blur-xl transition-all duration-500 hover:border-2 hover:border-blue-500/70 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)]"
                         >
                             {/* Background Image Container */}
                             <div
@@ -161,7 +154,7 @@ export function UpcomingEvents() {
                             </div>
                         </motion.div>
                     ))}
-                </motion.div>
+                </div>
             </div>
 
             <style jsx>{`
@@ -169,8 +162,15 @@ export function UpcomingEvents() {
                     mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
                     -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
                 }
-                .hover-pause:hover > div {
+                .hover-pause:hover .animate-scroll {
                     animation-play-state: paused !important;
+                }
+                .animate-scroll {
+                    animation: scroll-left var(--scroll-duration) linear infinite;
+                }
+                @keyframes scroll-left {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(var(--scroll-width)); }
                 }
             `}</style>
         </div>

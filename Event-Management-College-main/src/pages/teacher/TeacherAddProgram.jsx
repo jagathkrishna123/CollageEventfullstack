@@ -148,7 +148,7 @@ const TeacherAddProgram = () => {
             initial={{ opacity: 0, x: -25 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
+            <h1 className="text-[30px] md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
               Add New Program
             </h1>
             <p className="text-gray-500 text-lg font-medium">Create and configure a flagship experience.</p>

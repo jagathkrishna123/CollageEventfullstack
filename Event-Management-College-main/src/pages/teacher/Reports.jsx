@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { FaPlus, FaTrash } from "react-icons/fa";
+import { useAppContext } from "../../context/AppContext";
 
 const STORAGE_KEY = "reports_list";
 
@@ -8,6 +10,7 @@ const Reports = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAppContext();
 
   // Load reports from localStorage
   useEffect(() => {
@@ -33,7 +36,7 @@ const Reports = () => {
     // Refresh reports when storage changes
     window.addEventListener("storage", loadReports);
     // Also check periodically for changes
-    const interval = setInterval(loadReports, 1000);
+    const interval = setInterval(loadReports, 2000);
 
     return () => {
       window.removeEventListener("storage", loadReports);
@@ -49,142 +52,125 @@ const Reports = () => {
     }
   };
 
+  const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-neutral-900 via-gray-900 to-black flex items-center justify-center">
-        <div className="text-white text-xl">Loading reports...</div>
+      <div className="min-h-screen bg-[#03050F] flex items-center justify-center">
+        <div className="text-blue-500 font-bold animate-pulse text-xl">Loading reports...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6">
-      <div className="max-w-7xl mx-auto pt-20">
+    <div className="h-screen bg-[#03050F] p-6 overflow-y-auto font-out">
+      <div className="max-w-7xl mx-auto pt-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12 pt-20 md:pt-10">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Reports</h1>
-            <p className="text-gray-400">
-              View all reports submitted by teachers
+            <h1 className="text-4xl font-black text-white mb-2 tracking-tight">
+              Event Reports
+            </h1>
+            <p className="text-gray-500 font-medium">
+              View comprehensive reports and outcomes from past events
             </p>
           </div>
-          <button
-            onClick={() => navigate("/teacher/addreports")}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
-          >
-            + Add New Report
-          </button>
+          {isTeacher && (
+            <button
+              onClick={() => navigate("/teacher/addreports")}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition-all shadow-lg hover:shadow-blue-500/20 flex items-center gap-2 text-sm uppercase tracking-widest"
+            >
+              <FaPlus /> Add Report
+            </button>
+          )}
         </div>
 
         {/* Reports Grid */}
         {reports.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="bg-gray-800/50 rounded-xl p-12 border border-gray-700">
-              <svg
-                className="mx-auto h-16 w-16 text-gray-500 mb-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <h3 className="text-2xl font-semibold text-gray-300 mb-2">
-                No Reports Available
+          <div className="text-center py-20 bg-white/[0.02] rounded-[3rem] border border-white/5 border-dashed">
+            <div className="max-w-md mx-auto">
+              <span className="text-6xl mb-6 block grayscale opacity-30">📊</span>
+              <h3 className="text-2xl font-black text-white mb-2">
+                No Reports Published
               </h3>
-              <p className="text-gray-500 mb-6">
-                Reports will appear here once submitted by teachers
+              <p className="text-gray-500 mb-8 font-medium">
+                Detailed event reports will appear here once submitted by the faculty.
               </p>
-              <button
-                onClick={() => navigate("/teacher/addreports")}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200"
-              >
-                Create First Report
-              </button>
+              {isTeacher && (
+                <button
+                  onClick={() => navigate("/teacher/addreports")}
+                  className="px-8 py-3 bg-white/[0.05] hover:bg-white/[0.1] text-white rounded-xl font-bold transition-all border border-white/10 uppercase text-xs tracking-widest"
+                >
+                  Create First Report
+                </button>
+              )}
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {reports.map((report, index) => (
               <motion.div
                 key={report.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-xl overflow-hidden hover:border-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="group bg-white/[0.02] backdrop-blur-xl border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
               >
                 {/* Image */}
-                {report.image && (
-                  <div className="w-full h-64 overflow-hidden">
+                <div className="h-56 overflow-hidden relative">
+                  {report.image ? (
                     <img
                       src={report.image}
                       alt={report.programName}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     />
-                  </div>
-                )}
+                  ) : (
+                    <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-600">
+                      No Image
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#03050F] via-transparent to-transparent opacity-80" />
+                </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-8 -mt-6 relative">
+                  <div className="bg-[#03050F] absolute inset-x-0 top-0 h-6 -z-10 rounded-t-[2.5rem]" />
+
                   {/* Program Name */}
-                  <h3 className="text-xl font-bold text-white mb-3 line-clamp-1">
+                  <h3 className="text-xl font-black text-white mb-3 leading-tight group-hover:text-blue-400 transition-colors">
                     {report.programName}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-3 min-h-[60px]">
-                    {report.description}
-                  </p>
+                  <div className="mb-6 relative">
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-4 font-medium">
+                      {report.description}
+                    </p>
+                  </div>
 
-                  {/* Date and Actions */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-                    <p className="text-gray-500 text-xs">
+                  {/* Footer */}
+                  <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                    <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">
                       {new Date(report.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
                         month: "short",
                         day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
+                        year: "numeric",
                       })}
                     </p>
-                    <button
-                      onClick={() => handleDeleteReport(report.id)}
-                      className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
-                    >
-                      Delete
-                    </button>
+
+                    {isTeacher && (
+                      <button
+                        onClick={() => handleDeleteReport(report.id)}
+                        className="w-8 h-8 rounded-full flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all"
+                        title="Delete Report"
+                      >
+                        <FaTrash className="text-xs" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </motion.div>
             ))}
-          </div>
-        )}
-
-        {/* Stats */}
-        {reports.length > 0 && (
-          <div className="mt-8 bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center gap-8">
-              <div>
-                <p className="text-gray-400 text-sm">Total Reports</p>
-                <p className="text-3xl font-bold text-white">{reports.length}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Latest Report</p>
-                <p className="text-lg font-semibold text-white">
-                  {reports.length > 0
-                    ? new Date(reports[0].createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "N/A"}
-                </p>
-              </div>
-            </div>
           </div>
         )}
       </div>
@@ -193,4 +179,3 @@ const Reports = () => {
 };
 
 export default Reports;
-

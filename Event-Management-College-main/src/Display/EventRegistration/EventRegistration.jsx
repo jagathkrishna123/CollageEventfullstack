@@ -180,7 +180,7 @@ const EventRegistration = () => {
               <FaArrowLeft className="text-sm" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em]">Return to Event</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-2">
               Event Booking
             </h1>
             <p className="text-gray-500 font-medium tracking-tight">Securing your spot for <span className="text-white">{event.eventName}</span></p>
@@ -190,7 +190,7 @@ const EventRegistration = () => {
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${event.participationType === 'individual' ? 'bg-blue-600/20 text-blue-400' : 'bg-emerald-600/20 text-emerald-400'}`}>
               {event.participationType === 'individual' ? <FaUserAlt /> : <FaUsers />}
             </div>
-            <div>
+            <div className="px-4">
               <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Mode</p>
               <p className="font-bold text-white uppercase text-xs">{event.participationType}</p>
             </div>
@@ -224,7 +224,7 @@ const EventRegistration = () => {
           {/* Decorative Backglow */}
           <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-violet-600/20 rounded-[3.5rem] blur-2xl opacity-50 -z-10"></div>
 
-          <form onSubmit={handleSubmit} className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-[3rem] p-8 md:p-12 shadow-2xl space-y-12">
+          <form onSubmit={handleSubmit} className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-xl p-8 md:p-12 shadow-2xl space-y-12">
 
             {/* User Credentials Section */}
             <div className="space-y-8">
@@ -232,7 +232,7 @@ const EventRegistration = () => {
                 <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/20">
                   <FaUserAlt className="text-sm" />
                 </div>
-                <h2 className="text-xl font-black text-white tracking-tight">Personal Identity</h2>
+                <h2 className="text-lg font-black text-white tracking-tight font-medium md:font-extrabold">Personal Identity</h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -270,12 +270,12 @@ const EventRegistration = () => {
             {/* Team Configuration Section */}
             {event.participationType === "team" && (
               <div className="space-y-8 pt-8 border-t border-white/5">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
                       <FaUsers className="text-sm" />
                     </div>
-                    <h2 className="text-xl font-black text-white tracking-tight">Combat Team Roster</h2>
+                    <h2 className="text-xl font-black text-white tracking-tight font-medium md:font-extrabold">Combat Team Roster</h2>
                   </div>
                   <span className="px-4 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">
                     {teamData.members.length} Members Needed

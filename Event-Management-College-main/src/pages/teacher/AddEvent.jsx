@@ -162,10 +162,10 @@ const AddEvent = () => {
             initial={{ opacity: 0, x: -25 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
+            <h1 className="text-[30px] md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
               Orchestrate Event
             </h1>
-            <p className="text-gray-500 text-lg font-medium">Fine-tune the parameters of your college experience.</p>
+            <p className="text-gray-500 text-[16px] md:text-lg font-medium">Fine-tune the parameters of your college experience.</p>
           </motion.div>
         </div>
 
@@ -179,10 +179,10 @@ const AddEvent = () => {
           {/* Section 1: Core Configuration */}
           <div className="space-y-10">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/20">
+              <div className="w-10 h-10 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-400 border border-blue-500/20">
                 <FaCalendarAlt />
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Core Configuration</h2>
+              <h2 className="text-lg md:text-2xl font-black text-white tracking-tight font-medium md:font-extrabold">Core Configuration</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -234,10 +234,10 @@ const AddEvent = () => {
           {/* Section 2: Logistics */}
           <div className="space-y-10">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+              <div className="w-10 h-10 bg-indigo-600/20 rounded-full flex items-center justify-center text-indigo-400 border border-indigo-500/20">
                 <FaClock />
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Timeline & Location</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight text-lg md:text-2xl font-medium md:font-extrabold">Timeline & Location</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -331,10 +331,10 @@ const AddEvent = () => {
           {/* Section 3: Governance */}
           <div className="space-y-10">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-violet-600/20 rounded-xl flex items-center justify-center text-violet-400 border border-violet-500/20">
+              <div className="w-10 h-10 bg-violet-600/20 rounded-full flex items-center justify-center text-violet-400 border border-violet-500/20">
                 <FaUserTie />
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Event Stewardship</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight font-medium md:font-extrabold text-lg md:text-2xl">Event Stewardship</h2>
             </div>
 
             <div className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem]">
@@ -383,16 +383,16 @@ const AddEvent = () => {
           {/* Section 4: Participation Mechanics */}
           <div className="space-y-10">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+              <div className="w-10 h-10 bg-emerald-600/20 rounded-full flex items-center justify-center text-emerald-400 border border-emerald-500/20">
                 <FaUsers />
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Participation Protocols</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight text-lg md:text-2xl font-medium md:font-extrabold">Participation Protocols</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="space-y-6">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 block ml-1">Archetype</label>
-                <div className="grid grid-cols-2 gap-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 block ml-1">Archetypex</label>
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   <button
                     type="button"
                     onClick={() => setEventData(prev => ({ ...prev, participationType: "individual" }))}
@@ -487,10 +487,10 @@ const AddEvent = () => {
           {/* Section 5: Visual Brand */}
           <div className="space-y-10">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-pink-600/20 rounded-xl flex items-center justify-center text-pink-400 border border-pink-500/20">
+              <div className="w-10 h-10 bg-pink-600/20 rounded-full flex items-center justify-center text-pink-400 border border-pink-500/20">
                 <FaImage />
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Visual Identity & Recognition</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight font-medium md:font-extrabold text-lg md:text-2xl">Visual Identity & Recognition</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">

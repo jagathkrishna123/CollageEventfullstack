@@ -318,7 +318,7 @@ const AddProgram = () => {
             </h2>
 
             <div className="flex flex-col md:flex-row gap-6 mb-10">
-              <div className="flex-1 flex gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <select
                   className="p-4 rounded-2xl bg-[#0a0d1f] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-bold appearance-none cursor-pointer px-6"
                   value={featureIconLabel}

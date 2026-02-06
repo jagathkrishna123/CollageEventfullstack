@@ -140,9 +140,9 @@ const UserProfile = () => {
                     {/* Profile Content */}
                     <div className="pt-20 px-8 pb-12">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
-                            <div>
+                            <div className="flex flex-col gap-4">
                                 <h1 className="text-4xl font-black text-white mb-1 tracking-tight">{displayUser.name}</h1>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-3 flex flex-col md:flex-row">
                                     <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/20 flex items-center gap-2 shadow-lg shadow-blue-500/5">
                                         {isStudent ? <FaGraduationCap /> : <FaChalkboardTeacher />}
                                         {displayUser.userType}
