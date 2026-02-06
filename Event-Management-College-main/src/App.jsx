@@ -33,6 +33,7 @@ import UserProfile from "./pages/UserProfile";
 import About from "./pages/About";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 import AdminNotification from "./pages/admin/AdminNotification";
+import TeacherNotification from "./pages/teacher/TeacherNotification";
 
 function App() {
   const { pathname } = useLocation()
@@ -67,6 +68,7 @@ function App() {
           <Route path='attendence' element={<Attendence />} />
           <Route path='addstudent' element={<AddStudent />} />
           <Route path='addreports' element={<AddReports />} />
+          <Route path='teacher-notification' element={<TeacherNotification />} />
         </Route>
         
         <Route path='/admin' element={true ? <AdminLayout /> : <Login />}>

@@ -20,6 +20,7 @@ const TeacherNotification = () => {
             // Filter functionality: Show if recipient is 'all' OR specifically matches this user
             const myNotifications = allNotifications.filter(note => {
                 if (note.recipient.type === 'all') return true;
+                if (!user) return false;
                 // Check if recipient ID matches user's ID (assuming user.id or user.registerNumber/teacherId stores this)
                 // Adjust 'user.registerNumber' if your teacher object uses a different key for ID
                 return note.recipient.id === (user.teacherId || user.registerNumber || user.id);
@@ -37,6 +38,11 @@ const TeacherNotification = () => {
     const handleReplySubmit = (notificationId) => {
         if (!replyText.trim()) {
             toast.error("Reply cannot be empty");
+            return;
+        }
+
+        if (!user) {
+            toast.error("User info not found");
             return;
         }
 
@@ -114,7 +120,7 @@ const TeacherNotification = () => {
                                         {/* Replies Thread */}
                                         {note.replies && note.replies.length > 0 && (
                                             <div className="mb-6 pl-4 border-l-2 border-white/5 space-y-3">
-                                                {note.replies.filter(r => r.sender.id === (user.teacherId || user.registerNumber || user.name)).map(reply => (
+                                                {note.replies.filter(r => user && r.sender.id === (user.teacherId || user.registerNumber || user.name)).map(reply => (
                                                     <div key={reply.id} className="text-sm">
                                                         <div className="flex items-center gap-2 mb-1">
                                                             <span className="text-purple-400 font-bold text-xs">You</span>

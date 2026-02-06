@@ -6,6 +6,7 @@ import { IoMdAddCircleOutline } from 'react-icons/io';
 import { TbMessage } from 'react-icons/tb';
 import { PiUserCheckBold } from 'react-icons/pi';
 import { CgNotes } from 'react-icons/cg';
+import { LuMessageSquareMore } from 'react-icons/lu';
 
 const Sidebar = () => {
     const menuItems = [
@@ -17,7 +18,7 @@ const Sidebar = () => {
         { to: '/admin/attendence', icon: PiUserCheckBold, label: 'Attendance' },
         { to: '/admin/registrations', icon: CgNotes, label: 'Registrations' },
         { to: '/admin/addteacher', icon: MdOutlineGroupAdd, label: 'Add Teacher' },
-        { to: '/admin/admin-notification', icon: MdOutlineGroupAdd, label: 'Notification' },
+        { to: '/admin/admin-notification', icon: LuMessageSquareMore, label: 'Notification' },
     ];
 
     return (
