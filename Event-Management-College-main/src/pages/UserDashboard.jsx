@@ -40,7 +40,10 @@ const UserDashboard = () => {
     // Assuming registrations stored userId or we match by some other unique prop if needed
     // In EventRegistration we saved: userId: user.id
     const myRegistrations = allRegistrations.filter(
-      reg => String(reg.userId) === String(user.id) || reg.userEmail === user.email
+      reg =>
+        String(reg.userId) === String(user.id) ||
+        reg.userEmail === user.email ||
+        (reg.teamData?.members?.some(m => m.regNo === user.registerNumber))
     );
 
     // Map registrations to full event details
@@ -310,8 +313,8 @@ const UserDashboard = () => {
                         onClick={() => handleAttendance(event.id)}
                         disabled={event.attended}
                         className={`flex-1 py-2 rounded-lg font-medium transition ${event.attended
-                            ? 'bg-yellow-600/50 text-white cursor-not-allowed'
-                            : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          ? 'bg-yellow-600/50 text-white cursor-not-allowed'
+                          : 'bg-emerald-600 hover:bg-emerald-700 text-white'
                           }`}
                       >
                         {event.attended

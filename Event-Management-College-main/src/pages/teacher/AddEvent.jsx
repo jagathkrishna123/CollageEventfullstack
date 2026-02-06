@@ -1,4 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMapMarkerAlt,
+  FaUserTie,
+  FaUsers,
+  FaImage,
+  FaTrophy,
+  FaRegHandshake,
+  FaPlus,
+  FaTrash,
+  FaCloudUploadAlt,
+  FaArrowLeft,
+  FaTag
+} from "react-icons/fa";
 
 const AddEvent = () => {
   const [programs, setPrograms] = useState([]);
@@ -138,408 +154,417 @@ const AddEvent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] w-full text-white font-out p-6">
-      <div className="max-w-7xl mx-auto">
-
+    <div className="flex-1 min-h-screen bg-[#03050F] p-4 md:p-10 font-out text-gray-300 overflow-y-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-4">
-            Add New Event
-          </h1>
-          <p className="text-gray-400 text-lg">Create and configure a new college event</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <motion.div
+            initial={{ opacity: 0, x: -25 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
+              Orchestrate Event
+            </h1>
+            <p className="text-gray-500 text-lg font-medium">Fine-tune the parameters of your college experience.</p>
+          </motion.div>
         </div>
 
-        {/* Form Container */}
-        <div className="relative">
-          {/* Glow Effect */}
-          <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl opacity-75 blur-xl"></div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="relative bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 rounded-3xl shadow-2xl p-8 md:p-12"
-          >
-            {/* PROGRAM SELECTION */}
-            <div className="mb-8">
-              <label className="block mb-3 text-gray-200 font-semibold text-lg">Program Name</label>
-              <select
-                className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                onChange={handleProgramSelect}
-                value={eventData.programId || ""}
-              >
-                <option value="" disabled className="bg-gray-800">Select a Program</option>
-                {programs.map((prog) => (
-                  <option key={prog.id} value={prog.id} className="bg-gray-800">
-                    {prog.Name}
-                  </option>
-                ))}
-              </select>
+        <motion.form
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          onSubmit={handleSubmit}
+          className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-8 md:p-14 rounded-[3.5rem] shadow-2xl space-y-14"
+        >
+          {/* Section 1: Core Configuration */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/20">
+                <FaCalendarAlt />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Core Configuration</h2>
             </div>
 
-            {/* EVENT NAME */}
-            <div className="mb-8">
-              <label className="block mb-3 text-gray-200 font-semibold text-lg">Event Name</label>
-              <input
-                type="text"
-                name="eventName"
-                placeholder="Enter event name..."
-                value={eventData.eventName}
-                className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* DESCRIPTION */}
-            <div className="mb-8">
-              <label className="block mb-3 text-gray-200 font-semibold text-lg">Event Description</label>
-              <textarea
-                name="description"
-                placeholder="Describe the event details, objectives, and what participants can expect..."
-                value={eventData.description}
-                className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300 resize-none"
-                rows="4"
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* DATE & TIME */}
-            <div className="mb-8">
-              <label className="block mb-4 text-gray-200 font-semibold text-lg">Event Schedule</label>
-              <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-6">
                 <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Event Date</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={eventData.date}
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                    onChange={handleChange}
-                    required
-                  />
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Parent Program</label>
+                  <select
+                    className="w-full p-4 rounded-2xl bg-[#0a0d1f] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold cursor-pointer appearance-none"
+                    onChange={handleProgramSelect}
+                    value={eventData.programId || ""}
+                  >
+                    <option value="" disabled className="bg-gray-900">Select Program</option>
+                    {programs.map((prog) => (
+                      <option key={prog.id} value={prog.id} className="bg-gray-900">
+                        {prog.Name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Start Time</label>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Event Name</label>
                   <input
-                    type="time"
-                    name="startTime"
-                    value={eventData.startTime}
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
+                    type="text"
+                    name="eventName"
+                    value={eventData.eventName}
                     onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">End Time</label>
-                  <input
-                    type="time"
-                    name="endTime"
-                    value={eventData.endTime}
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                    onChange={handleChange}
+                    className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold text-lg"
+                    placeholder="e.g. Code Sprint"
                     required
                   />
                 </div>
               </div>
+
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Detailed Synopsis</label>
+                <textarea
+                  name="description"
+                  value={eventData.description}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all h-[152px] resize-none font-medium leading-relaxed"
+                  placeholder="Describe the objective and format of this event..."
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Logistics */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                <FaClock />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Timeline & Location</h2>
             </div>
 
-            {/* VENUE */}
-            <div className="mb-8">
-              <label className="block mb-3 text-gray-200 font-semibold text-lg">Venue</label>
-              <input
-                type="text"
-                name="venue"
-                value={eventData.venue}
-                placeholder="Enter event venue/location..."
-                className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                onChange={handleChange}
-                required
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={eventData.date}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Start Time</label>
+                <input
+                  type="time"
+                  name="startTime"
+                  value={eventData.startTime}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">End Time</label>
+                <input
+                  type="time"
+                  name="endTime"
+                  value={eventData.endTime}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Venue Name</label>
+                <input
+                  type="text"
+                  name="venue"
+                  value={eventData.venue}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  placeholder="Seminar Hall 1"
+                  required
+                />
+              </div>
             </div>
 
-            {/* VENUE LOCATION */}
-            <div className="mb-8">
-              <label className="block mb-4 text-gray-200 font-semibold text-lg">Venue Coordinates</label>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Latitude</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Geographical Offsets (Lat, Lng)</label>
+                <div className="grid grid-cols-2 gap-4">
                   <input
                     type="number"
                     step="any"
                     name="latitude"
                     value={eventData.latitude}
-                    placeholder="e.g., 11.2588"
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                     onChange={handleChange}
+                    placeholder="Latitude"
+                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono text-sm"
                   />
-                </div>
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Longitude</label>
                   <input
                     type="number"
                     step="any"
                     name="longitude"
                     value={eventData.longitude}
-                    placeholder="e.g., 75.7804"
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
+                    placeholder="Longitude"
+                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono text-sm"
                     onChange={handleChange}
                   />
                 </div>
               </div>
-            </div>
 
-            {/* DEPARTMENT & INCHARGE */}
-            <div className="mb-8">
-              <label className="block mb-4 text-gray-200 font-semibold text-lg">Event Organization</label>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Department</label>
-                  <input
-                    type="text"
-                    name="department"
-                    value={eventData.department}
-                    placeholder="Organizing department..."
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Event Incharge</label>
-                  <div className="bg-white/5 border border-white/20 rounded-2xl p-4 max-h-40 overflow-y-auto backdrop-blur-sm">
-                    {teachers.length === 0 ? (
-                      <p className="text-gray-500 text-sm">No registered teachers found.</p>
-                    ) : (
-                      teachers.map((teacher) => (
-                        <label key={teacher.id} className="flex items-center gap-3 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
-                          <input
-                            type="checkbox"
-                            value={teacher.name}
-                            checked={eventData.incharge.split(", ").includes(teacher.name)}
-                            onChange={(e) => {
-                              const name = e.target.value;
-                              const currentIncharges = eventData.incharge ? eventData.incharge.split(", ") : [];
-
-                              let newIncharges;
-                              if (e.target.checked) {
-                                newIncharges = [...currentIncharges, name];
-                              } else {
-                                newIncharges = currentIncharges.filter(i => i !== name);
-                              }
-
-                              setEventData(prev => ({ ...prev, incharge: newIncharges.join(", ") }));
-                            }}
-                            className="w-5 h-5 text-blue-500 rounded focus:ring-blue-600 bg-gray-700 border-gray-600"
-                          />
-                          <span className="text-gray-200">{teacher.name} <span className="text-gray-500 text-sm">({teacher.department})</span></span>
-                        </label>
-                      ))
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-400 mt-2 ml-1">Selected: {eventData.incharge || "None"}</p>
-                </div>
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Host Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={eventData.department}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  placeholder="CS & Engineering"
+                  required
+                />
               </div>
             </div>
+          </div>
 
-            {/* PARTICIPATION TYPE */}
-            <div className="mb-8">
-              <label className="block mb-4 text-gray-200 font-semibold text-lg">Participation Type</label>
-              <div className="flex gap-8">
-                <label className="flex items-center gap-3 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="participationType"
-                    value="individual"
-                    checked={eventData.participationType === "individual"}
-                    onChange={handleChange}
-                    className="w-5 h-5 text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500 focus:ring-2"
-                  />
-                  <span className="text-gray-300 group-hover:text-white transition-colors duration-200 font-medium">Individual Participation</span>
-                </label>
-                <label className="flex items-center gap-3 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="participationType"
-                    value="team"
-                    checked={eventData.participationType === "team"}
-                    onChange={handleChange}
-                    className="w-5 h-5 text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500 focus:ring-2"
-                  />
-                  <span className="text-gray-300 group-hover:text-white transition-colors duration-200 font-medium">Team Participation</span>
-                </label>
+          {/* Section 3: Governance */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-violet-600/20 rounded-xl flex items-center justify-center text-violet-400 border border-violet-500/20">
+                <FaUserTie />
               </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Event Stewardship</h2>
             </div>
 
-            {/* INDIVIDUAL PARTICIPATION SETTINGS */}
-            {eventData.participationType === "individual" && (
-              <div className="mb-8 p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
-                <h3 className="text-lg font-semibold text-blue-300 mb-4">Individual Participation Settings</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block mb-2 text-gray-300 font-medium">Overall Participant Limit</label>
-                    <input
-                      type="number"
-                      name="overallIndividualLimit"
-                      value={eventData.overallIndividualLimit}
-                      placeholder="Total participants allowed"
-                      min="1"
-                      className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2 text-gray-300 font-medium">Participants Per Department</label>
-                    <input
-                      type="number"
-                      name="departmentIndividualLimit"
-                      value={eventData.departmentIndividualLimit}
-                      placeholder="Max per department"
-                      min="1"
-                      className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TEAM PARTICIPATION SETTINGS */}
-            {eventData.participationType === "team" && (
-              <div className="mb-8 p-6 bg-purple-500/10 border border-purple-500/20 rounded-2xl">
-                <h3 className="text-lg font-semibold text-purple-300 mb-4">Team Participation Settings</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block mb-2 text-gray-300 font-medium">Teams Per Department</label>
-                    <input
-                      type="number"
-                      name="teamsPerDepartment"
-                      value={eventData.teamsPerDepartment}
-                      placeholder="Number of teams per dept"
-                      min="1"
-                      className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2 text-gray-300 font-medium">Members Per Team</label>
-                    <input
-                      type="number"
-                      name="membersPerTeamFromDepartment"
-                      value={eventData.membersPerTeamFromDepartment}
-                      placeholder="Team size"
-                      min="1"
-                      className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* EVENT MEDIA */}
-            <div className="mb-8">
-              <label className="block mb-4 text-gray-200 font-semibold text-lg">Event Media</label>
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* EVENT POSTER */}
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Event Poster</label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePosterImage}
-                      className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-blue-500 file:text-white hover:file:bg-blue-600 transition-all duration-300"
-                    />
-                  </div>
-                  {eventData.poster && (
-                    <div className="mt-3 relative group">
-                      <img
-                        src={eventData.poster}
-                        alt="Event poster preview"
-                        className="w-32 h-32 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* PRICE IMAGE */}
-                <div>
-                  <label className="block mb-2 text-gray-300 font-medium">Prize Information</label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePriceImage}
-                      className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-green-500 file:text-white hover:file:bg-green-600 transition-all duration-300"
-                    />
-                  </div>
-                  {eventData.priceImage && (
-                    <div className="mt-3 relative group">
-                      <img
-                        src={eventData.priceImage}
-                        alt="Prize information preview"
-                        className="w-32 h-32 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* SPONSORS */}
-            <div className="mb-8">
-              <label className="block mb-3 text-gray-200 font-semibold text-lg">Event Sponsors</label>
-              <div className="space-y-4">
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleSponsorImages}
-                    className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-indigo-500 file:text-white hover:file:bg-indigo-600 transition-all duration-300"
-                  />
-                  <p className="text-sm text-gray-400 mt-1">Select up to 3 sponsor logos (PNG, JPG)</p>
-                </div>
-
-                {/* Sponsor Preview */}
-                {eventData.sponsorImages.length > 0 && (
-                  <div className="flex flex-wrap gap-4 mt-4">
-                    {eventData.sponsorImages.map((img, i) => (
-                      <div key={i} className="relative group">
-                        <img
-                          src={img}
-                          alt={`Sponsor ${i + 1}`}
-                          className="w-24 h-24 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
+            <div className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem]">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 block ml-1 text-center">Assign Event Incharges</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
+                {teachers.length === 0 ? (
+                  <p className="col-span-full text-center text-gray-600 font-bold py-10 uppercase tracking-widest text-xs">No registered teachers found in system.</p>
+                ) : (
+                  teachers.map((teacher) => {
+                    const isSelected = eventData.incharge.split(", ").includes(teacher.name);
+                    return (
+                      <label
+                        key={teacher.id}
+                        className={`flex items-center gap-4 p-4 rounded-2xl border transition-all cursor-pointer group ${isSelected ? 'bg-violet-600/20 border-violet-500/50' : 'bg-white/[0.02] border-white/5 hover:border-white/20'
+                          }`}
+                      >
+                        <input
+                          type="checkbox"
+                          value={teacher.name}
+                          checked={isSelected}
+                          onChange={(e) => {
+                            const name = e.target.value;
+                            const currentIncharges = eventData.incharge ? eventData.incharge.split(", ") : [];
+                            let newIncharges = e.target.checked ? [...currentIncharges, name] : currentIncharges.filter(i => i !== name);
+                            setEventData(prev => ({ ...prev, incharge: newIncharges.join(", ") }));
+                          }}
+                          className="hidden"
                         />
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isSelected ? 'bg-violet-600 text-white' : 'bg-white/5 text-gray-500 group-hover:text-gray-300'
+                          }`}>
+                          <FaUserTie />
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                          <p className={`font-bold text-sm truncate ${isSelected ? 'text-white' : 'text-gray-400'}`}>{teacher.name}</p>
+                          <p className="text-[10px] text-gray-500 font-medium truncate uppercase tracking-tighter">{teacher.department}</p>
+                        </div>
+                      </label>
+                    );
+                  })
+                )}
+              </div>
+              <p className="text-[10px] font-black text-violet-400 mt-6 text-center uppercase tracking-widest">Selected: {eventData.incharge || "None"}</p>
+            </div>
+          </div>
+
+          {/* Section 4: Participation Mechanics */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                <FaUsers />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Participation Protocols</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-6">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 block ml-1">Archetype</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setEventData(prev => ({ ...prev, participationType: "individual" }))}
+                    className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-4 ${eventData.participationType === "individual" ? 'bg-emerald-600/20 border-emerald-500' : 'bg-white/[0.02] border-white/5 grayscale opacity-40'
+                      }`}
+                  >
+                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl">👤</div>
+                    <span className="font-black text-xs uppercase tracking-[0.2em] text-white">Individual</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEventData(prev => ({ ...prev, participationType: "team" }))}
+                    className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-4 ${eventData.participationType === "team" ? 'bg-emerald-600/20 border-emerald-500' : 'bg-white/[0.02] border-white/5 grayscale opacity-40'
+                      }`}
+                  >
+                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl">👥</div>
+                    <span className="font-black text-xs uppercase tracking-[0.2em] text-white">Group / Team</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <AnimatePresence mode="wait">
+                  {eventData.participationType === "individual" ? (
+                    <motion.div
+                      key="individual"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                    >
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Global Limit</label>
+                        <input
+                          type="number"
+                          name="overallIndividualLimit"
+                          value={eventData.overallIndividualLimit}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 100"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Per Department</label>
+                        <input
+                          type="number"
+                          name="departmentIndividualLimit"
+                          value={eventData.departmentIndividualLimit}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 10"
+                        />
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="team"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                    >
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Teams Per Dept.</label>
+                        <input
+                          type="number"
+                          name="teamsPerDepartment"
+                          value={eventData.teamsPerDepartment}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 2"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Members / Team</label>
+                        <input
+                          type="number"
+                          name="membersPerTeamFromDepartment"
+                          value={eventData.membersPerTeamFromDepartment}
+                          onChange={handleChange}
+                          className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-bold"
+                          placeholder="e.g. 4"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 5: Visual Brand */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-pink-600/20 rounded-xl flex items-center justify-center text-pink-400 border border-pink-500/20">
+                <FaImage />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Visual Identity & Recognition</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {/* Event Poster */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Master Poster</label>
+                <div className="relative group aspect-square rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-blue-500/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden">
+                  {eventData.poster ? (
+                    <img src={eventData.poster} className="absolute inset-0 w-full h-full object-cover" alt="Poster" />
+                  ) : (
+                    <div className="space-y-3">
+                      <FaCloudUploadAlt className="text-3xl text-gray-700 group-hover:text-blue-400 transition-all mx-auto" />
+                      <p className="text-gray-600 font-bold uppercase text-[8px] tracking-[0.2em]">Upload JPG/PNG</p>
+                    </div>
+                  )}
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handlePosterImage} />
+                </div>
+              </div>
+
+              {/* Price Image */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Grand Prize</label>
+                <div className="relative group aspect-square rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-amber-500/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden">
+                  {eventData.priceImage ? (
+                    <img src={eventData.priceImage} className="absolute inset-0 w-full h-full object-cover" alt="Price" />
+                  ) : (
+                    <div className="space-y-3">
+                      <FaTrophy className="text-3xl text-gray-700 group-hover:text-amber-500 transition-all mx-auto" />
+                      <p className="text-gray-600 font-bold uppercase text-[8px] tracking-[0.2em]">Upload Trophy Asset</p>
+                    </div>
+                  )}
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handlePriceImage} />
+                </div>
+              </div>
+
+              {/* Sponsors */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Sponsors (Max 3)</label>
+                <div className="relative group aspect-square rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-pink-500/30 transition-all p-4 flex flex-col justify-center gap-3 overflow-hidden">
+                  <div className="grid grid-cols-2 gap-2 h-full">
+                    {eventData.sponsorImages.map((img, i) => (
+                      <div key={i} className="relative rounded-xl overflow-hidden border border-white/10 aspect-square">
+                        <img src={img} className="w-full h-full object-cover" />
                         <button
                           type="button"
                           onClick={() => removeSponsorImage(i)}
-                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+                          className="absolute -top-1 -right-1 bg-red-600 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center"
                         >
-                          ×
+                          ✕
                         </button>
                       </div>
                     ))}
+                    {eventData.sponsorImages.length < 3 && (
+                      <div className="relative rounded-xl overflow-hidden border border-dashed border-white/10 aspect-square flex items-center justify-center opacity-30 group-hover:opacity-100 transition-all">
+                        <FaRegHandshake className="text-xl" />
+                        <input type="file" accept="image/*" multiple className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleSponsorImages} />
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* SUBMIT BUTTON */}
-            <div className="flex justify-center pt-4">
-              <button
-                type="submit"
-                className="px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-1 transition-all duration-300"
-              >
-                Create Event
-              </button>
-            </div>
-
-          </form>
-        </div>
+          {/* Action Suite */}
+          <div className="pt-10 flex flex-col md:flex-row gap-6">
+            <button
+              type="submit"
+              className="flex-1 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] transition-all shadow-2xl shadow-blue-900/40 active:scale-[0.98]"
+            >
+              Deploy Event
+            </button>
+          </div>
+        </motion.form>
       </div>
     </div>
   );

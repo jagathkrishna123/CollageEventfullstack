@@ -40,15 +40,52 @@ const Registrations = () => {
   // Get registered students for a specific event
   const getEventStudents = (eventId) => {
     const eventRegs = registrations.filter(reg => String(reg.eventId) === String(eventId));
-    return eventRegs.map(reg => {
-      const student = users.find(u => String(u.id) === String(reg.userId));
-      return {
-        ...student,
-        regId: reg.id,
-        regStatus: reg.status,
-        regDate: reg.registrationDate
-      };
-    }).filter(s => s.id);
+    let allStudents = [];
+
+    eventRegs.forEach(reg => {
+      if (reg.teamData && reg.teamData.members && reg.teamData.members.length > 0) {
+        // Team Registration: Add all members
+        reg.teamData.members.forEach(member => {
+          // Find full user details using Register Number
+          const student = users.find(u => u.registerNumber && u.registerNumber.toUpperCase() === member.regNo.toUpperCase());
+          if (student) {
+            allStudents.push({
+              ...student,
+              regId: reg.id,
+              regStatus: reg.status,
+              regDate: reg.registrationDate
+            });
+          } else {
+            // Fallback
+            allStudents.push({
+              id: `temp-${member.regNo}`,
+              name: member.name,
+              registerNumber: member.regNo,
+              email: "N/A",
+              department: "External/Unknown",
+              semester: "-",
+              mobile: "-",
+              regId: reg.id,
+              regStatus: reg.status,
+              regDate: reg.registrationDate
+            });
+          }
+        });
+      } else {
+        // Individual Registration
+        const student = users.find(u => String(u.id) === String(reg.userId));
+        if (student) {
+          allStudents.push({
+            ...student,
+            regId: reg.id,
+            regStatus: reg.status,
+            regDate: reg.registrationDate
+          });
+        }
+      }
+    });
+
+    return allStudents;
   };
 
   if (loading) {

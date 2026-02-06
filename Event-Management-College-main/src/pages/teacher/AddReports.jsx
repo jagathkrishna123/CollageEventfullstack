@@ -121,7 +121,7 @@ const AddReports = () => {
   };
 
   return (
-    <div className="min-h-full w-full bg-gradient-to-br from-neutral-900 via-gray-900 to-black p-6 overflow-y-auto font-out">
+    <div className="min-h-full w-full  p-6 overflow-y-auto font-out">
       <div className="max-w-5xl w-full mx-auto">
         <h1 className="text-3xl font-bold text-white mb-6">Add Report</h1>
 

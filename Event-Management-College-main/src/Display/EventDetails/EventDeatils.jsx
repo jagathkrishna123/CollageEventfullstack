@@ -291,7 +291,7 @@ const EventDetails = () => {
                     </div>
                   ) : isTeacher ? (
                     <div className="w-full py-5 rounded-[2rem] bg-amber-500/5 border border-amber-500/10 text-amber-500 font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3">
-                      <FaChalkboardTeacher /> Faculty Access Only
+                      <FaChalkboardTeacher /> Student Access Only
                     </div>
                   ) : isAlreadyRegistered() ? (
                     <div className="w-full py-5 rounded-[2rem] bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3">

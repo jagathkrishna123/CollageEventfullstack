@@ -1,10 +1,20 @@
 
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaBolt,
   FaCheckCircle,
   FaLightbulb,
   FaStar,
+  FaCalendarAlt,
+  FaClock,
+  FaTag,
+  FaInfoCircle,
+  FaCloudUploadAlt,
+  FaPlus,
+  FaTrash,
+  FaImage,
+  FaFilePdf
 } from "react-icons/fa";
 
 const ICON_OPTIONS = [
@@ -130,234 +140,275 @@ const TeacherAddProgram = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#03050F] via-[#0a0d1f] to-[#03050F] text-white font-out p-6">
-      <div className="max-w-7xl mx-auto">
-
+    <div className="flex-1 min-h-screen bg-[#03050F] p-4 md:p-10 font-out text-gray-300 overflow-y-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-4">
-            Add New Program
-          </h1>
-          <p className="text-gray-400 text-lg">Create and configure a new college program</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <motion.div
+            initial={{ opacity: 0, x: -25 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-500 to-violet-500 bg-clip-text text-transparent mb-3">
+              Add New Program
+            </h1>
+            <p className="text-gray-500 text-lg font-medium">Create and configure a flagship experience.</p>
+          </motion.div>
         </div>
 
-        {/* Form Container */}
-        <div className="relative">
-          {/* Glow Effect */}
-          <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl opacity-75 blur-xl"></div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="relative bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 rounded-3xl shadow-2xl p-8 md:p-12"
-          >
-            {/* Program Name */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-3">Program Name</label>
-              <input
-                type="text"
-                className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Hackathon"
-                required
-              />
+        <motion.form
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          onSubmit={handleSubmit}
+          className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-8 md:p-14 rounded-[3.5rem] shadow-2xl space-y-14"
+        >
+          {/* Section 1: Core Configuration */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/20">
+                <FaTag />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Core Configuration</h2>
             </div>
 
-            {/* Category */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-3">Category</label>
-              <select
-                className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              >
-                <option value="" className="bg-gray-800">Select a category</option>
-                {CATEGORY_OPTIONS.map((cat, index) => (
-                  <option key={index} value={cat} className="bg-gray-800">
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Title */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-3">Program Tagline/Title</label>
-              <input
-                type="text"
-                className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., India’s largest student hackathon"
-                required
-              />
-            </div>
-
-            {/* Date + Time */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-4">Program Schedule</label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-6">
                 <div>
-                  <label className="block text-gray-300 mb-2 font-medium">Program Date</label>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Program Name</label>
+                  <input
+                    type="text"
+                    className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold text-lg"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g. InnovateX 2026"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Category</label>
+                  <select
+                    className="w-full p-4 rounded-2xl bg-[#0a0d1f] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold cursor-pointer appearance-none"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled className="bg-gray-900">Select Category</option>
+                    {CATEGORY_OPTIONS.map((cat, index) => (
+                      <option key={index} value={cat} className="bg-gray-900">
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Tagline / Title</label>
+                <textarea
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all h-[152px] resize-none font-medium leading-relaxed"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Unleashing the future of student innovation"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Logistics */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                <FaClock />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Timeline & Description</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Launch Date</label>
                   <input
                     type="date"
-                    className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
+                    className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     required
                   />
                 </div>
-
                 <div>
-                  <label className="block text-gray-300 mb-2 font-medium">Program Duration / Time</label>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Duration / Time</label>
                   <input
                     type="text"
-                    className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
+                    className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
-                    placeholder="e.g., 48 Hours"
+                    placeholder="e.g. 3 Days"
                     required
                   />
                 </div>
               </div>
-            </div>
 
-            {/* Brochure Upload */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-3">Program Brochure (PDF)</label>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept=".pdf"
-                  className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-blue-500 file:text-white hover:file:bg-blue-600 transition-all duration-300 cursor-pointer"
-                  onChange={(e) => setBrochure(e.target.files[0])}
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 block ml-1">Detailed Synopsis</label>
+                <textarea
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all h-[68px] resize-none font-medium leading-relaxed"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Briefly describe the program objectives..."
+                  required
                 />
               </div>
             </div>
+          </div>
 
-            {/* Image Upload */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-3">Program Image</label>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-blue-500 file:text-white hover:file:bg-blue-600 transition-all duration-300"
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
+          {/* Section 3: Visual Assets */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-pink-600/20 rounded-xl flex items-center justify-center text-pink-400 border border-pink-500/20">
+                <FaImage />
               </div>
-              {image && (
-                <div className="mt-3 relative group">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt="Program preview"
-                    className="w-32 h-32 object-cover rounded-2xl border border-white/20 shadow-lg group-hover:scale-105 transition-transform duration-300"
-                  />
+              <h2 className="text-2xl font-black text-white tracking-tight">Visual Identity</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Image Upload */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Program Hero Image</label>
+                <div className="relative group min-h-[200px] rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-blue-500/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden">
+                  {image ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0">
+                      <img src={URL.createObjectURL(image)} className="w-full h-full object-cover" alt="Preview" />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-white font-bold text-xs uppercase tracking-widest">Change Image</p>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <div className="space-y-3">
+                      <FaCloudUploadAlt className="text-3xl text-gray-700 group-hover:text-blue-400 transition-all mx-auto" />
+                      <p className="text-gray-600 font-bold uppercase text-[8px] tracking-[0.2em]">Upload JPG/PNG</p>
+                    </div>
+                  )}
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => setImage(e.target.files[0])} />
                 </div>
-              )}
+              </div>
+
+              {/* Brochure Upload */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Program Brochure (PDF)</label>
+                <div className="relative group min-h-[200px] rounded-[2rem] bg-white/[0.02] border-2 border-dashed border-white/10 hover:border-indigo-500/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden">
+                  {brochure ? (
+                    <div className="flex flex-col items-center gap-3">
+                      <FaFilePdf className="text-4xl text-red-500" />
+                      <p className="text-white font-bold text-sm truncate max-w-[200px]">{brochure.name}</p>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setBrochure(null); }}
+                        className="text-[10px] text-gray-500 hover:text-red-400 uppercase tracking-widest font-black"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <FaFilePdf className="text-3xl text-gray-700 group-hover:text-indigo-400 transition-all mx-auto" />
+                      <p className="text-gray-600 font-bold uppercase text-[8px] tracking-[0.2em]">Upload PDF Document</p>
+                    </div>
+                  )}
+                  <input type="file" accept=".pdf" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => setBrochure(e.target.files[0])} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4: Features */}
+          <div className="space-y-10">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                <FaBolt />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Program Highlighters</h2>
             </div>
 
-            {/* Description */}
-            <div className="mb-8">
-              <label className="block text-gray-200 font-semibold text-lg mb-3">Program Description</label>
-              <textarea
-                className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-white h-32 outline-none resize-none placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter program description..."
-                required
-              ></textarea>
-            </div>
-
-            {/* Features Section */}
-            <div className="mb-8 p-8 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/10 rounded-3xl shadow-lg">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Program Features
-              </h2>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                {/* Icon Selector */}
+            <div className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem] space-y-8">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <select
-                  className="w-full sm:w-auto p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
+                  className="w-full sm:w-auto p-4 rounded-2xl bg-[#0a0d1f] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold cursor-pointer appearance-none px-8"
                   onChange={(e) => {
-                    const selected = ICON_OPTIONS.find(
-                      (item) => item.label === e.target.value
-                    );
+                    const selected = ICON_OPTIONS.find(item => item.label === e.target.value);
                     setFeatureIcon(selected.value);
                     setFeatureIconLabel(selected.label);
                   }}
                 >
                   {ICON_OPTIONS.map((item, i) => (
-                    <option key={i} value={item.label} className="bg-gray-800">
-                      {item.label}
-                    </option>
+                    <option key={i} value={item.label} className="bg-gray-800">{item.label}</option>
                   ))}
                 </select>
 
-                {/* Feature Text */}
                 <input
                   type="text"
-                  className="flex-1 p-4 rounded-2xl bg-white/5 border border-white/20 text-white outline-none placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                  placeholder="Feature name..."
+                  className="flex-1 p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-bold"
+                  placeholder="Feature name (e.g. Free Certification)"
                   value={featureName}
                   onChange={(e) => setFeatureName(e.target.value)}
                 />
 
-                {/* Add Button */}
                 <button
                   type="button"
                   onClick={addFeature}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-1"
+                  className="px-8 py-4 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 rounded-2xl text-emerald-400 font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 active:scale-95"
                 >
-                  Add Feature
+                  <FaPlus /> Add
                 </button>
               </div>
 
-              {/* Display Added Features */}
-              {features.length > 0 && (
-                <div className="space-y-3 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <AnimatePresence mode="popLayout">
                   {features.map((f, index) => {
                     const IconComp = ICON_OPTIONS.find(opt => opt.label === f.iconLabel)?.value || FaBolt;
                     return (
-                      <div
+                      <motion.div
                         key={index}
-                        className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/10 shadow-md"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="flex justify-between items-center bg-white/[0.03] p-4 rounded-2xl border border-white/5 hover:border-white/10 transition-all group"
                       >
-                        <div className="flex items-center gap-3 text-white">
-                          <IconComp className="text-blue-400 text-xl" />
-                          <span>{f.name}</span>
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                            <IconComp />
+                          </div>
+                          <span className="font-bold text-sm text-gray-300">{f.name}</span>
                         </div>
-
                         <button
                           type="button"
                           onClick={() => removeFeature(index)}
-                          className="text-red-500 hover:text-red-400 transition-colors duration-200 text-xl"
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-500 hover:bg-red-500/10 transition-all"
                         >
-                          ✕
+                          <FaTrash size={12} />
                         </button>
-                      </div>
+                      </motion.div>
                     );
                   })}
-                </div>
-              )}
+                </AnimatePresence>
+                {features.length === 0 && (
+                  <p className="col-span-full text-center text-gray-600 font-bold py-6 uppercase tracking-widest text-[10px]">No features added yet.</p>
+                )}
+              </div>
             </div>
+          </div>
 
-            {/* SUBMIT BUTTON */}
-            <div className="flex justify-center pt-4">
-              <button
-                type="submit"
-                className="px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-1 transition-all duration-300"
-              >
-                Create Program
-              </button>
-            </div>
-
-          </form>
-        </div>
+          {/* Action Suite */}
+          <div className="pt-10">
+            <button
+              type="submit"
+              className="w-full py-6 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.4em] transition-all shadow-2xl shadow-blue-900/40 active:scale-[0.98]"
+            >
+              Initialize Program
+            </button>
+          </div>
+        </motion.form>
       </div>
     </div>
   );

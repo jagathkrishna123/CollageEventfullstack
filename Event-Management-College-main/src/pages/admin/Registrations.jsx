@@ -29,15 +29,54 @@ const Registrations = () => {
   // Get registered students for a specific event
   const getEventStudents = (eventId) => {
     const eventRegs = registrations.filter(reg => String(reg.eventId) === String(eventId));
-    return eventRegs.map(reg => {
-      const student = users.find(u => String(u.id) === String(reg.userId));
-      return {
-        ...student,
-        regId: reg.id,
-        regStatus: reg.status,
-        regDate: reg.registrationDate
-      };
-    }).filter(s => s.id); // Filter out any undefined users
+    let allStudents = [];
+
+    eventRegs.forEach(reg => {
+      if (reg.teamData && reg.teamData.members && reg.teamData.members.length > 0) {
+        // Team Registration: Add all members
+        reg.teamData.members.forEach(member => {
+          // Find full user details using Register Number
+          const student = users.find(u => u.registerNumber && u.registerNumber.toUpperCase() === member.regNo.toUpperCase());
+          if (student) {
+            allStudents.push({
+              ...student,
+              regId: reg.id,
+              regStatus: reg.status,
+              regDate: reg.registrationDate,
+              teamName: `Team of ${reg.registeredBy}`
+            });
+          } else {
+            // Fallback if user lookup fails (e.g. deleted user)
+            allStudents.push({
+              id: `temp-${member.regNo}`,
+              name: member.name,
+              registerNumber: member.regNo,
+              email: "N/A",
+              department: "Externa/Unknown",
+              semester: "-",
+              mobile: "-",
+              regId: reg.id,
+              regStatus: reg.status,
+              regDate: reg.registrationDate,
+              teamName: `Team of ${reg.registeredBy}`
+            });
+          }
+        });
+      } else {
+        // Individual Registration
+        const student = users.find(u => String(u.id) === String(reg.userId));
+        if (student) {
+          allStudents.push({
+            ...student,
+            regId: reg.id,
+            regStatus: reg.status,
+            regDate: reg.registrationDate
+          });
+        }
+      }
+    });
+
+    return allStudents;
   };
 
   if (loading) {
@@ -172,14 +211,14 @@ const Registrations = () => {
                 <div className="p-7 pt-5">
                   <div className="space-y-4 text-sm text-gray-400">
                     <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                      <span className="text-lg"><BsCalendarDate className='text-red-400'/></span>
+                      <span className="text-lg"><BsCalendarDate className='text-red-400' /></span>
                       <div>
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-tighter">Event Date</p>
                         <p className="text-gray-200 font-medium">{event.date}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                      <span className="text-lg"><IoLocationSharp className='text-green-700'/></span>
+                      <span className="text-lg"><IoLocationSharp className='text-green-700' /></span>
                       <div>
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-tighter">Location</p>
                         <p className="text-gray-200 font-medium truncate max-w-[180px]">{event.venue}</p>
